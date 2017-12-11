@@ -18,6 +18,7 @@ namespace Element
 
         public AnimatedSprite(Texture2D texture, int rows, int columns)
         {
+            // title just a test?
             Texture = texture;
             Rows = rows;
             Columns = columns;
