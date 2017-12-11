@@ -9,7 +9,7 @@ namespace Element
     /// </summary>
     public class Player
     {
-        public Texture2D PlayerTexture;
+        public AnimatedSprite Sprite;
         public Vector2 Position;
         public bool Active;
         public int Health;
@@ -19,7 +19,7 @@ namespace Element
         /// </summary>
         public int Width
         {
-            get { return PlayerTexture.Width; }
+            get { return Sprite.Width; }
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace Element
         /// </summary>
         public int Height
         {
-            get { return PlayerTexture.Height; }
+            get { return Sprite.Height; }
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Element
         /// </summary>
         public void Initialize(Texture2D texture, Vector2 position)
         {
-            PlayerTexture = texture;
+            Sprite = new AnimatedSprite(texture, 8, 13, 53, 3);
             Position = position;
             Active = true;
             Health = 100;
@@ -44,9 +44,9 @@ namespace Element
         /// <summary>
         /// Update the player character and all children actors
         /// </summary>
-        public void Update()
+        public void Update(GameTime gameTime)
         {
-
+            Sprite.Update(gameTime);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Element
         /// </summary>
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PlayerTexture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            Sprite.Draw(spriteBatch, Position);
         }
     
     }
@@ -85,7 +85,7 @@ namespace Element
         {
             // TODO: Add your initialization logic here
             Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Initialize(Content.Load<Texture2D>("player/player_05"), playerPosition);
+            player.Initialize(Content.Load<Texture2D>("sokobanTilesheet"), playerPosition);
 
             base.Initialize();
       
@@ -123,6 +123,7 @@ namespace Element
                 Exit();
 
             // TODO: Add your update logic here
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
