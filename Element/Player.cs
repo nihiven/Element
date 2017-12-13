@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Element
@@ -32,9 +33,11 @@ namespace Element
         /// <summary>
         /// Set initial values
         /// </summary>
-        public void Initialize(Texture2D texture, Vector2 position)
+        public void Initialize(ContentManager contentManager, Vector2 position)
         {
-            Sprite = new AnimatedSprite(texture, 8, 13, 53, new int[] { 0, 1, 0, 2 }, 0.25);
+            SpriteSheet spriteSheet = new SpriteSheet(contentManager, "female_walkcycle", 4, 9);
+            Animation walkAnimation = new Animation("female_walk", spriteSheet, 19, 9, FPS.TEN);
+            Sprite = new AnimatedSprite(walkAnimation);
             Position = position;
             Active = true;
             Health = 100;

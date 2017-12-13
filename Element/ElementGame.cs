@@ -13,6 +13,7 @@ namespace Element
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Player player = new Player();
+        Animation[] Animations;
 
         public ElementGame()
         {
@@ -29,11 +30,7 @@ namespace Element
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-            player.Initialize(Content.Load<Texture2D>("sokobanTilesheet"), playerPosition);
-
             base.Initialize();
-      
         }
 
         /// <summary>
@@ -44,8 +41,9 @@ namespace Element
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             // TODO: use this.Content to load your game content here
+            Vector2 playerPosition = new Vector2(20, 20);
+            player.Initialize(this.Content, playerPosition);
         }
 
         /// <summary>
@@ -55,6 +53,7 @@ namespace Element
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            Content.Unload();
         }
 
         /// <summary>
