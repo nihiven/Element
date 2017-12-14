@@ -7,11 +7,11 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player
+    public class Player : IActor
     {
         public AnimatedSprite Sprite;
-        public Vector2 Position;
-        public bool Active;
+        public Vector2 Position { get; set; }
+        public bool Active { get; set; }
         public int Health;
 
         /// <summary>
@@ -22,25 +22,29 @@ namespace Element
             get { return Sprite.Width; }
         }
 
+        public void LoadContent(ContentManager content)
+        {
+            Position = new Vector2();
+            Active = true;
+            Health = 100;
+
+            SpriteSheet spriteSheet = new SpriteSheet(content, "female_walkcycle", 4, 9);
+            Animation walkAnimation = new Animation("female_walk", spriteSheet, 19, 9, FPS.TEN);
+            Sprite = new AnimatedSprite(walkAnimation);
+        }
+
+
+        public void UnloadContent()
+        {
+            // what to do here?
+        }
+
         /// <summary>
         /// Returns player height, assumes height of the player is the height of the player texture.
         /// </summary>
         public int Height
         {
             get { return Sprite.Height; }
-        }
-
-        /// <summary>
-        /// Set initial values
-        /// </summary>
-        public void Initialize(ContentManager contentManager, Vector2 position)
-        {
-            SpriteSheet spriteSheet = new SpriteSheet(contentManager, "female_walkcycle", 4, 9);
-            Animation walkAnimation = new Animation("female_walk", spriteSheet, 19, 9, FPS.TEN);
-            Sprite = new AnimatedSprite(walkAnimation);
-            Position = position;
-            Active = true;
-            Health = 100;
         }
 
         /// <summary>

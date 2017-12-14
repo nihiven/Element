@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Element
 {  
@@ -12,13 +12,17 @@ namespace Element
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Player player = new Player();
-        Animation[] Animations;
+        List<IActor> actorList = new List<IActor>();
+
+        Player player;
+
 
         public ElementGame()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.SynchronizeWithVerticalRetrace = true; // vsync
             Content.RootDirectory = "Content";
+            
         }
 
         /// <summary>
@@ -29,6 +33,8 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
+            actorList.Add(new Player());
+
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -39,11 +45,13 @@ namespace Element
         /// </summary>
         protected override void LoadContent()
         {
+            foreach (IActor actor in actorList)
+                actor.LoadContent(this.Content);
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            
             // TODO: use this.Content to load your game content here
-            Vector2 playerPosition = new Vector2(20, 20);
-            player.Initialize(this.Content, playerPosition);
         }
 
         /// <summary>
@@ -52,6 +60,9 @@ namespace Element
         /// </summary>
         protected override void UnloadContent()
         {
+            foreach (IActor actor in actorList)
+                actor.UnloadContent();
+            
             // TODO: Unload any non ContentManager content here
             Content.Unload();
         }
@@ -63,12 +74,10 @@ namespace Element
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            foreach (IActor actor in actorList)
+                actor.Update(gameTime);
 
             // TODO: Add your update logic here
-            player.Update(gameTime);
-
             base.Update(gameTime);
         }
 
@@ -79,11 +88,12 @@ namespace Element
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
             spriteBatch.Begin();
-            player.Draw(spriteBatch);
-            spriteBatch.End();
 
+            foreach (IActor actor in actorList)
+                actor.Draw(spriteBatch);
+
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

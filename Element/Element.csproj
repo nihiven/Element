@@ -45,10 +45,12 @@
     <Compile Include="Animation.cs" />
     <Compile Include="ElementGame.cs" />
     <Compile Include="FPS.cs" />
+    <Compile Include="IActor.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpriteSheet.cs" />
+    <Compile Include="XB1Pad.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
