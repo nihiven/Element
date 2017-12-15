@@ -5,19 +5,58 @@
    *{
     font-family:Monaco,Menlo,Consolas,"Droid Sans Mono",monospace;
    }
+   div.center {
+    width:80%; 
+    margin-left:10%; 
+    margin-right:10%;
+   }
+   div.edicts {
+    width:60%; 
+    margin-left:20%; 
+    margin-right:20%;
+   }
+   div.entry {
+    background-color: hsl(214, 78%, 94%);
+	padding:7px;
+   }
   </style>
 
  </head>
  <body>
-  <b>Design Edicts</b>
+ <div class="edicts">
+  <b>Element Design Edicts</b>
   <ul>
    <li>Figure out what fun is and make it rewarding.</li>
    <li>Make the fun competitive.</li>
    <li>No Fetch/FedEx Quests</li>
    <li>Have lots of guns and even more bullets.</li>
    <li>Rewards need to drop during that activity that awarded them.</li>
-  </ul><hr>
+   <li>Breadth, then depth.</li>
+  </ul>
+</div>
+<div class="center">
+ <hr>
+ <div class="entry">
+  <b>2017.12.14 - Thursday</b><br>
+  <b>Game Design</b><br>
+  One new edict: Breadth, then depth.<br>
+  Basically, avoid getting stuck in paralysis analysis hell. I'm going to make a concerted effort to make things work only as much as I need them to. Once a component is established and
+  has gone beyond the design stage, I can start implementing new features. Don't wax your car if it hasn't been put together yet!<br><br>
+  
+  <b>Technical Design</b><br>
+  I was pumped up to start coding today, fueled by my little breakthrough last night, and went to work on an input component. This will allow the game to read button presses, trigger pulls, stick moves, etc, from the gamepad, as well as determine if states have changed
+  since the last Update() tick. Playing around with input brought up the need to draw some text on the screen, so I began on the Debug component as well. Today is the first of what I'm sure will be many days where I will be shutting down with a project that fails to build.<br><br>
+  I've been spending a lot of time reading about game design, here are some of the things I read today...
+  <ul>
+	<li>An online book, <a href="http://gameprogrammingpatterns.com/component.html">Game Programming Patterns</a>, has a informative chapter the explores some ways to decouple your game components.</li>
+	<li>This <a href="https://gamedev.stackexchange.com/a/24301">answer on stackoverflow</a> that goes into why using the same texture is important when calling SpriteBatch. Which in turn, makes me think about how sprites should be grouped together within the spritesheets.</li>
+	<li>If you want to put all of those cores in your new Ryzen to use, <a href="https://www.codeproject.com/Articles/7933/Smart-Thread-Pool">Smart Thread Pools</a> are a way you can do that.</li>
+	<li>The <a href="https://www.redblobgames.com">Red Blob Games</a> blog has some great articles on various game programming topics.</li>
+  </ul>
+  </div>
+  <hr>
 
+  <div class="entry">
   <b>2017.12.13 - Wednesday</b><br>
   <b>Game Design</b><br>
   I gave the weekly state of the game presentation to my supporter.<br><br>
@@ -26,8 +65,10 @@
   There is a great post on stackoverflow about <a href="https://stackoverflow.com/questions/5458760/game-architecture/5459955#5459955">general game architecture</a> that I came across today. It helped me understand how game objects are
   tracked and made me think about iterfaces as they relate to games, and how I should be using them. It was a bit of an 'Aha!' moment for me. There are a lot of things I'm not sure how I'm going to do, this article helped me get a little
   closer to checking one of those things off the list. I wanted to see a little more info about the guy that made the post, so I checked his profile to find out that he is the Lead Engine Developer for <a href="http://rivercityransom.com/sheet.php?p=river_city_ransom_underground">River City Ransom: Underground</a>.
-  <br><br><br><hr>
+  </div>
+  <hr>
 
+  <div class="entry">
   <b>2017.12.12 - Tuesday</b><br>
   <b>Game Design</b><br>
   I drew a mockup of the DPS tester, storyboard pane #7, and took a bunch of notes on how it will function.<br><br>
@@ -35,8 +76,10 @@
   <b>Technical Design</b><br>
   I extracted a couple of classes from the Player() object to make them usable for other characters. It doesn't seem like much 
   in writing, but it ended up being a fair amount of code.
-  <br><br><br><hr>
+  </div>
+  <hr>
 
+  <div class="entry">
   <b>2017.12.11 - Monday</b><br>
   <b>Game Design</b>
   <ul>
@@ -48,8 +91,10 @@
   <b>Technical Design</b><br>
   I did more work on the prototype, specifically on animated sprites, adding a feature that allows sprite animations to play out of order frames from the
   sprite sheet.
-  <br><br><br><hr>
+  </div>
+  <hr>
 
+  <div class="entry">
   <b>2017.12.10 - Sunday</b><br>
   I installed the <a href="http://www.monogame.net">monogame tools</a> and intend to use them to build a prototype. I want the prototype to have:<br>
   <ul>
@@ -64,8 +109,10 @@
 
   For the prototype, I'm using sprite resources from <a href="http://kenney.nl/assets">Kenney Assets</a>.<br><br>
   I also added a couple of design edicts to the list (see top of page).
-  <br><br><br><hr>
+  </div>
+  <hr>
   <center><a href="http://nvn.io">by nihiven</a></center>
+ </div>
  </body>
 
  

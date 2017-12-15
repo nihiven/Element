@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,17 +9,7 @@ namespace Element
     {
         void LoadContent(ContentManager content);
         void UnloadContent();
-
-        void Update(GameTime gameTime);
-
-        //  void Think(float seconds);
-        //  void UpdatePhysics(float seconds);
-
+        void Update(GameTime gameTime, ref XB1Pad input);
         void Draw(SpriteBatch spriteBatch);
-
-    //    void Touched(IActor by);
-
-        Vector2 Position { get; }
-     //   Rectangle BoundingBox { get; }
     }
 }

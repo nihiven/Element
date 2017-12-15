@@ -43,9 +43,11 @@
   <ItemGroup>
     <Compile Include="AnimatedSprite.cs" />
     <Compile Include="Animation.cs" />
+    <Compile Include="Debug.cs" />
     <Compile Include="ElementGame.cs" />
     <Compile Include="FPS.cs" />
     <Compile Include="IActor.cs" />
+    <Compile Include="IComponent.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

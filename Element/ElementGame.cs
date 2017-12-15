@@ -13,10 +13,9 @@ namespace Element
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         List<IActor> actorList = new List<IActor>();
-
-        Player player;
-
-
+        List<IComponent> componentList = new List<IComponent>();
+        XB1Pad input = new XB1Pad();
+        
         public ElementGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -75,7 +74,7 @@ namespace Element
         protected override void Update(GameTime gameTime)
         {
             foreach (IActor actor in actorList)
-                actor.Update(gameTime);
+                actor.Update(gameTime, ref input);
 
             // TODO: Add your update logic here
             base.Update(gameTime);

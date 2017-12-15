@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Element
 {
@@ -50,7 +51,7 @@ namespace Element
         /// <summary>
         /// Update the player character and all children actors
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, ref XB1Pad input)
         {
             Sprite.Update(gameTime);
         }
