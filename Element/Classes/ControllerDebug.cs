@@ -6,20 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Element
 {
-    class ControllerDebug : IComponent, IActor
+    class ControllerDebug : IComponent, IInputHandler, IUpdateable, IDrawHandler
     {
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
+        private Vector2 background;
+        private Vector2 buttonA;
 
         public void Initialize()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void LoadContent(ContentManager content)
@@ -34,7 +31,18 @@ namespace Element
 
         public void Update(GameTime gameTime)
         {
+
+        }
+
+        public void UpdateInput(GameTime gameTime, ref XB1Pad input)
+        {
+            
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
             throw new NotImplementedException();
         }
+
     }
 }

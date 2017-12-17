@@ -5,6 +5,5 @@ namespace Element
     interface IComponent
     {
         void Initialize();
-        void Update(GameTime gameTime);
     }
 }

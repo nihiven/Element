@@ -14,14 +14,14 @@ namespace Element
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        List<IActor> actorList = new List<IActor>();
+        List<IUpdateable> updateList = new List<IActor>();
+        List<IActor> inputList = new List<IActor>();
+        List<IActor> drawList = new List<IActor>();
         List<IComponent> componentList = new List<IComponent>();
         XB1Pad input = new XB1Pad();
         
         public ElementGame()
         {
-            
-
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -29,6 +29,9 @@ namespace Element
             this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             graphics.SynchronizeWithVerticalRetrace = false; // vsync
 
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -93,7 +96,10 @@ namespace Element
 
             // actors
             foreach (IActor actor in actorList)
-                actor.Update(gameTime, ref input);
+                actor.Update(gameTime);
+
+            foreach (IActor actor in actorList)
+                actor.UpdateInput(gameTime, ref input);
 
             // TODO: Add your update logic here
             base.Update(gameTime);

@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Element
 {
-    class Debug : IActor
+    class Debug : IComponent
     {
         private SpriteFont font;
         private List<String> Messages;

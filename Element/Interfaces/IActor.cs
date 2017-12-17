@@ -10,6 +10,7 @@ namespace Element
         void Initialize();
         void LoadContent(ContentManager content);
         void UnloadContent();
+        void Update(GameTime gameTime);
         void Update(GameTime gameTime, ref XB1Pad input);
         void Draw(SpriteBatch spriteBatch);
     }
