@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace Element
@@ -11,6 +12,11 @@ namespace Element
     {
         private SpriteFont font;
         private List<String> Messages;
+
+        public void Initialize()
+        {
+
+        }
 
         public void LoadContent(ContentManager content)
         {
@@ -23,6 +29,7 @@ namespace Element
 
         public void Update(GameTime gameTime, ref XB1Pad input)
         {
+           int a = input.GetButtonState(Buttons.A);
         }
 
         public void Draw(SpriteBatch spriteBatch)

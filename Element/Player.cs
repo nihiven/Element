@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Element
 {
@@ -22,6 +21,12 @@ namespace Element
         {
             get { return Sprite.Width; }
         }
+
+        public void Initialize()
+        {
+
+        }
+
 
         public void LoadContent(ContentManager content)
         {

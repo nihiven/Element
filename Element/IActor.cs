@@ -7,6 +7,7 @@ namespace Element
 {
     interface IActor
     {
+        void Initialize();
         void LoadContent(ContentManager content);
         void UnloadContent();
         void Update(GameTime gameTime, ref XB1Pad input);

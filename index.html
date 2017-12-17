@@ -1,26 +1,7 @@
 <html>
  <head>
   <title>Element Dev Blog</title>
-  <style>
-   *{
-    font-family:Monaco,Menlo,Consolas,"Droid Sans Mono",monospace;
-   }
-   div.center {
-    width:80%; 
-    margin-left:10%; 
-    margin-right:10%;
-   }
-   div.edicts {
-    width:60%; 
-    margin-left:20%; 
-    margin-right:20%;
-   }
-   div.entry {
-    background-color: hsl(214, 78%, 94%);
-	padding:7px;
-   }
-  </style>
-
+  <link rel="stylesheet" type="text/css" href="nStyle.css">
  </head>
  <body>
  <div class="edicts">
@@ -44,7 +25,7 @@
   has gone beyond the design stage, I can start implementing new features. Don't wax your car if it hasn't been put together yet!<br><br>
   
   <b>Technical Design</b><br>
-  I was pumped up to start coding today, fueled by my little breakthrough last night, and went to work on an input component. This will allow the game to read button presses, trigger pulls, stick moves, etc, from the gamepad, as well as determine if states have changed
+  I was pumped up to start coding today, fueled by my little breakthrough last night, and started working on an input component. This will allow the game to read button presses, trigger pulls, stick moves, etc, from the gamepad, as well as determine if states have changed
   since the last Update() tick. Playing around with input brought up the need to draw some text on the screen, so I began on the Debug component as well. Today is the first of what I'm sure will be many days where I will be shutting down with a project that fails to build.<br><br>
   I've been spending a lot of time reading about game design, here are some of the things I read today...
   <ul>
@@ -54,7 +35,6 @@
 	<li>The <a href="https://www.redblobgames.com">Red Blob Games</a> blog has some great articles on various game programming topics.</li>
   </ul>
   </div>
-  <hr>
 
   <div class="entry">
   <b>2017.12.13 - Wednesday</b><br>
@@ -66,7 +46,6 @@
   tracked and made me think about iterfaces as they relate to games, and how I should be using them. It was a bit of an 'Aha!' moment for me. There are a lot of things I'm not sure how I'm going to do, this article helped me get a little
   closer to checking one of those things off the list. I wanted to see a little more info about the guy that made the post, so I checked his profile to find out that he is the Lead Engine Developer for <a href="http://rivercityransom.com/sheet.php?p=river_city_ransom_underground">River City Ransom: Underground</a>.
   </div>
-  <hr>
 
   <div class="entry">
   <b>2017.12.12 - Tuesday</b><br>
@@ -77,7 +56,6 @@
   I extracted a couple of classes from the Player() object to make them usable for other characters. It doesn't seem like much 
   in writing, but it ended up being a fair amount of code.
   </div>
-  <hr>
 
   <div class="entry">
   <b>2017.12.11 - Monday</b><br>
@@ -92,7 +70,6 @@
   I did more work on the prototype, specifically on animated sprites, adding a feature that allows sprite animations to play out of order frames from the
   sprite sheet.
   </div>
-  <hr>
 
   <div class="entry">
   <b>2017.12.10 - Sunday</b><br>
@@ -111,7 +88,7 @@
   I also added a couple of design edicts to the list (see top of page).
   </div>
   <hr>
-  <center><a href="http://nvn.io">by nihiven</a></center>
+  <div class="footer"><center>by nihiven</center></div>
  </div>
  </body>
 

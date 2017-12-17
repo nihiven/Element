@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
+
 
 namespace Element
 {  
@@ -18,10 +20,15 @@ namespace Element
         
         public ElementGame()
         {
-            graphics = new GraphicsDeviceManager(this);
-            graphics.SynchronizeWithVerticalRetrace = true; // vsync
-            Content.RootDirectory = "Content";
             
+
+            graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+
+            // run fast
+            this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
+            graphics.SynchronizeWithVerticalRetrace = false; // vsync
+
         }
 
         /// <summary>
@@ -32,7 +39,15 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
+            // components
+            input.Initialize();
+
+            // actors
             actorList.Add(new Player());
+            actorList.Add(new SoundEffects());
+
+            foreach (IActor actor in actorList)
+                actor.Initialize();
 
             // TODO: Add your initialization logic here
             base.Initialize();
@@ -73,6 +88,10 @@ namespace Element
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            // components
+            input.Update(gameTime);
+
+            // actors
             foreach (IActor actor in actorList)
                 actor.Update(gameTime, ref input);
 
