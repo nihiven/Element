@@ -1,14 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Element
 {
     interface IDrawHandler
     {
-        int DrawOrder { get; }
-        bool Visible { get; }
-        AnimatedSprite sprite { get; }
-
-        void Draw(GameTime gameTime);
+         void Draw(SpriteBatch spriteBatch);
     }
 }

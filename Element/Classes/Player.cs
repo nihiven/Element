@@ -7,42 +7,19 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IActor
+    public class Player : IComponent, IUpdateHandler, IContent, IDrawHandler
     {
-        public AnimatedSprite Sprite;
+        public AnimatedSprite Sprite { get; set;  }
         public Vector2 Position { get; set; }
         public bool Active { get; set; }
         public int Health;
 
         /// <summary>
-        /// Returns player width, assumes width of the player is the height of the player texture.
+        /// Returns player width, assumes width of the player is the width of the player texture.
         /// </summary>
         public int Width
         {
             get { return Sprite.Width; }
-        }
-
-        public void Initialize()
-        {
-
-        }
-
-
-        public void LoadContent(ContentManager content)
-        {
-            Position = new Vector2();
-            Active = true;
-            Health = 100;
-
-            SpriteSheet spriteSheet = new SpriteSheet(content, "female_walkcycle", 4, 9);
-            Animation walkAnimation = new Animation("female_walk", spriteSheet, 19, 9, FPS.TEN);
-            Sprite = new AnimatedSprite(walkAnimation);
-        }
-
-
-        public void UnloadContent()
-        {
-            // what to do here?
         }
 
         /// <summary>
@@ -52,11 +29,32 @@ namespace Element
         {
             get { return Sprite.Height; }
         }
+        
+        public void Initialize()
+        {
+            Position = new Vector2();
+            Active = true;
+            Health = 100;
+        }
+
+
+        public void LoadContent(ContentManager content)
+        {
+            SpriteSheet spriteSheet = new SpriteSheet(content, "female_walkcycle", 4, 9);
+            Animation walkAnimation = new Animation("female_walk", spriteSheet, 19, 9, FPS.TEN);
+            Sprite = new AnimatedSprite(walkAnimation);
+        }
+
+
+        public void UnloadContent(ContentManager content)
+        {
+            // what to do here?
+        }
 
         /// <summary>
         /// Update the player character and all children actors
         /// </summary>
-        public void Update(GameTime gameTime, ref XB1Pad input)
+        public void Update(GameTime gameTime)
         {
             Sprite.Update(gameTime);
         }
@@ -68,7 +66,6 @@ namespace Element
         {
             Sprite.Draw(spriteBatch, Position);
         }
-
     }
 
 }

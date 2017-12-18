@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Element
 {
-    class SoundEffects : IActor
+    class SoundEffects : IComponent, IContent, IInputHandler
     {
         public Dictionary<string, SoundEffect> soundEffects;
 
@@ -17,18 +17,12 @@ namespace Element
             soundEffects = new Dictionary<string, SoundEffect>();
         }
 
-        public void Update(GameTime gameTime, ref XB1Pad input)
+        public void Input(XB1Pad input)
         {
-
             if (input.GetButtonState(Buttons.A) == ButtonState.PRESSED)
             {
-                soundEffects["button"].Play(0.2f, 0.0f, -0.25f);
+                soundEffects["button"].Play(0.2f, 0.0f, -0.20f);
             }
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-
         }
 
         public void LoadContent(ContentManager content)
@@ -36,7 +30,7 @@ namespace Element
             soundEffects.Add("button", content.Load<SoundEffect>("soundEffects/button"));
         }
 
-        public void UnloadContent()
+        public void UnloadContent(ContentManager content)
         {
 
         }

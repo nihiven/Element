@@ -21,16 +21,16 @@ namespace Element
     {
         private GamePadState currentState;
         private GamePadState previousState;
-        private List<Buttons> _buttons;
-        private Dictionary<Buttons, int> _states;
+        private List<Buttons> buttons;
+        private Dictionary<Buttons, int> states;
 
         public void Initialize()
         {
-            _buttons = new List<Buttons>();
-            _states = new Dictionary<Buttons, int>();
+            buttons = new List<Buttons>();
+            states = new Dictionary<Buttons, int>();
 
-            _buttons.Add(Buttons.A);
-            _states[Buttons.A] = ButtonState.NONE;
+            buttons.Add(Buttons.A);
+            states[Buttons.A] = ButtonState.NONE;
 
             previousState = GamePad.GetState(PlayerIndex.One);
         }
@@ -45,7 +45,7 @@ namespace Element
             {
                 currentState = GamePad.GetState(PlayerIndex.One);
 
-                foreach (Buttons button in _buttons)
+                foreach (Buttons button in buttons)
                 {
                     updateState(button, currentState.IsButtonDown(button));
                 }
@@ -58,13 +58,13 @@ namespace Element
         {
             if (isButtonDown)
             {
-                switch (_states[button])
+                switch (states[button])
                 {
                     case ButtonState.NONE:
-                        _states[button] = ButtonState.PRESSED;
+                        states[button] = ButtonState.PRESSED;
                         break;
                     case ButtonState.PRESSED:
-                        _states[button] = ButtonState.HELD;
+                        states[button] = ButtonState.HELD;
                         break;
                     case ButtonState.HELD:
                         break;
@@ -74,18 +74,18 @@ namespace Element
             }
             else
             {
-                switch (_states[button])
+                switch (states[button])
                 {
                     case ButtonState.NONE:
                         break;
                     case ButtonState.PRESSED:
-                        _states[button] = ButtonState.RELEASED;
+                        states[button] = ButtonState.RELEASED;
                         break;
                     case ButtonState.HELD:
-                        _states[button] = ButtonState.RELEASED;
+                        states[button] = ButtonState.RELEASED;
                         break;
                     case ButtonState.RELEASED:
-                        _states[button] = ButtonState.NONE;
+                        states[button] = ButtonState.NONE;
                         break;
                     default:
                         throw new System.InvalidOperationException("button has not been initialized");
@@ -96,9 +96,9 @@ namespace Element
 
         public int GetButtonState(Buttons button)
         {
-            if (_states.ContainsKey(button))
+            if (states.ContainsKey(button))
             {
-                return _states[button];
+                return states[button];
             }
             else
             {

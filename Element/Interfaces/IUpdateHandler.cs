@@ -5,6 +5,6 @@ namespace Element
 {
     interface IUpdateHandler
     {
-        void Update(GameTime gameTime)
+        void Update(GameTime gameTime);
     }
 }

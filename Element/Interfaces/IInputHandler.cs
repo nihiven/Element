@@ -8,6 +8,6 @@ namespace Element
 {
     interface IInputHandler
     {
-        void Input(ref XB1Pad input);
+        void Input(XB1Pad input);
     }
 }

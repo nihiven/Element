@@ -14,10 +14,7 @@ namespace Element
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        List<IUpdateable> updateList = new List<IActor>();
-        List<IActor> inputList = new List<IActor>();
-        List<IActor> drawList = new List<IActor>();
-        List<IComponent> componentList = new List<IComponent>();
+        List<IComponent> objects = new List<IComponent>();
         XB1Pad input = new XB1Pad();
         
         public ElementGame()
@@ -28,10 +25,6 @@ namespace Element
             // run fast
             this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             graphics.SynchronizeWithVerticalRetrace = false; // vsync
-
-            graphics.PreferredBackBufferHeight = 600;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -46,12 +39,17 @@ namespace Element
             input.Initialize();
 
             // actors
-            actorList.Add(new Player());
-            actorList.Add(new SoundEffects());
+            objects.Add(new Player());
+            objects.Add(new SoundEffects());
+            objects.Add(new ControllerDebug());
 
-            foreach (IActor actor in actorList)
-                actor.Initialize();
-
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is IComponent)
+                {
+                    ((IComponent)objects[i]).Initialize();
+                }
+            }
             // TODO: Add your initialization logic here
             base.Initialize();
         }
@@ -62,8 +60,13 @@ namespace Element
         /// </summary>
         protected override void LoadContent()
         {
-            foreach (IActor actor in actorList)
-                actor.LoadContent(this.Content);
+           for (int i = 0; i<objects.Count; i++)
+            {
+                if (objects[i] is IContent)
+                {
+                    ((IContent)objects[i]).LoadContent(this.Content);
+                }
+            }
 
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -77,9 +80,14 @@ namespace Element
         /// </summary>
         protected override void UnloadContent()
         {
-            foreach (IActor actor in actorList)
-                actor.UnloadContent();
-            
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is IContent)
+                {
+                    ((IContent)objects[i]).UnloadContent(this.Content);
+                }
+            }
+
             // TODO: Unload any non ContentManager content here
             Content.Unload();
         }
@@ -94,12 +102,21 @@ namespace Element
             // components
             input.Update(gameTime);
 
-            // actors
-            foreach (IActor actor in actorList)
-                actor.Update(gameTime);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is IInputHandler)
+                {
+                    ((IInputHandler)objects[i]).Input(input);
+                }
+            }
 
-            foreach (IActor actor in actorList)
-                actor.UpdateInput(gameTime, ref input);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is IUpdateHandler)
+                {
+                    ((IUpdateHandler)objects[i]).Update(gameTime);
+                }
+            }
 
             // TODO: Add your update logic here
             base.Update(gameTime);
@@ -114,8 +131,13 @@ namespace Element
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            foreach (IActor actor in actorList)
-                actor.Draw(spriteBatch);
+            for (int i = 0; i < objects.Count; i++)
+            {
+                if (objects[i] is IDrawHandler)
+                {
+                    ((IDrawHandler)objects[i]).Draw(spriteBatch);
+                }
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
