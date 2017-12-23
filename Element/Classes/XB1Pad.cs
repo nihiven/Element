@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace Element
@@ -17,7 +19,7 @@ namespace Element
         //public const string;
     }
 
-    public class XB1Pad : IComponent
+    public class XB1Pad : IComponent, IInput
     {
         private GamePadState currentState;
         private GamePadState previousState;
@@ -26,11 +28,30 @@ namespace Element
 
         public void Initialize()
         {
-            buttons = new List<Buttons>();
-            states = new Dictionary<Buttons, int>();
+            buttons = new List<Buttons>
+            {
+                Buttons.A,
+                Buttons.B,
+                Buttons.Y,
+                Buttons.X,
+                Buttons.RightShoulder,
+                Buttons.LeftShoulder,
+                Buttons.RightTrigger,
+                Buttons.LeftTrigger,
+                Buttons.RightStick,
+                Buttons.LeftStick,
+                Buttons.Back,
+                Buttons.Start,
+                Buttons.DPadUp,
+                Buttons.DPadDown,
+                Buttons.DPadLeft,
+                Buttons.DPadRight
+            };
 
-            buttons.Add(Buttons.A);
-            states[Buttons.A] = ButtonState.NONE;
+
+            states = new Dictionary<Buttons, int>();
+            foreach (Buttons button in buttons)
+                states[button] = ButtonState.NONE;
 
             previousState = GamePad.GetState(PlayerIndex.One);
         }
@@ -67,6 +88,9 @@ namespace Element
                         states[button] = ButtonState.HELD;
                         break;
                     case ButtonState.HELD:
+                        break;
+                    case ButtonState.RELEASED:
+                        states[button] = ButtonState.PRESSED;
                         break;
                     default:
                         throw new System.InvalidOperationException("button has not been initialized");
@@ -105,5 +129,11 @@ namespace Element
                 throw new System.ArgumentException("Button is not tracked", "button");
             }
         }
+
+        public void Draw(SpriteBatch spriteBatch) { }
+
+        public void LoadContent(ContentManager content) { }
+
+        public void UnloadContent() { }
     }
 }

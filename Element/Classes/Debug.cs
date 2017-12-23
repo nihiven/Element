@@ -44,5 +44,10 @@ namespace Element
             }
             
         }
+
+        public void Update(GameTime gameTime)
+        {
+            
+        }
     }
 }

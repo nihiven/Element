@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Element
 {
-    class Sprite : IDrawHandler
+    class Sprite
     {
         public Vector2 Position { get; set; }
         public int Width { get; set; } // width of the tile map in pixels

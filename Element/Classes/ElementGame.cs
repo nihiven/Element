@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
-
 namespace Element
 {  
 
@@ -15,7 +14,6 @@ namespace Element
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         List<IComponent> objects = new List<IComponent>();
-        XB1Pad input = new XB1Pad();
         
         public ElementGame()
         {
@@ -35,22 +33,22 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
-            // components
-            input.Initialize();
+            // create the components
+            ObjectManager.Add("input", ComponentFactory.New("input"));
+            ObjectManager.Add("soundEffects", ComponentFactory.New("soundEffects"));
+            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug"));
 
-            // actors
-            objects.Add(new Player());
-            objects.Add(new SoundEffects());
-            objects.Add(new ControllerDebug());
+            // add the components
+            objects.Add((IComponent)ObjectManager.Get("input"));
+            objects.Add((IComponent)ObjectManager.Get("controllerDebug"));
+            objects.Add((IComponent)ObjectManager.Get("soundEffects"));
 
-            for (int i = 0; i < objects.Count; i++)
-            {
-                if (objects[i] is IComponent)
-                {
-                    ((IComponent)objects[i]).Initialize();
-                }
-            }
-            // TODO: Add your initialization logic here
+
+            // intialize every component
+            foreach (IComponent component in objects)
+                component.Initialize();
+            
+            // call base class initialize
             base.Initialize();
         }
 
@@ -60,18 +58,12 @@ namespace Element
         /// </summary>
         protected override void LoadContent()
         {
-           for (int i = 0; i<objects.Count; i++)
-            {
-                if (objects[i] is IContent)
-                {
-                    ((IContent)objects[i]).LoadContent(this.Content);
-                }
-            }
-
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            // TODO: use this.Content to load your game content here
+
+            // llooooaadd some content
+            foreach (IComponent component in objects)
+                component.LoadContent(this.Content);
         }
 
         /// <summary>
@@ -80,13 +72,9 @@ namespace Element
         /// </summary>
         protected override void UnloadContent()
         {
-            for (int i = 0; i < objects.Count; i++)
-            {
-                if (objects[i] is IContent)
-                {
-                    ((IContent)objects[i]).UnloadContent(this.Content);
-                }
-            }
+            // llooooaadd some content
+            foreach (IComponent component in objects)
+                component.UnloadContent();
 
             // TODO: Unload any non ContentManager content here
             Content.Unload();
@@ -99,24 +87,9 @@ namespace Element
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // components
-            input.Update(gameTime);
-
-            for (int i = 0; i < objects.Count; i++)
-            {
-                if (objects[i] is IInputHandler)
-                {
-                    ((IInputHandler)objects[i]).Input(input);
-                }
-            }
-
-            for (int i = 0; i < objects.Count; i++)
-            {
-                if (objects[i] is IUpdateHandler)
-                {
-                    ((IUpdateHandler)objects[i]).Update(gameTime);
-                }
-            }
+            // it's gametime
+            foreach (IComponent component in objects)
+                component.Update(gameTime);
 
             // TODO: Add your update logic here
             base.Update(gameTime);
@@ -131,13 +104,9 @@ namespace Element
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
 
-            for (int i = 0; i < objects.Count; i++)
-            {
-                if (objects[i] is IDrawHandler)
-                {
-                    ((IDrawHandler)objects[i]).Draw(spriteBatch);
-                }
-            }
+            // llooooaadd some content
+            foreach (IComponent component in objects)
+                component.Draw(spriteBatch);
 
             spriteBatch.End();
             base.Draw(gameTime);

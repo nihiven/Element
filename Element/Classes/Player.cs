@@ -1,18 +1,26 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Element
 {
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IUpdateHandler, IContent, IDrawHandler
+    public class Player
     {
-        public AnimatedSprite Sprite { get; set;  }
+        public AnimatedSprite Sprite { get; set; }
         public Vector2 Position { get; set; }
         public bool Active { get; set; }
         public int Health;
+        private readonly IInput input;
+
+        public Player(IInput input)
+        {
+            this.input = input ?? throw new ArgumentNullException("input");
+        }
 
         /// <summary>
         /// Returns player width, assumes width of the player is the width of the player texture.
@@ -67,5 +75,4 @@ namespace Element
             Sprite.Draw(spriteBatch, Position);
         }
     }
-
 }
