@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Element.Classes;
+using Element.Interfaces;
 
 namespace Element
 {
@@ -12,7 +14,7 @@ namespace Element
                 case ("input"):
                     return new XB1Pad();
                 case ("controllerDebug"):
-                    return new ControllerDebug((IInput)ObjectManager.Get("input"));
+                    return new ControllerDebug((IInput)ObjectManager.Get("input"), (IGraphics)ObjectManager.Get("graphics"));
                 case ("soundEffects"):
                     return new SoundEffects((IInput)ObjectManager.Get("input"));
                 default:

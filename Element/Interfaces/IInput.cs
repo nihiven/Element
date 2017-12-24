@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace Element
+namespace Element.Interfaces
 {
     public interface IInput
     {

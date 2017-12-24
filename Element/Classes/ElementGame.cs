@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Element.Interfaces;
 
 namespace Element
 {  
@@ -17,12 +18,20 @@ namespace Element
         
         public ElementGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            // we use the object manager with out 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
+            // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
+            ObjectManager.Add("graphics", (IComponent)new GraphicsManager(this));
+            graphics = (GraphicsDeviceManager)ObjectManager.Get("graphics");
+
             Content.RootDirectory = "Content";
 
+            // TODO: move this
             // run fast
             this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             graphics.SynchronizeWithVerticalRetrace = false; // vsync
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -33,7 +42,7 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
-            // create the components
+            // create the game components
             ObjectManager.Add("input", ComponentFactory.New("input"));
             ObjectManager.Add("soundEffects", ComponentFactory.New("soundEffects"));
             ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug"));

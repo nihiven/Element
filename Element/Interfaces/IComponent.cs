@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Element
+namespace Element.Interfaces
 {
     public interface IComponent
     {

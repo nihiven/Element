@@ -4,8 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Element.Interfaces;
 
-namespace Element
+namespace Element.Classes
 {
     class ControllerDebug : IComponent
     {
@@ -15,18 +16,21 @@ namespace Element
         public List<Buttons> buttons;
         public Dictionary<Buttons, Vector2> positions;
         public Dictionary<Buttons, int> frames;
+        public bool Enabled { get; set; }
         private readonly IInput input;
+        private readonly IGraphics graphics;
 
-        public ControllerDebug(IInput input)
+        public ControllerDebug(IInput input, IGraphics graphics)
         {
             this.input = input ?? throw new ArgumentNullException("input");
+            this.graphics = graphics ?? throw new ArgumentNullException("graphics");
+            this.Enabled = true;
         }
 
         public void Initialize()
         {
-            Size = new Vector2(100.0f, 75.0f);
-
-            Position = new Vector2();
+            Size = new Vector2(242.0f, 103.0f);
+            Position = new Vector2(graphics.GetViewPortSize().X - Size.X - 5, 5);
 
             buttons = new List<Buttons>
             {
@@ -70,28 +74,28 @@ namespace Element
 
             positions = new Dictionary<Buttons, Vector2>
             {
-                { Buttons.Y, new Vector2(150, 55) }, // good
-                { Buttons.A, new Vector2(150, 109) }, // good
-                { Buttons.B, new Vector2(175, 82) }, // good
-                { Buttons.X, new Vector2(125, 82) }, // good
-                { Buttons.RightShoulder, new Vector2(264, 45) },
-                { Buttons.LeftShoulder, new Vector2(45, 45) }, // good
-                { Buttons.RightTrigger, new Vector2(226, 40) },
-                { Buttons.LeftTrigger, new Vector2(78, 40) }, // good
-                { Buttons.RightStick, new Vector2(264, 75) },
-                { Buttons.LeftStick, new Vector2(45, 75) }, // good
-                { Buttons.Back, new Vector2(112, 45) },
-                { Buttons.Start, new Vector2(188, 45) },
-                { Buttons.DPadUp, new Vector2(75, 90) },
-                { Buttons.DPadDown, new Vector2(75, 116) },
-                { Buttons.DPadLeft, new Vector2(58, 103) },
-                { Buttons.DPadRight, new Vector2(92, 103) }
+                { Buttons.Y, new Vector2(105, 15) }, // good
+                { Buttons.A, new Vector2(105, 69) }, // good
+                { Buttons.B, new Vector2(130, 42) }, // good
+                { Buttons.X, new Vector2(80, 42) }, // good
+                { Buttons.RightShoulder, new Vector2(209, 5) },
+                { Buttons.LeftShoulder, new Vector2(0, 5) }, // good
+                { Buttons.RightTrigger, new Vector2(176, 0) },
+                { Buttons.LeftTrigger, new Vector2(33, 0) }, // good
+                { Buttons.RightStick, new Vector2(209, 35) },
+                { Buttons.LeftStick, new Vector2(0, 35) }, // good
+                { Buttons.Back, new Vector2(67, 5) },
+                { Buttons.Start, new Vector2(143, 5) },
+                { Buttons.DPadUp, new Vector2(30, 50) },
+                { Buttons.DPadDown, new Vector2(30, 76) },
+                { Buttons.DPadLeft, new Vector2(13, 63) },
+                { Buttons.DPadRight, new Vector2(47, 63) }
             };
         }
 
         public void LoadContent(ContentManager content)
         {
-            sprite = new SpriteSheet(content, "controllerDebug/Xbox360PixelPad", 3, 9);
+            sprite = new SpriteSheet(content, "controllerDebug/Xbox360PixelPadtrans", 4, 9);
         }
         
         public void UnloadContent() { }
@@ -100,13 +104,16 @@ namespace Element
 
         public void Draw(SpriteBatch spriteBatch)
         {
-
-            foreach (Buttons button in buttons)
-            {
-                if (input.GetButtonState(button) == ButtonState.HELD || input.GetButtonState(button) == ButtonState.PRESSED)
-                    sprite.Draw(spriteBatch, frames[button], positions[button]);
+            if (this.Enabled)
+            { 
+                foreach (Buttons button in buttons)
+                {
+                    if (input.GetButtonState(button) == ButtonState.HELD || input.GetButtonState(button) == ButtonState.PRESSED)
+                        sprite.Draw(spriteBatch, frames[button], Position + positions[button]);
+                    else
+                        sprite.Draw(spriteBatch, frames[button]+18, Position + positions[button]);
+                }
             }
-            
         }
     }
 }

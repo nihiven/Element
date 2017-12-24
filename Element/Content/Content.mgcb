@@ -62,7 +62,7 @@
 /processorParam:TextureFormat=Color
 /build:player/05.png
 
-#begin controllerDebug/Xbox360PixelPad.png
+#begin controllerDebug/Xbox360PixelPadtrans.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -72,5 +72,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:controllerDebug/Xbox360PixelPad.png
+/build:controllerDebug/Xbox360PixelPadtrans.png
 
