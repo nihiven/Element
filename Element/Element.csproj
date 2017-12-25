@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Classes\AnimatedSprite.cs" />
     <Compile Include="Classes\Animation.cs" />
+    <Compile Include="Classes\Cardinal.cs" />
     <Compile Include="Classes\ControllerDebug.cs" />
     <Compile Include="Classes\Debug.cs" />
     <Compile Include="Classes\ElementGame.cs" />

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Element.Interfaces;
+using Element.Classes;
 
 namespace Element
 {
@@ -13,11 +14,6 @@ namespace Element
         public const int PRESSED = 1;
         public const int HELD = 2;
         public const int RELEASED = 4;
-    }
-
-    public static class ButtonStateText
-    {
-        //public const string;
     }
 
     public class XB1Pad : IComponent, IInput
@@ -48,8 +44,7 @@ namespace Element
                 Buttons.DPadLeft,
                 Buttons.DPadRight
             };
-
-
+            
             states = new Dictionary<Buttons, int>();
             foreach (Buttons button in buttons)
                 states[button] = ButtonState.NONE;
@@ -68,9 +63,7 @@ namespace Element
                 currentState = GamePad.GetState(PlayerIndex.One);
 
                 foreach (Buttons button in buttons)
-                {
                     updateState(button, currentState.IsButtonDown(button));
-                }
 
                 previousState = currentState;
             }
@@ -129,6 +122,46 @@ namespace Element
             {
                 throw new System.ArgumentException("Button is not tracked", "button");
             }
+        }
+
+        public Vector2 GetLeftThumbstickVector()
+        {
+            return currentState.ThumbSticks.Left;
+        }
+
+        public Vector2 GetRightThumbstickVector()
+        {
+            return currentState.ThumbSticks.Left;
+        }
+
+        public int GetLeftThumbstickCardinal()
+        {
+            return this.GetCardinalDirection(currentState.ThumbSticks.Left);
+        }
+
+        public int GetRightThumbstickCardinal()
+        {
+            return this.GetCardinalDirection(currentState.ThumbSticks.Right);
+        }
+
+        private int GetCardinalDirection(Vector2 vector)
+        {
+            int cardinal = 0;
+
+            if (vector.X < 0)
+                cardinal += Cardinal.West;
+
+            if (vector.X > 0)
+                cardinal += Cardinal.East;
+
+            if (vector.Y > 0)
+                cardinal += Cardinal.North;
+
+            if (vector.Y < 0)
+                cardinal += Cardinal.South;
+
+
+            return cardinal;
         }
 
         public void Draw(SpriteBatch spriteBatch) { }

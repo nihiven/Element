@@ -8,6 +8,21 @@ using Element.Interfaces;
 
 namespace Element.Classes
 {
+    // TODO: convert buttons to this class
+    class ButtonInfo
+    {
+        public Buttons button;
+        public Vector2 position;
+        public int frame;
+
+        ButtonInfo(Buttons button, Vector2 position, int frame)
+        {
+            this.button = button;
+            this.position = position;
+            this.frame = frame;
+        }
+    }
+
     class ControllerDebug : IComponent
     {
         public Vector2 Size;
@@ -19,6 +34,7 @@ namespace Element.Classes
         public bool Enabled { get; set; }
         private readonly IInput input;
         private readonly IGraphics graphics;
+        private SpriteFont font;
 
         public ControllerDebug(IInput input, IGraphics graphics)
         {
@@ -96,6 +112,7 @@ namespace Element.Classes
         public void LoadContent(ContentManager content)
         {
             sprite = new SpriteSheet(content, "controllerDebug/Xbox360PixelPadtrans", 4, 9);
+            font = content.Load<SpriteFont>("Arial");
         }
         
         public void UnloadContent() { }
@@ -113,6 +130,10 @@ namespace Element.Classes
                     else
                         sprite.Draw(spriteBatch, frames[button]+18, Position + positions[button]);
                 }
+
+                spriteBatch.DrawString(font, input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
+                spriteBatch.DrawString(font, input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
+                spriteBatch.DrawString(font, Cardinal.String(input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
             }
         }
     }

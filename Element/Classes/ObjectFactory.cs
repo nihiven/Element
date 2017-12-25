@@ -17,6 +17,8 @@ namespace Element
                     return new ControllerDebug((IInput)ObjectManager.Get("input"), (IGraphics)ObjectManager.Get("graphics"));
                 case ("soundEffects"):
                     return new SoundEffects((IInput)ObjectManager.Get("input"));
+                case ("player"):
+                    return new Player((IInput)ObjectManager.Get("input"));
                 default:
                     return null;
             }

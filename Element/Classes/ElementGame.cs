@@ -29,8 +29,8 @@ namespace Element
             // run fast
             this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             graphics.SynchronizeWithVerticalRetrace = false; // vsync
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
+            graphics.PreferredBackBufferWidth = 640;
+            graphics.PreferredBackBufferHeight = 480;
             graphics.ApplyChanges();
         }
 
@@ -43,14 +43,17 @@ namespace Element
         protected override void Initialize()
         {
             // create the game components
-            ObjectManager.Add("input", ComponentFactory.New("input"));
-            ObjectManager.Add("soundEffects", ComponentFactory.New("soundEffects"));
-            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug"));
+            ObjectManager.Add("input", ComponentFactory.New("input")); // core
+            ObjectManager.Add("soundEffects", ComponentFactory.New("soundEffects")); // core
+            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
+            ObjectManager.Add("player", ComponentFactory.New("player")); // game
+
 
             // add the components
-            objects.Add((IComponent)ObjectManager.Get("input"));
-            objects.Add((IComponent)ObjectManager.Get("controllerDebug"));
-            objects.Add((IComponent)ObjectManager.Get("soundEffects"));
+            objects.Add((IComponent)ObjectManager.Get("input")); // core
+            objects.Add((IComponent)ObjectManager.Get("controllerDebug")); // core
+            objects.Add((IComponent)ObjectManager.Get("soundEffects")); // core
+            objects.Add((IComponent)ObjectManager.Get("player")); // game
 
 
             // intialize every component
@@ -110,7 +113,7 @@ namespace Element
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
             // llooooaadd some content
