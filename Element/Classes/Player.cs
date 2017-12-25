@@ -12,14 +12,14 @@ namespace Element
     /// </summary>
     public class Player : IComponent, IMoveable
     {
+        private Vector2 _position;
+        public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
+        public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
         public bool Active { get; set; }
         public int Health { get; set; }
         public AnimatedSprite AnimatedSprite { get; set; }
-
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
-        public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
-        public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
 
         private readonly IInput input;
 
@@ -37,13 +37,17 @@ namespace Element
         /// </summary>
         public Vector2 Position
         {
-            get
-            {
-                return new Vector2();
-            }
+            get { return this._position; }
             set
             {
-                this.Position = new Vector2();
+                // clamp min an max values
+                float x = (value.X < MinPosition.X) ? MinPosition.X: value.X;
+                float y = (value.Y < MinPosition.Y) ? MinPosition.Y: value.Y;
+
+                x = (x > MaxPosition.X - this.Height) ? MaxPosition.X - this.Width : x;
+                y = (y > MaxPosition.Y - this.Width) ? MaxPosition.Y - this.Height : y;
+
+                this._position = new Vector2(x, y);
             } 
         }
 
@@ -52,7 +56,7 @@ namespace Element
         /// </summary>
         public int Width
         {
-            get { return this.AnimatedSprite.Width; }
+            get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;  }
         }
 
         /// <summary>
@@ -60,7 +64,7 @@ namespace Element
         /// </summary>
         public int Height
         {
-            get { return this.AnimatedSprite.Height; }
+            get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0; }
         }
 
         // TODO: uncouple the recalc from the intialization
@@ -111,6 +115,7 @@ namespace Element
         /// </summary>
         public void Update(GameTime gameTime)
         {
+            Vector2 oldPosition = this.Position;
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
             this.Position += new Vector2(input.GetLeftThumbstickVector().X, -input.GetLeftThumbstickVector().Y) + new Vector2(input.GetRightThumbstickVector().X, -input.GetRightThumbstickVector().Y);
@@ -133,7 +138,8 @@ namespace Element
             if (cardinal == Cardinal.West)
                 this.AnimatedSprite.SetAnimation("female_walk_left");
 
-            this.AnimatedSprite.Update(gameTime);
+            if (this.Position != oldPosition)
+                this.AnimatedSprite.Update(gameTime);
         }
 
         /// <summary>
