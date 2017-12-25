@@ -10,12 +10,12 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent
+    public class Player : IComponent, IMoveable
     {
-        public AnimatedSprite AnimatedSprite { get; set; }
         public bool Active { get; set; }
-        public int Health;
-        
+        public int Health { get; set; }
+        public AnimatedSprite AnimatedSprite { get; set; }
+
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box

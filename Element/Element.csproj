@@ -49,6 +49,7 @@
     <Compile Include="Classes\ElementGame.cs" />
     <Compile Include="Classes\FPS.cs" />
     <Compile Include="Classes\GraphicsManager.cs" />
+    <Compile Include="Classes\IMoveable.cs" />
     <Compile Include="Classes\ObjectFactory.cs" />
     <Compile Include="Classes\Sprite.cs" />
     <Compile Include="Interfaces\IComponent.cs" />
