@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,7 @@ namespace Element
         public bool Active { get; set; }
         public int Health { get; set; }
         public AnimatedSprite AnimatedSprite { get; set; }
+        public List<AnimatedSprite> attachments;
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
 

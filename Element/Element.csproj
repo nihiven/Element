@@ -46,6 +46,7 @@
     <Compile Include="Classes\Cardinal.cs" />
     <Compile Include="Classes\ControllerDebug.cs" />
     <Compile Include="Classes\Debug.cs" />
+    <Compile Include="Classes\DestinyGuns.cs" />
     <Compile Include="Classes\ElementGame.cs" />
     <Compile Include="Classes\FPS.cs" />
     <Compile Include="Classes\GraphicsManager.cs" />
