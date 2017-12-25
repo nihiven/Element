@@ -13,15 +13,38 @@ namespace Element
     public class Player : IComponent
     {
         public AnimatedSprite AnimatedSprite { get; set; }
-        public Vector2 Position { get; set;  }
         public bool Active { get; set; }
         public int Health;
-        public float Velocity { get;  }
+        
+        public float Acceleration { get; set; }
+        public float Velocity { get; set; }
+        public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
+        public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
+
         private readonly IInput input;
 
+        /// <summary>
+        /// Player constructor, accepts an object that implements IInput interface
+        /// </summary>
         public Player(IInput input)
         {
             this.input = input ?? throw new ArgumentNullException("input");
+        }
+
+        /// <summary>
+        /// The player's current position realative to the viewport.
+        /// This will clamp a users position to MinPosition and MaxPosition
+        /// </summary>
+        public Vector2 Position
+        {
+            get
+            {
+                return new Vector2();
+            }
+            set
+            {
+                this.Position = new Vector2();
+            } 
         }
 
         /// <summary>
@@ -39,17 +62,29 @@ namespace Element
         {
             get { return this.AnimatedSprite.Height; }
         }
-        
+
+        // TODO: uncouple the recalc from the intialization
+        // move the recalc to it's own function so it can be called when screen size changes
+        /// <summary>
+        /// 
+        /// </summary>
         public void Initialize()
         {
-            this.Position = new Vector2();
+            this.MinPosition = new Vector2(0, 0);
+            this.MaxPosition = new Vector2(640, 480); // TODO: tie to something. maybe the map?
+            this.Position = this.MinPosition;
             this.Active = true;
             this.Health = 100;
         }
 
 
+        // TODO: load this from a file??
+        /// <summary>
+        /// Load the art assests for the player
+        /// </summary>
         public void LoadContent(ContentManager content)
         {
+            // TODO: read this data from a file
             SpriteSheet spriteSheet = new SpriteSheet(content, "female_walkcycle", 4, 9);
             Animation walkUp = new Animation("female_walk_up", spriteSheet, 1, 9, FPS.TEN);
             Animation walkDown = new Animation("female_walk_down", spriteSheet, 19, 9, FPS.TEN);
@@ -63,7 +98,9 @@ namespace Element
             this.AnimatedSprite.AddAnimation(walkRight);
         }
 
-
+        /// <summary>
+        /// Unload unmanaged assests (none yet)
+        /// </summary>
         public void UnloadContent()
         {
             // unload unmanaged content
@@ -74,9 +111,14 @@ namespace Element
         /// </summary>
         public void Update(GameTime gameTime)
         {
+            // update to a new position
+            // movement is constrained to MinPosition and MaxPosition in the setter
             this.Position += new Vector2(input.GetLeftThumbstickVector().X, -input.GetLeftThumbstickVector().Y) + new Vector2(input.GetRightThumbstickVector().X, -input.GetRightThumbstickVector().Y);
-
-
+            
+            // cardinal direction will determine which animation is used
+            // animations should be the same number of frames
+            // the animation will change on .SetAnimation(), but the current frame will remain the same
+            // so the animations should be synced on the spritesheet in order to move smoothly from one to another
             int cardinal = input.GetRightThumbstickCardinal();
 
             if (cardinal == Cardinal.North)
@@ -99,6 +141,7 @@ namespace Element
         /// </summary>
         public void Draw(SpriteBatch spriteBatch)
         {
+            // the animated sprite draws its current frame by default
             this.AnimatedSprite.Draw(spriteBatch, Position);
         }
     }

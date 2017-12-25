@@ -4,6 +4,7 @@ namespace Element.Classes
 {
     public static class Cardinal
     {
+        // TODO: Should this be bitwise?
         public static int North = 1;
         public static int Northeast = 11;
         public static int East = 10;
