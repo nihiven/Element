@@ -11,7 +11,7 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IMoveable
+    public class Player : IComponent, IMoveable, IAttachPoints
     {
         private Vector2 _position;
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
@@ -23,7 +23,19 @@ namespace Element
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
 
+        // IInput
         private readonly IInput input;
+
+        // IAttachPoints
+        public Vector2 HighArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 MidArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 LowArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 HighWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 MidWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 LowWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 HighPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 MidPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 LowPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
@@ -68,6 +80,7 @@ namespace Element
         {
             get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0; }
         }
+
 
         // TODO: uncouple the recalc from the intialization
         // move the recalc to it's own function so it can be called when screen size changes
