@@ -47,10 +47,12 @@
     <Compile Include="Classes\Engine\Cardinal.cs" />
     <Compile Include="Classes\Engine\ControllerDebug.cs" />
     <Compile Include="Classes\Engine\Debug.cs" />
+    <Compile Include="Interfaces\IContentManager.cs" />
     <Compile Include="Classes\Engine\ItemDebug.cs" />
     <Compile Include="Classes\Engine\ItemManager.cs" />
+    <Compile Include="Classes\Engine\ContentManagement.cs" />
     <Compile Include="Interfaces\IGun.cs" />
-    <Compile Include="Classes\Items\JadeRabbit.cs" />
+    <Compile Include="Classes\Actors\Weapon.cs" />
     <Compile Include="Classes\Engine\ElementGame.cs" />
     <Compile Include="Classes\Engine\FPS.cs" />
     <Compile Include="Classes\Engine\GraphicsManager.cs" />
@@ -67,7 +69,6 @@
     <Compile Include="Interfaces\IGraphics.cs" />
     <Compile Include="Interfaces\IInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Classes\Engine\SoundEffect.cs" />
     <Compile Include="Classes\Engine\SpriteSheet.cs" />
     <Compile Include="Classes\Engine\XB1Pad.cs" />
   </ItemGroup>
@@ -91,6 +92,9 @@
     <MonoGameContentReference Include="Content\Content.mgcb" />
     <None Include="app.manifest" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes\Items\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

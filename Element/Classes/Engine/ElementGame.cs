@@ -11,28 +11,17 @@ namespace Element
     /// </summary>
     public class ElementGame : Game
     {
+        IContentManager _contentManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         List<IComponent> components = new List<IComponent>();
 
-        // these are temporary
-        // we need to make some kind of resource manager
-        // maybe subclass the content manager and go from there
-        private Dictionary<string, SpriteSheet> spriteSheets = new Dictionary<string, SpriteSheet>();
-        private Dictionary<string, AnimatedSprite> animatedSprites = new Dictionary<string, AnimatedSprite>();
-        private Dictionary<string, Animation> animations = new Dictionary<string, Animation>();
-        
         public ElementGame()
         {
-            // this is crappy,  i think
-            // add the ContentManager to the global object list so we can get to it from anywhere?
-            ObjectManager.Add("contentManager", Content);
-            Content.RootDirectory = "Content"; // set out root content directory
-
             // we use the object manager with our 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
             // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
             ObjectManager.Add("graphics", new GraphicsManager(this));
-            graphics = (GraphicsDeviceManager)ObjectManager.Get("graphics");
+            graphics = ObjectManager.Get<GraphicsDeviceManager>("graphics");
 
             // TODO: move this
             // run fast
@@ -51,28 +40,6 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
-            // create the game components
-            ObjectManager.Add("itemManager", ComponentFactory.New("itemManager")); // core
-            ObjectManager.Add("input", ComponentFactory.New("input")); // core
-            ObjectManager.Add("soundEffects", ComponentFactory.New("soundEffects")); // core
-            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
-            ObjectManager.Add("itemDebug", ComponentFactory.New("itemDebug")); // core
-            ObjectManager.Add("player", ComponentFactory.New("player")); // game
-
-
-            // HERE WE GO
-            // AN ITEM MANAGER
-
-
-            // add the components
-            components.Add((IComponent)ObjectManager.Get("itemManager")); // core
-            components.Add((IComponent)ObjectManager.Get("input")); // core
-            components.Add((IComponent)ObjectManager.Get("controllerDebug")); // core
-            components.Add((IComponent)ObjectManager.Get("itemDebug")); // core
-            components.Add((IComponent)ObjectManager.Get("soundEffects")); // core
-            components.Add((IComponent)ObjectManager.Get("player")); // game
-
-
             // intialize every component
             foreach (IComponent component in components)
                 component.Initialize();
@@ -90,31 +57,58 @@ namespace Element
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            /// the master blaster
+            this._contentManager = new ContentManagement(Content);
+            Content.RootDirectory = "Content";
+            ObjectManager.Add("contentManager", this._contentManager);
+
+
             // load all of the textures here for now
             // eventually we will move them into a resource file
             // and load them from there
+            // CONTROLLER DEBUG
+            _contentManager.AddSpriteSheet(identifier: "controllerDebug", contentLocation: "controllerDebug/Xbox360PixelPadtrans", rows: 4, columns: 9);
+            _contentManager.AddFont("Arial", Content.Load<SpriteFont>("Arial"));
 
             // PLAYER
             // TODO: read this data from a file
-            spriteSheets.Add("female_walkcycle", new SpriteSheet(Content, "female_walkcycle", 4, 9));
-            Animation walkUp = new Animation("female_walk_up", spriteSheets["female_walkcycle"], 1, 9, FPS.TEN);
-            Animation walkDown = new Animation("female_walk_down", spriteSheets["female_walkcycle"], 19, 9, FPS.TEN);
-            Animation walkLeft = new Animation("female_walk_left", spriteSheets["female_walkcycle"], 10, 9, FPS.TEN);
-            Animation walkRight = new Animation("female_walk_right", spriteSheets["female_walkcycle"], 28, 9, FPS.TEN);
-            animatedSprites.Add("female", new AnimatedSprite());
-            animatedSprites["female"].AddAnimation(walkUp);
-            animatedSprites["female"].AddAnimation(walkDown);
-            animatedSprites["female"].AddAnimation(walkLeft);
-            animatedSprites["female"].AddAnimation(walkRight);
+            _contentManager.AddSpriteSheet(identifier: "female_walkcycle", contentLocation: "female_walkcycle", rows: 4, columns: 9);
+            _contentManager.AddAnimation(identifier: "female_walk_up", spriteSheetIdentifier: "female_walkcycle", startFrame: 1, frameCount: 9, framesPerSecond: FPS.TEN);
+            _contentManager.AddAnimation(identifier: "female_walk_down", spriteSheetIdentifier: "female_walkcycle", startFrame: 19, frameCount: 9, framesPerSecond: FPS.TEN);
+            _contentManager.AddAnimation(identifier: "female_walk_left", spriteSheetIdentifier: "female_walkcycle", startFrame: 10, frameCount: 9, framesPerSecond: FPS.TEN);
+            _contentManager.AddAnimation(identifier: "female_walk_right", spriteSheetIdentifier: "female_walkcycle", startFrame: 28, frameCount: 9, framesPerSecond: FPS.TEN);
+            _contentManager.AddAnimatedSprite("female", new AnimatedSprite());
+            _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_up"));
+            _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_down"));
+            _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_left"));
+            _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_right"));
 
             // JADE RABBIT
-            spriteSheets.Add("JadeRabbit", new SpriteSheet(Content, "weapons/jadeRabbitTiny", 1, 1));
-            animations.Add("JadeRabbit:Fire", new Animation("jadeRabbitFire", spriteSheets["JadeRabbit"], 1, 1, 1));
-            animatedSprites.Add("JadeRabbit", new AnimatedSprite());
-            animatedSprites["JadeRabbit"].AddAnimation(animations["JadeRabbit:Fire"]);
-            
-            ObjectManager.Add("animatedSprites", animatedSprites);
+            _contentManager.AddSpriteSheet(identifier: "JadeRabbit", contentLocation: "weapons/jadeRabbitTiny", rows: 1, columns: 1);
+            _contentManager.AddAnimation(identifier: "JadeRabbit:Fire", spriteSheetIdentifier: "JadeRabbit", startFrame: 1, frameCount: 1, framesPerSecond: 1);
+            _contentManager.AddAnimatedSprite("JadeRabbit", new AnimatedSprite());
+            _contentManager.GetAnimatedSprite("JadeRabbit").AddAnimation(_contentManager.GetAnimation("JadeRabbit:Fire"));
 
+            // BULLET
+            _contentManager.AddSpriteSheet("bullet", "weapons/bullet", 1, 1);
+            _contentManager.AddAnimation("bullet", "bullet", 1, 1, 1);
+            _contentManager.AddAnimatedSprite("bullet", new AnimatedSprite());
+            _contentManager.GetAnimatedSprite("bullet").AddAnimation(_contentManager.GetAnimation("bullet"));
+
+
+            // create the game components
+            ObjectManager.Add("itemManager", ComponentFactory.New("itemManager")); // core
+            ObjectManager.Add("input", ComponentFactory.New("input")); // core
+            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
+            ObjectManager.Add("itemDebug", ComponentFactory.New("itemDebug")); // core
+            ObjectManager.Add("player", ComponentFactory.New("player")); // game
+
+            // add the components
+            components.Add(ObjectManager.Get<IComponent>("itemManager")); // core
+            components.Add(ObjectManager.Get<IComponent>("input")); // core
+            components.Add(ObjectManager.Get<IComponent>("controllerDebug")); // core
+            components.Add(ObjectManager.Get<IComponent>("itemDebug")); // core
+            components.Add(ObjectManager.Get<IComponent>("player")); // game
 
             // llooooaadd some content
             foreach (IComponent component in components)

@@ -28,25 +28,28 @@ namespace Element.Classes
         public Vector2 Size;
         public Vector2 Position { get; set; }
         private SpriteSheet sprite;
+        private SpriteFont font;
         public List<Buttons> buttons;
         public Dictionary<Buttons, Vector2> positions;
         public Dictionary<Buttons, int> frames;
         public bool Enabled { get; set; }
-        private readonly IInput input;
-        private readonly IGraphics graphics;
-        private SpriteFont font;
 
-        public ControllerDebug(IInput input, IGraphics graphics)
+        private readonly IInput _input;
+        private readonly IGraphics _graphics;
+        private readonly IContentManager _contentManager;
+
+        public ControllerDebug(IInput input, IContentManager contentManager, IGraphics graphics)
         {
-            this.input = input ?? throw new ArgumentNullException("input");
-            this.graphics = graphics ?? throw new ArgumentNullException("graphics");
+            this._input = input ?? throw new ArgumentNullException("input");
+            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+            this._graphics = graphics ?? throw new ArgumentNullException("graphics");
+
             this.Enabled = true;
-        }
+            this.sprite = _contentManager.GetSpriteSheet("controllerDebug");
+            this.font = _contentManager.GetFont("Arial");
 
-        public void Initialize()
-        {
             Size = new Vector2(242.0f, 103.0f);
-            Position = new Vector2(graphics.GetViewPortSize().X - Size.X - 5, 5);
+            Position = new Vector2(_graphics.GetViewPortSize().X - Size.X - 5, 5);
 
             buttons = new List<Buttons>
             {
@@ -109,10 +112,14 @@ namespace Element.Classes
             };
         }
 
+        public void Initialize()
+        {
+
+        }
+
         public void LoadContent(ContentManager content)
         {
-            sprite = new SpriteSheet(content, "controllerDebug/Xbox360PixelPadtrans", 4, 9);
-            font = content.Load<SpriteFont>("Arial");
+
         }
         
         public void UnloadContent() { }
@@ -125,15 +132,15 @@ namespace Element.Classes
             { 
                 foreach (Buttons button in buttons)
                 {
-                    if (input.GetButtonState(button) == ButtonState.Held || input.GetButtonState(button) == ButtonState.Pressed)
+                    if (_input.GetButtonState(button) == ButtonState.Held || _input.GetButtonState(button) == ButtonState.Pressed)
                         sprite.Draw(spriteBatch, frames[button], Position + positions[button]);
                     else
                         sprite.Draw(spriteBatch, frames[button]+18, Position + positions[button]);
                 }
 
-                spriteBatch.DrawString(font, input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
-                spriteBatch.DrawString(font, input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
-                spriteBatch.DrawString(font, Cardinal.String(input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
+                spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
+                spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
+                spriteBatch.DrawString(font, Cardinal.String(_input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
             }
         }
     }

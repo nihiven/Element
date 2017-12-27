@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Element.Interfaces;
-using Element.Classes;
 
 namespace Element
 {
@@ -23,7 +22,7 @@ namespace Element
         private List<Buttons> buttons;
         private Dictionary<Buttons, int> states;
 
-        public void Initialize()
+        public XB1Pad()
         {
             buttons = new List<Buttons>
             {
@@ -44,12 +43,17 @@ namespace Element
                 Buttons.DPadLeft,
                 Buttons.DPadRight
             };
-            
+
             states = new Dictionary<Buttons, int>();
             foreach (Buttons button in buttons)
                 states[button] = ButtonState.None;
 
             previousState = GamePad.GetState(PlayerIndex.One);
+        }
+
+        public void Initialize()
+        {
+
         }
 
         public void Update(GameTime gameTime)

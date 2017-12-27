@@ -17,11 +17,12 @@ namespace Element.Classes
         {
             this.Position = position;
             this.Angle = angle;
+            this.Velocity = 10;
         }
 
         public void Initialize()
         {
-            this.Velocity = 10;
+
         }
 
         public void Update(GameTime gameTime)
@@ -38,9 +39,7 @@ namespace Element.Classes
 
         public void LoadContent(ContentManager content)
         {
-            Animation fire = new Animation("bullet", new SpriteSheet(content, "weapons/bullet", 1, 1), 1, 1, 1);
-            this.AnimatedSprite = new AnimatedSprite();
-            this.AnimatedSprite.AddAnimation(fire);
+
         }
 
         public void UnloadContent()

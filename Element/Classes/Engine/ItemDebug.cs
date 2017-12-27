@@ -42,7 +42,7 @@ namespace Element.Classes
         {
             if (input.GetButtonState(Buttons.B) == ButtonState.Pressed)
             {
-                Player player = (Player)ObjectManager.Get("player");
+                Player player = ObjectManager.Get<Player>("player");
                 itemManager.NewWeapon(player.Position);
             }
         }

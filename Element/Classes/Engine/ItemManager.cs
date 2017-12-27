@@ -17,7 +17,6 @@ namespace Element.Classes
 
         public ItemManager()
         {
-
         }
 
         public void NewWeapon(Vector2 position)

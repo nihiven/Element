@@ -13,7 +13,6 @@ namespace Element
     /// </summary>
     public class Player : IComponent, IMoveable, IAttachable
     {
-        private Vector2 _position;
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
         public bool Active { get; set; }
@@ -24,14 +23,15 @@ namespace Element
         public float Velocity { get; set; }
         public float PickupRadius { get; set; }
 
-        //
-        private readonly IInput input;
+        private Vector2 _position;
+        private readonly IInput _input;
+        private readonly IContentManager _contentManager;
 
         // IAttachPoints
-        public Vector2 HighArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 MidArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 HighArmor { get => this.Position; set => this.HighArmor = value; }
+        public Vector2 MidArmor { get => this.Position; set => this.HighArmor = value; }
         public Vector2 LowArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 HighWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Vector2 HighWeapon { get => this.Position; set => this.HighArmor = value; }
         public Vector2 MidWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Vector2 LowWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         public Vector2 HighPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -41,9 +41,19 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input)
+        public Player(IInput input, IContentManager contentManager)
         {
-            this.input = input ?? throw new ArgumentNullException("input");
+            this._input = input ?? throw new ArgumentNullException("input");
+            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+
+            this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
+
+            this.MinPosition = new Vector2(0, 0);
+            this.MaxPosition = new Vector2(640, 480); // TODO: tie to something. maybe the map?
+            this.Position = this.MinPosition;
+            this.Active = true;
+            this.Health = 100;
+            this.PickupRadius = 30;
         }
 
         /// <summary>
@@ -90,12 +100,7 @@ namespace Element
         /// </summary>
         public void Initialize()
         {
-            this.MinPosition = new Vector2(0, 0);
-            this.MaxPosition = new Vector2(640, 480); // TODO: tie to something. maybe the map?
-            this.Position = this.MinPosition;
-            this.Active = true;
-            this.Health = 100;
-            this.PickupRadius = 30;
+
         }
 
 
@@ -105,8 +110,7 @@ namespace Element
         /// </summary>
         public void LoadContent(ContentManager content)
         {
-            Dictionary<string, AnimatedSprite> anim = (Dictionary<string, AnimatedSprite>)ObjectManager.Get("animatedSprites");
-            this.AnimatedSprite = anim["female"];
+           
         }
 
         /// <summary>
@@ -125,13 +129,13 @@ namespace Element
             Vector2 oldPosition = this.Position;
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
-            this.Position += new Vector2(input.GetLeftThumbstickVector().X, -input.GetLeftThumbstickVector().Y) + new Vector2(input.GetRightThumbstickVector().X, -input.GetRightThumbstickVector().Y);
+            this.Position += new Vector2(_input.GetLeftThumbstickVector().X, -_input.GetLeftThumbstickVector().Y) + new Vector2(_input.GetRightThumbstickVector().X, -_input.GetRightThumbstickVector().Y);
             
             // cardinal direction will determine which animation is used
             // animations should be the same number of frames
             // the animation will change on .SetAnimation(), but the current frame will remain the same
             // so the animations should be synced on the spritesheet in order to move smoothly from one to another
-            int cardinal = input.GetRightThumbstickCardinal();
+            int cardinal = _input.GetRightThumbstickCardinal();
 
             if (cardinal == Cardinal.North)
                 this.AnimatedSprite.SetAnimation("female_walk_up");

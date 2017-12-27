@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Element.Classes;
 using Element.Interfaces;
-using Element.DestinyGuns;
 using System;
 using Microsoft.Xna.Framework;
 
@@ -11,7 +10,14 @@ namespace Element
     {
         public static IGun RandomWeapon(Vector2 spawnLocation)
         {
-            return new Weapon((IInput)ObjectManager.Get("input"), Guid.NewGuid(), "JadeRabbit", "Jade Rabbit", spawnLocation);
+            return new Weapon(
+                ObjectManager.Get<IInput>("input"), 
+                ObjectManager.Get<IContentManager>("contentManager"), 
+                Guid.NewGuid(), 
+                "JadeRabbit", 
+                "Jade Rabbit", 
+                spawnLocation
+           );
         }
     }
 
@@ -25,15 +31,23 @@ namespace Element
                 case ("input"):
                     return new XB1Pad();
                 case ("controllerDebug"):
-                    return new ControllerDebug(input: (IInput)ObjectManager.Get("input"), graphics: (IGraphics)ObjectManager.Get("graphics"));
+                    return new ControllerDebug(
+                        input: ObjectManager.Get<IInput>("input"), 
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager"), 
+                        graphics: ObjectManager.Get<IGraphics>("graphics")
+                    );
                 case ("itemDebug"):
-                    return new ItemDebug((IInput)ObjectManager.Get("input"), (IItemManager)ObjectManager.Get("itemManager"));
+                    return new ItemDebug(
+                        input: ObjectManager.Get<IInput>("input"), 
+                        itemManager: ObjectManager.Get<IItemManager>("itemManager")
+                    );
                 case ("itemManager"):
                     return new ItemManager();
-                case ("soundEffects"):
-                    return new SoundEffects((IInput)ObjectManager.Get("input"));
                 case ("player"):
-                    return new Player((IInput)ObjectManager.Get("input"));
+                    return new Player(
+                        input: ObjectManager.Get<IInput>("input"), 
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager")
+                    );
                 default:
                     return null;
             }
@@ -55,13 +69,13 @@ namespace Element
             _objects.Add(identifier, obj);
         }
 
-        public static object Get(string identifier)
+        public static T Get<T>(string identifier)
         {
             // make sure an object exists for identifier
             if (_objects.ContainsKey(identifier))
-                return _objects[identifier];
+                return (T)_objects[identifier];
             else
-                return null;
+                return default(T);
         }
 
         public static Dictionary<string, object> Objects

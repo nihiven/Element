@@ -13,6 +13,13 @@ namespace Element
     {
         private SpriteFont font;
         private List<String> Messages;
+        private IContentManager _contentManager;
+
+        public Debug(IContentManager contentManager)
+        {
+            this._contentManager = contentManager;
+            font = _contentManager.GetFont("Arial");
+        }
 
         public void Initialize()
         {
@@ -21,7 +28,7 @@ namespace Element
 
         public void LoadContent(ContentManager content)
         {
-            font = content.Load<SpriteFont>("Arial");
+            
         }
 
         public void UnloadContent()
