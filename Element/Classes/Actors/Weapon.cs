@@ -13,10 +13,10 @@ namespace Element.Classes
 
         public AnimatedSprite AnimatedSprite { get; set; }
 
-        public int Width => throw new NotImplementedException();
-        public int Height => throw new NotImplementedException();
-        public float Acceleration => throw new NotImplementedException();
-        public float Velocity => throw new NotImplementedException();
+        public int Width => this.AnimatedSprite.Width;
+        public int Height => this.AnimatedSprite.Height;
+        public float Acceleration { get; set; }
+        public float Velocity { get; set; }
 
         public float BaseDamage { get; set; }
         public float BaseVelocity { get; set; }
@@ -28,6 +28,10 @@ namespace Element.Classes
 
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
+
+
+        //Testing 
+        public bool PlayerClose;
 
         public Weapon(IInput input, IContentManager contentManager, Guid guid, string itemId, string name, Vector2 spawnLocation)
         {
@@ -44,6 +48,8 @@ namespace Element.Classes
 
             this._contentManager = contentManager;
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite(itemId);
+
+            this.PlayerClose = false;
         }
 
         public void Initialize()
