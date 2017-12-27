@@ -41,31 +41,42 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\AnimatedSprite.cs" />
-    <Compile Include="Classes\Animation.cs" />
-    <Compile Include="Classes\Cardinal.cs" />
-    <Compile Include="Classes\ControllerDebug.cs" />
-    <Compile Include="Classes\Debug.cs" />
-    <Compile Include="Classes\DestinyGuns.cs" />
-    <Compile Include="Classes\ElementGame.cs" />
-    <Compile Include="Classes\FPS.cs" />
-    <Compile Include="Classes\GraphicsManager.cs" />
+    <Compile Include="Classes\Engine\AnimatedSprite.cs" />
+    <Compile Include="Classes\Engine\Animation.cs" />
+    <Compile Include="Classes\Actors\Bullet.cs" />
+    <Compile Include="Classes\Engine\Cardinal.cs" />
+    <Compile Include="Classes\Engine\ControllerDebug.cs" />
+    <Compile Include="Classes\Engine\Debug.cs" />
+    <Compile Include="Classes\Engine\ItemDebug.cs" />
+    <Compile Include="Classes\Engine\ItemManager.cs" />
+    <Compile Include="Interfaces\IGun.cs" />
+    <Compile Include="Classes\Items\JadeRabbit.cs" />
+    <Compile Include="Classes\Engine\ElementGame.cs" />
+    <Compile Include="Classes\Engine\FPS.cs" />
+    <Compile Include="Classes\Engine\GraphicsManager.cs" />
+    <Compile Include="Classes\Engine\Utilities.cs" />
+    <Compile Include="Interfaces\IAttachable.cs" />
+    <Compile Include="Interfaces\IDraw.cs" />
+    <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IMoveable.cs" />
-    <Compile Include="Classes\ObjectFactory.cs" />
-    <Compile Include="Classes\Sprite.cs" />
+    <Compile Include="Classes\Engine\ObjectFactory.cs" />
+    <Compile Include="Classes\Engine\Sprite.cs" />
     <Compile Include="Interfaces\IComponent.cs" />
-    <Compile Include="Classes\Player.cs" />
+    <Compile Include="Classes\Actors\Player.cs" />
     <Compile Include="Classes\Program.cs" />
     <Compile Include="Interfaces\IGraphics.cs" />
     <Compile Include="Interfaces\IInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Classes\SoundEffect.cs" />
-    <Compile Include="Classes\SpriteSheet.cs" />
-    <Compile Include="Classes\XB1Pad.cs" />
+    <Compile Include="Classes\Engine\SoundEffect.cs" />
+    <Compile Include="Classes\Engine\SpriteSheet.cs" />
+    <Compile Include="Classes\Engine\XB1Pad.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap, Version=4.5.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\StructureMap.4.5.3\lib\net45\StructureMap.dll</HintPath>

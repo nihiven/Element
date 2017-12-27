@@ -125,7 +125,7 @@ namespace Element.Classes
             { 
                 foreach (Buttons button in buttons)
                 {
-                    if (input.GetButtonState(button) == ButtonState.HELD || input.GetButtonState(button) == ButtonState.PRESSED)
+                    if (input.GetButtonState(button) == ButtonState.Held || input.GetButtonState(button) == ButtonState.Pressed)
                         sprite.Draw(spriteBatch, frames[button], Position + positions[button]);
                     else
                         sprite.Draw(spriteBatch, frames[button]+18, Position + positions[button]);

@@ -10,10 +10,10 @@ namespace Element
 {
     public static class ButtonState
     {
-        public const int NONE = 0;
-        public const int PRESSED = 1;
-        public const int HELD = 2;
-        public const int RELEASED = 4;
+        public const int None = 0;
+        public const int Pressed = 1;
+        public const int Held = 2;
+        public const int Released = 4;
     }
 
     public class XB1Pad : IComponent, IInput
@@ -47,7 +47,7 @@ namespace Element
             
             states = new Dictionary<Buttons, int>();
             foreach (Buttons button in buttons)
-                states[button] = ButtonState.NONE;
+                states[button] = ButtonState.None;
 
             previousState = GamePad.GetState(PlayerIndex.One);
         }
@@ -75,16 +75,16 @@ namespace Element
             {
                 switch (states[button])
                 {
-                    case ButtonState.NONE:
-                        states[button] = ButtonState.PRESSED;
+                    case ButtonState.None:
+                        states[button] = ButtonState.Pressed;
                         break;
-                    case ButtonState.PRESSED:
-                        states[button] = ButtonState.HELD;
+                    case ButtonState.Pressed:
+                        states[button] = ButtonState.Held;
                         break;
-                    case ButtonState.HELD:
+                    case ButtonState.Held:
                         break;
-                    case ButtonState.RELEASED:
-                        states[button] = ButtonState.PRESSED;
+                    case ButtonState.Released:
+                        states[button] = ButtonState.Pressed;
                         break;
                     default:
                         throw new System.InvalidOperationException("button has not been initialized");
@@ -94,16 +94,16 @@ namespace Element
             {
                 switch (states[button])
                 {
-                    case ButtonState.NONE:
+                    case ButtonState.None:
                         break;
-                    case ButtonState.PRESSED:
-                        states[button] = ButtonState.RELEASED;
+                    case ButtonState.Pressed:
+                        states[button] = ButtonState.Released;
                         break;
-                    case ButtonState.HELD:
-                        states[button] = ButtonState.RELEASED;
+                    case ButtonState.Held:
+                        states[button] = ButtonState.Released;
                         break;
-                    case ButtonState.RELEASED:
-                        states[button] = ButtonState.NONE;
+                    case ButtonState.Released:
+                        states[button] = ButtonState.None;
                         break;
                     default:
                         throw new System.InvalidOperationException("button has not been initialized");
@@ -136,32 +136,12 @@ namespace Element
 
         public int GetLeftThumbstickCardinal()
         {
-            return this.GetCardinalDirection(currentState.ThumbSticks.Left);
+            return Utilities.GetCardinalDirection(currentState.ThumbSticks.Left);
         }
 
         public int GetRightThumbstickCardinal()
         {
-            return this.GetCardinalDirection(currentState.ThumbSticks.Right);
-        }
-
-        private int GetCardinalDirection(Vector2 vector)
-        {
-            int cardinal = 0;
-
-            if (vector.X < 0)
-                cardinal += Cardinal.West;
-
-            if (vector.X > 0)
-                cardinal += Cardinal.East;
-
-            if (vector.Y > 0)
-                cardinal += Cardinal.North;
-
-            if (vector.Y < 0)
-                cardinal += Cardinal.South;
-
-
-            return cardinal;
+            return Utilities.GetCardinalDirection(currentState.ThumbSticks.Right);
         }
 
         public void Draw(SpriteBatch spriteBatch) { }

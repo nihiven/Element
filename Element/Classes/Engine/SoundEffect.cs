@@ -24,14 +24,6 @@ namespace Element
             soundEffects = new Dictionary<string, SoundEffect>();
         }
 
-        public void Input()
-        {
-            if (input.GetButtonState(Buttons.A) == ButtonState.PRESSED)
-            {
-                soundEffects["button"].Play(0.2f, 0.0f, -0.20f);
-            }
-        }
-
         public void LoadContent(ContentManager content)
         {
             soundEffects.Add("button", content.Load<SoundEffect>("soundEffects/button"));
@@ -39,7 +31,13 @@ namespace Element
 
         public void UnloadContent() { }
 
-        public void Update(GameTime gameTime) { }
+        public void Update(GameTime gameTime)
+        {
+            if (input.GetButtonState(Buttons.A) == ButtonState.Pressed)
+            {
+                soundEffects["button"].Play(0.2f, 0.0f, -0.20f);
+            }
+        }
 
         public void Draw(SpriteBatch spriteBatch) { }
     }

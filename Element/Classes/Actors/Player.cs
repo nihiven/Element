@@ -11,7 +11,7 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IMoveable, IAttachPoints
+    public class Player : IComponent, IMoveable, IAttachable
     {
         private Vector2 _position;
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
@@ -22,8 +22,9 @@ namespace Element
         public List<AnimatedSprite> attachments;
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
+        public float PickupRadius { get; set; }
 
-        // IInput
+        //
         private readonly IInput input;
 
         // IAttachPoints
@@ -94,6 +95,7 @@ namespace Element
             this.Position = this.MinPosition;
             this.Active = true;
             this.Health = 100;
+            this.PickupRadius = 30;
         }
 
 
@@ -103,18 +105,8 @@ namespace Element
         /// </summary>
         public void LoadContent(ContentManager content)
         {
-            // TODO: read this data from a file
-            SpriteSheet spriteSheet = new SpriteSheet(content, "female_walkcycle", 4, 9);
-            Animation walkUp = new Animation("female_walk_up", spriteSheet, 1, 9, FPS.TEN);
-            Animation walkDown = new Animation("female_walk_down", spriteSheet, 19, 9, FPS.TEN);
-            Animation walkLeft = new Animation("female_walk_left", spriteSheet, 10, 9, FPS.TEN);
-            Animation walkRight = new Animation("female_walk_right", spriteSheet, 28, 9, FPS.TEN);
-
-            this.AnimatedSprite = new AnimatedSprite();
-            this.AnimatedSprite.AddAnimation(walkUp);
-            this.AnimatedSprite.AddAnimation(walkDown);
-            this.AnimatedSprite.AddAnimation(walkLeft);
-            this.AnimatedSprite.AddAnimation(walkRight);
+            Dictionary<string, AnimatedSprite> anim = (Dictionary<string, AnimatedSprite>)ObjectManager.Get("animatedSprites");
+            this.AnimatedSprite = anim["female"];
         }
 
         /// <summary>
