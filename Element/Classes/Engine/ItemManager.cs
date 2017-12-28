@@ -9,6 +9,9 @@ namespace Element.Classes
     public interface IItemManager
     {
         void NewWeapon(Vector2 position);
+        void Add(IItem item);
+        void Remove(IItem item);
+        List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance);
     }
 
     public class ItemManager : IComponent, IItemManager
@@ -30,7 +33,7 @@ namespace Element.Classes
         // IComponent
         public void Initialize()
         {
-            
+
         }
 
         public void Update(GameTime gameTime)
@@ -51,12 +54,37 @@ namespace Element.Classes
 
         public void LoadContent(ContentManager content)
         {
-            
+
         }
 
         public void UnloadContent()
         {
 
         }
+
+        public void Add(IItem item)
+        {
+            Items.Add(item.Guid.ToString(), item);
+        }
+
+        public void Remove(IItem item)
+        {
+            Items.Remove(item.Guid.ToString());
+        }
+
+        public List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance)
+        {
+            List<IItem> hits = new List<IItem>();
+            foreach (IItem item in Items.Values)
+            { 
+                if (Vector2.Distance(item.Position, searchVector) <= searchDistance)
+                {
+                    hits.Add(item);
+                }
+            }
+
+            return hits;
+        }
+
     }
 }

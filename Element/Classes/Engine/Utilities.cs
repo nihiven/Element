@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Element.Classes;
 using System;
 
@@ -6,6 +7,8 @@ namespace Element
 {
     public static class Utilities
     {
+        private static Texture2D rect;
+
         public static int GetCardinalDirection(Vector2 vector)
         {
             int cardinal = 0;
@@ -35,6 +38,17 @@ namespace Element
         public static Vector2 GetVectorFromAngle(double angle)
         {
             return new Vector2((float)Math.Cos(angle), -(float)Math.Sin(angle));
+        }
+
+        public static void DrawRectangle(Rectangle coords, Color color, SpriteBatch spriteBatch)
+        {
+            if (rect == null)
+            {
+                rect = new Texture2D(spriteBatch.GraphicsDevice, 1, 1);
+                rect.SetData(new[] { Color.White });
+            }
+
+            spriteBatch.Draw(rect, coords, color);
         }
     }
 }

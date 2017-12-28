@@ -12,7 +12,6 @@ namespace Element.Classes
         public Vector2 FirePosition { get; set; } // position at which the bullets are created
 
         public AnimatedSprite AnimatedSprite { get; set; }
-
         public int Width => this.AnimatedSprite.Width;
         public int Height => this.AnimatedSprite.Height;
         public float Acceleration { get; set; }
@@ -77,6 +76,14 @@ namespace Element.Classes
         public void Attach(Vector2 position)
         {
             this.Position = position;
+        }
+
+        public Rectangle BoundingBox
+        {
+            get
+            {
+                return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
+            }
         }
 
         public void Fire(double angle)

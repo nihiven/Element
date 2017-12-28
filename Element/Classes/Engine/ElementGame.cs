@@ -95,6 +95,13 @@ namespace Element
             _contentManager.AddAnimatedSprite("bullet", new AnimatedSprite());
             _contentManager.GetAnimatedSprite("bullet").AddAnimation(_contentManager.GetAnimation("bullet"));
 
+            // INVENTORY
+            _contentManager.AddSoundEffect("buzzer1", "audio/buzzer1");
+            _contentManager.AddSoundEffect("Inv_Close", "audio/inventory/Inv_Close");
+            _contentManager.AddSoundEffect("Inv_Open", "audio/inventory/Inv_Open");
+            _contentManager.AddSoundEffect("Inv_Equip", "audio/inventory/Inv_Equip");
+            _contentManager.AddSoundEffect("Inv_Vertical", "audio/inventory/Inv_Vertical");
+
 
             // create the game components
             ObjectManager.Add("itemManager", ComponentFactory.New("itemManager")); // core

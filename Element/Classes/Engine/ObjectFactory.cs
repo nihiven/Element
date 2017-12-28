@@ -46,7 +46,8 @@ namespace Element
                 case ("player"):
                     return new Player(
                         input: ObjectManager.Get<IInput>("input"), 
-                        contentManager: ObjectManager.Get<IContentManager>("contentManager")
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                        itemManager: ObjectManager.Get<IItemManager>("itemManager")
                     );
                 default:
                     return null;

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Element.Classes
 {
-    class Bullet : IComponent, IDraw
+    class Bullet : IComponent
     {
         public double Angle { get; set; }
         public float Velocity { get; set; } // pixels per second

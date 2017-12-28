@@ -58,7 +58,6 @@
     <Compile Include="Classes\Engine\GraphicsManager.cs" />
     <Compile Include="Classes\Engine\Utilities.cs" />
     <Compile Include="Interfaces\IAttachable.cs" />
-    <Compile Include="Interfaces\IDraw.cs" />
     <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IMoveable.cs" />
     <Compile Include="Classes\Engine\ObjectFactory.cs" />

@@ -122,3 +122,33 @@
 /processorParam:TextureFormat=Color
 /build:weapons/jadeRabbitTiny.png
 
+#begin audio/Buzzer1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/Buzzer1.ogg
+
+#begin audio/inventory/Inv_Close.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/inventory/Inv_Close.ogg
+
+#begin audio/inventory/Inv_Open.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/inventory/Inv_Open.ogg
+
+#begin audio/inventory/Inv_Equip.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/inventory/Inv_Equip.ogg
+
+#begin audio/inventory/Inv_Vertical.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/inventory/Inv_Vertical.ogg
+

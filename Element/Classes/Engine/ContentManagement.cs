@@ -57,9 +57,9 @@ namespace Element.Classes
             return this._fonts[identifier];
         }
 
-        public void AddSoundEffect(string identifier, SoundEffect soundEffect)
+        public void AddSoundEffect(string identifier, string contentPath)
         {
-            _soundEffects.Add(identifier, soundEffect);
+            _soundEffects.Add(identifier, _content.Load<SoundEffect>(contentPath));
         }
         public SoundEffect GetSoundEffect(string identifier)
         {

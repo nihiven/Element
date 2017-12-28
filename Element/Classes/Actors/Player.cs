@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Element.Classes;
+using Element.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Element.Classes;
-using Element.Interfaces;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Element
 {
@@ -15,10 +17,19 @@ namespace Element
     {
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
+        public AnimatedSprite AnimatedSprite { get; set; }
+
+        // inventory
+        // TODO: make this a component
+        public List<IItem> Inventory;
+        public bool ShowInventory;
+        public double InventoryTimeout;
+        public int InventorySelected;
+        public int InventoryMaxItems;
+
+        // stats
         public bool Active { get; set; }
         public int Health { get; set; }
-        public AnimatedSprite AnimatedSprite { get; set; }
-        public List<AnimatedSprite> attachments;
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
         public float PickupRadius { get; set; }
@@ -26,8 +37,10 @@ namespace Element
         private Vector2 _position;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
+        private IItemManager _itemManager;
 
         // IAttachPoints
+        public List<IItem> Attachments;
         public Vector2 HighArmor { get => this.Position; set => this.HighArmor = value; }
         public Vector2 MidArmor { get => this.Position; set => this.HighArmor = value; }
         public Vector2 LowArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -41,10 +54,11 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager)
+        public Player(IInput input, IContentManager contentManager, IItemManager itemManager)
         {
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+            this._itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
 
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
 
@@ -54,6 +68,13 @@ namespace Element
             this.Active = true;
             this.Health = 100;
             this.PickupRadius = 30;
+
+            // inventory 
+            this.Inventory = new List<IItem>(32);
+            this.ShowInventory = false;
+            this.InventoryTimeout = 5;
+            this.InventorySelected = 0;
+            this.InventoryMaxItems = 5;
         }
 
         /// <summary>
@@ -76,6 +97,11 @@ namespace Element
             } 
         }
 
+        public Vector2 PickupPosition
+        {
+            get { return new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
+        }
+
         /// <summary>
         /// Returns player width, assumes width of the player is the width of the player texture.
         /// </summary>
@@ -92,6 +118,13 @@ namespace Element
             get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0; }
         }
 
+        public Rectangle BoundingBox
+        {
+            get
+            {
+                return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
+            }
+        }
 
         // TODO: uncouple the recalc from the intialization
         // move the recalc to it's own function so it can be called when screen size changes
@@ -130,7 +163,7 @@ namespace Element
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
             this.Position += new Vector2(_input.GetLeftThumbstickVector().X, -_input.GetLeftThumbstickVector().Y) + new Vector2(_input.GetRightThumbstickVector().X, -_input.GetRightThumbstickVector().Y);
-            
+
             // cardinal direction will determine which animation is used
             // animations should be the same number of frames
             // the animation will change on .SetAnimation(), but the current frame will remain the same
@@ -151,6 +184,116 @@ namespace Element
 
             if (this.Position != oldPosition)
                 this.AnimatedSprite.Update(gameTime);
+
+            if (this.ShowInventory)
+            {
+                this.InventoryTimeout -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (this.InventoryTimeout <= 0)
+                {
+                    this.InventoryClose();
+                }
+            }
+
+
+            if (_input.GetButtonState(Buttons.LeftShoulder) == ButtonState.Pressed)
+            {
+                this.InventoryOpen();
+
+                if (this.Inventory.Count > 0)
+                {
+                    this.InventorySelected--;
+                    this.InventorySelected = (this.InventorySelected < 0) ? this.Inventory.Count - 1 : this.InventorySelected;
+                    _contentManager.GetSoundEffect("Inv_Vertical").Play();
+                }
+            }
+
+            if (_input.GetButtonState(Buttons.RightShoulder) == ButtonState.Pressed)
+            {
+                this.InventoryOpen();
+
+                if (this.Inventory.Count > 0)
+                {
+                    this.InventorySelected++;
+                    this.InventorySelected = (this.InventorySelected > Inventory.Count - 1) ? 0 : this.InventorySelected;
+                    _contentManager.GetSoundEffect("Inv_Vertical").Play();
+                }
+            }
+
+
+            if (_input.GetButtonState(Buttons.X) == ButtonState.Pressed)
+            {
+                if (this.Inventory.Count > 0)
+                {
+                    this.InventoryOpen();
+                    this.InventorySelectedItem().Position = this.Position;
+                    this._itemManager.Add(this.InventorySelectedItem());
+                    this.Inventory.Remove(this.InventorySelectedItem());
+                    
+                    if (InventorySelected != 0)
+                    {
+                        InventorySelected--;
+                    }
+                    
+                }
+            }
+
+            if (_input.GetButtonState(Buttons.Y) == ButtonState.Pressed)
+            {
+                this.InventoryToggle();
+            }
+
+            // look for items near me ?
+            if (_input.GetButtonState(Buttons.A) == ButtonState.Pressed)
+            {
+                List<IItem> nearbyItems = this._itemManager.GetItemsInVicinity(this.PickupPosition, 30);
+                
+                if(nearbyItems.Count > 0)
+                {
+                    if (this.Inventory.Count < this.InventoryMaxItems)
+                    {
+                        IItem item = nearbyItems[0];
+                        this.Inventory.Add(item);
+                        this._itemManager.Remove(item);
+                    }
+                    else
+                    {
+                        _contentManager.GetSoundEffect("buzzer1").Play();
+                    }
+                }
+            }
+        }
+
+        public IItem InventorySelectedItem()
+        {
+            return (this.Inventory.Count > 0) ? this.Inventory[this.InventorySelected] : null;
+        }
+
+        public void InventoryToggle()
+        {
+            if (this.ShowInventory)
+                this.InventoryClose();
+            else
+                this.InventoryOpen();
+        }
+
+        public void InventoryOpen()
+        {
+            if (!this.ShowInventory)
+            {
+                this.ShowInventory = true;
+                _contentManager.GetSoundEffect("Inv_Open").Play();
+            }
+            this.InventoryTimeout = 5;
+        }
+
+        public void InventoryClose()
+        {
+            if (this.ShowInventory)
+            {
+                this.ShowInventory = false;
+                _contentManager.GetSoundEffect("Inv_Close").Play();
+            }
+            this.InventoryTimeout = 0;
         }
 
         /// <summary>
@@ -158,6 +301,29 @@ namespace Element
         /// </summary>
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (this.ShowInventory)
+            {
+                // draw title
+                int y = 100;
+                spriteBatch.DrawString(_contentManager.GetFont("Arial"), "Inventory", new Vector2(10, y), Color.Orange);
+
+                // draw selected rectangle
+                IItem selected = (this.Inventory.Count > 0) ? Inventory[InventorySelected] : null;
+
+                // draw inventory
+                foreach (IItem item in this.Inventory)
+                {
+                    y += 30;
+
+                    if (item.Equals(selected))
+                    { 
+                        Utilities.DrawRectangle(new Rectangle(10-1, y-1, item.AnimatedSprite.Width+2, item.AnimatedSprite.Height+2), Color.Red, spriteBatch);
+                    }
+
+                    item.AnimatedSprite.Draw(spriteBatch, new Vector2(10, y));
+
+                }
+            }
             // the animated sprite draws its current frame by default
             this.AnimatedSprite.Draw(spriteBatch, Position);
         }

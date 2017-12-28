@@ -15,7 +15,7 @@ namespace Element.Interfaces
         void AddFont(string identifier, SpriteFont font);
         SpriteFont GetFont(string identifier);
 
-        void AddSoundEffect(string identifier, SoundEffect soundEffect);
+        void AddSoundEffect(string identifier, string contentPath);
         SoundEffect GetSoundEffect(string identifier);
     }
 }
