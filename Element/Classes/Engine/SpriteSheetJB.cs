@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Element
 {
-    public class SpriteSheet
+    public class SpriteSheetJB
     {
         public String ContentName { get; set; }
         public Texture2D Texture { get; set; } // tile map
@@ -14,7 +14,7 @@ namespace Element
         public int FrameWidth;
         public int FrameHeight;
 
-        public SpriteSheet(ContentManager contentManager, string contentName, int rows, int columns)
+        public SpriteSheetJB(ContentManager contentManager, string contentName, int rows, int columns)
         {
             ContentName = contentName;
             Texture = contentManager.Load<Texture2D>(ContentName);

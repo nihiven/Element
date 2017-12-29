@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using TexturePackerLoader;
+using TexturePackerMonoGameDefinitions;
 
 namespace Element.Classes
 {
@@ -12,6 +14,7 @@ namespace Element.Classes
         public Vector2 FirePosition { get; set; } // position at which the bullets are created
 
         public AnimatedSprite AnimatedSprite { get; set; }
+        public SpriteSheet SpriteSheet { get; set; }
         public int Width => this.AnimatedSprite.Width;
         public int Height => this.AnimatedSprite.Height;
         public float Acceleration { get; set; }
@@ -47,6 +50,8 @@ namespace Element.Classes
 
             this._contentManager = contentManager;
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite(itemId);
+            this.SpriteSheet = this._contentManager.GetSpriteSheet("Guns");
+            
 
             this.PlayerClose = false;
         }
@@ -68,9 +73,9 @@ namespace Element.Classes
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
-            this.AnimatedSprite.Draw(spriteBatch, this.Position);
+            this.AnimatedSprite.Draw(spriteRender.spriteBatch, this.Position);
         }
 
         public void Attach(Vector2 position)

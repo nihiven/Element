@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Element.Interfaces;
+using TexturePackerLoader;
 
 
 namespace Element
@@ -40,14 +41,14 @@ namespace Element
            int a = input.GetButtonState(Buttons.A);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
             int x = 15;
             int y = 15;
 
             foreach (String message in Messages)
             {
-                spriteBatch.DrawString(font, message, new Vector2(x, y), Color.Black);
+                spriteRender.spriteBatch.DrawString(font, message, new Vector2(x, y), Color.Black);
                 y += 15;
             }
             

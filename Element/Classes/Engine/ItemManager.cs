@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using TexturePackerLoader;
 
 namespace Element.Classes
 {
@@ -44,11 +45,11 @@ namespace Element.Classes
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
             foreach (IItem item in this.Items.Values)
             {
-                item.AnimatedSprite.Draw(spriteBatch, item.Position);
+                item.AnimatedSprite.Draw(spriteRender.spriteBatch, item.Position);
             }
         }
 

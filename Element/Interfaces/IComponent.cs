@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
@@ -8,7 +9,7 @@ namespace Element.Interfaces
     {
         void Initialize();
         void Update(GameTime gameTime);
-        void Draw(SpriteBatch spriteBatch);
+        void Draw(SpriteRender spriteRender);
         void LoadContent(ContentManager content);
         void UnloadContent();
     }

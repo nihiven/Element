@@ -3,6 +3,7 @@ using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using TexturePackerLoader;
 
 namespace Element
 {  
@@ -14,6 +15,7 @@ namespace Element
         IContentManager _contentManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteRender spriteRender; // TexturePacker
         List<IComponent> components = new List<IComponent>();
 
         public ElementGame()
@@ -57,6 +59,9 @@ namespace Element
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // texturePacker spriter render class
+            this.spriteRender = new SpriteRender(this.spriteBatch);
+
             /// the master blaster
             this._contentManager = new ContentManagement(Content);
             Content.RootDirectory = "Content";
@@ -66,13 +71,18 @@ namespace Element
             // load all of the textures here for now
             // eventually we will move them into a resource file
             // and load them from there
+
+            // TEXTURE PACKER
+            _contentManager.AddSpriteSheet("Guns", "Guns");
+
+
             // CONTROLLER DEBUG
-            _contentManager.AddSpriteSheet(identifier: "controllerDebug", contentLocation: "controllerDebug/Xbox360PixelPadtrans", rows: 4, columns: 9);
+            _contentManager.AddSpriteSheetJB(identifier: "controllerDebug", contentLocation: "controllerDebug/Xbox360PixelPadtrans", rows: 4, columns: 9);
             _contentManager.AddFont("Arial", Content.Load<SpriteFont>("Arial"));
 
             // PLAYER
             // TODO: read this data from a file
-            _contentManager.AddSpriteSheet(identifier: "female_walkcycle", contentLocation: "female_walkcycle", rows: 4, columns: 9);
+            _contentManager.AddSpriteSheetJB(identifier: "female_walkcycle", contentLocation: "female_walkcycle", rows: 4, columns: 9);
             _contentManager.AddAnimation(identifier: "female_walk_up", spriteSheetIdentifier: "female_walkcycle", startFrame: 1, frameCount: 9, framesPerSecond: FPS.TEN);
             _contentManager.AddAnimation(identifier: "female_walk_down", spriteSheetIdentifier: "female_walkcycle", startFrame: 19, frameCount: 9, framesPerSecond: FPS.TEN);
             _contentManager.AddAnimation(identifier: "female_walk_left", spriteSheetIdentifier: "female_walkcycle", startFrame: 10, frameCount: 9, framesPerSecond: FPS.TEN);
@@ -84,23 +94,24 @@ namespace Element
             _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_right"));
 
             // JADE RABBIT
-            _contentManager.AddSpriteSheet(identifier: "JadeRabbit", contentLocation: "weapons/jadeRabbitTiny", rows: 1, columns: 1);
+            _contentManager.AddSpriteSheetJB(identifier: "JadeRabbit", contentLocation: "weapons/jadeRabbitTiny", rows: 1, columns: 1);
             _contentManager.AddAnimation(identifier: "JadeRabbit:Fire", spriteSheetIdentifier: "JadeRabbit", startFrame: 1, frameCount: 1, framesPerSecond: 1);
             _contentManager.AddAnimatedSprite("JadeRabbit", new AnimatedSprite());
             _contentManager.GetAnimatedSprite("JadeRabbit").AddAnimation(_contentManager.GetAnimation("JadeRabbit:Fire"));
 
             // BULLET
-            _contentManager.AddSpriteSheet("bullet", "weapons/bullet", 1, 1);
+            _contentManager.AddSpriteSheetJB("bullet", "weapons/bullet", 1, 1);
             _contentManager.AddAnimation("bullet", "bullet", 1, 1, 1);
             _contentManager.AddAnimatedSprite("bullet", new AnimatedSprite());
             _contentManager.GetAnimatedSprite("bullet").AddAnimation(_contentManager.GetAnimation("bullet"));
 
             // INVENTORY
             _contentManager.AddSoundEffect("buzzer1", "audio/buzzer1");
-            _contentManager.AddSoundEffect("Inv_Close", "audio/inventory/Inv_Close");
-            _contentManager.AddSoundEffect("Inv_Open", "audio/inventory/Inv_Open");
-            _contentManager.AddSoundEffect("Inv_Equip", "audio/inventory/Inv_Equip");
+            _contentManager.AddSoundEffect("Inv_Close", "audio/inventory/Close");
+            _contentManager.AddSoundEffect("Inv_Open", "audio/inventory/Open");
+            _contentManager.AddSoundEffect("Equip", "audio/inventory/Inv_Equip");
             _contentManager.AddSoundEffect("Inv_Vertical", "audio/inventory/Inv_Vertical");
+            _contentManager.AddSoundEffect("Inv_Pickup", "audio/inventory/Pickup");
 
 
             // create the game components
@@ -162,7 +173,7 @@ namespace Element
             
             // draw everything
             foreach (IComponent component in components)
-                component.Draw(spriteBatch);
+                component.Draw(this.spriteRender);
 
             spriteBatch.End();
             base.Draw(gameTime);

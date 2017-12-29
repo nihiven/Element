@@ -1,12 +1,11 @@
 ﻿using Element.Classes;
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using TexturePackerLoader;
 
 namespace Element
 {
@@ -18,6 +17,8 @@ namespace Element
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
         public AnimatedSprite AnimatedSprite { get; set; }
+        public IItem ItemEquiped { get; set; }
+
 
         // inventory
         // TODO: make this a component
@@ -68,6 +69,9 @@ namespace Element
             this.Active = true;
             this.Health = 100;
             this.PickupRadius = 30;
+
+            // items
+            this.ItemEquiped = null;
 
             // inventory 
             this.Inventory = new List<IItem>(32);
@@ -203,7 +207,7 @@ namespace Element
                 {
                     this.InventorySelected--;
                     this.InventorySelected = (this.InventorySelected < 0) ? this.Inventory.Count - 1 : this.InventorySelected;
-                    _contentManager.GetSoundEffect("Inv_Vertical").Play();
+                    _contentManager.GetSoundEffect("Inv_Vertical").Play(1, 0.1f, -0.6f);
                 }
             }
 
@@ -215,7 +219,7 @@ namespace Element
                 {
                     this.InventorySelected++;
                     this.InventorySelected = (this.InventorySelected > Inventory.Count - 1) ? 0 : this.InventorySelected;
-                    _contentManager.GetSoundEffect("Inv_Vertical").Play();
+                    _contentManager.GetSoundEffect("Inv_Vertical").Play(1, -0.2f, -0.6f); ;
                 }
             }
 
@@ -229,6 +233,8 @@ namespace Element
                     this._itemManager.Add(this.InventorySelectedItem());
                     this.Inventory.Remove(this.InventorySelectedItem());
                     
+                    // TODO: if you drop your equipped weapon, remove it from your player
+
                     if (InventorySelected != 0)
                     {
                         InventorySelected--;
@@ -254,6 +260,10 @@ namespace Element
                         IItem item = nearbyItems[0];
                         this.Inventory.Add(item);
                         this._itemManager.Remove(item);
+                        _contentManager.GetSoundEffect("Inv_Pickup").Play();
+
+                        if (this.ItemEquiped == null)
+                            this.EquipItem(item);
                     }
                     else
                     {
@@ -261,6 +271,13 @@ namespace Element
                     }
                 }
             }
+        }
+
+        // player method
+        public void EquipItem(IItem item)
+        {
+            this.ItemEquiped = item;
+            _contentManager.GetSoundEffect("Equip").Play();
         }
 
         public IItem InventorySelectedItem()
@@ -281,7 +298,7 @@ namespace Element
             if (!this.ShowInventory)
             {
                 this.ShowInventory = true;
-                _contentManager.GetSoundEffect("Inv_Open").Play();
+                _contentManager.GetSoundEffect("Inv_Open").Play(1, 0, -0.6f);
             }
             this.InventoryTimeout = 5;
         }
@@ -291,7 +308,7 @@ namespace Element
             if (this.ShowInventory)
             {
                 this.ShowInventory = false;
-                _contentManager.GetSoundEffect("Inv_Close").Play();
+                _contentManager.GetSoundEffect("Inv_Open").Play(1, -0.2f, -0.6f); ;
             }
             this.InventoryTimeout = 0;
         }
@@ -299,13 +316,16 @@ namespace Element
         /// <summary>
         /// Draw the player character and child actors
         /// </summary>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
+            // draw inventory first
             if (this.ShowInventory)
             {
+                Utilities.DrawRectangle(new Rectangle(5, 95, 125, 40 + (this.Inventory.Count * 30)), Color.DarkSlateGray, spriteRender.spriteBatch);
+
                 // draw title
                 int y = 100;
-                spriteBatch.DrawString(_contentManager.GetFont("Arial"), "Inventory", new Vector2(10, y), Color.Orange);
+                spriteRender.spriteBatch.DrawString(_contentManager.GetFont("Arial"), "Inventory", new Vector2(10, y), Color.Orange);
 
                 // draw selected rectangle
                 IItem selected = (this.Inventory.Count > 0) ? Inventory[InventorySelected] : null;
@@ -313,19 +333,34 @@ namespace Element
                 // draw inventory
                 foreach (IItem item in this.Inventory)
                 {
-                    y += 30;
+                    y += 32;
 
                     if (item.Equals(selected))
                     { 
-                        Utilities.DrawRectangle(new Rectangle(10-1, y-1, item.AnimatedSprite.Width+2, item.AnimatedSprite.Height+2), Color.Red, spriteBatch);
+                        Utilities.DrawRectangle(new Rectangle(12-1, y-1, item.AnimatedSprite.Width+2, item.AnimatedSprite.Height+2), Color.Red, spriteRender.spriteBatch);
                     }
 
-                    item.AnimatedSprite.Draw(spriteBatch, new Vector2(10, y));
+                    if (item.Equals(this.ItemEquiped))
+                    {
+                        Utilities.DrawRectangle(new Rectangle(12, y, item.AnimatedSprite.Width, item.AnimatedSprite.Height), Color.Green, spriteRender.spriteBatch);
+                    }
+
+                    item.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(12, y));
 
                 }
             }
+
+
+            // draw Player
             // the animated sprite draws its current frame by default
-            this.AnimatedSprite.Draw(spriteBatch, Position);
+            this.AnimatedSprite.Draw(spriteRender.spriteBatch, Position);
+
+            // draw attached items
+            if (this.ItemEquiped != null)
+            {
+                this.ItemEquiped.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(this.Position.X+6, this.Position.Y+36));
+            }
+
         }
     }
 }

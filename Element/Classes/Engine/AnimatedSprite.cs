@@ -30,10 +30,14 @@ namespace Element
             CurrentFrame = (this.Anim.StartFrame - 1) + this.Anim.FrameOrder[this.CurrentFrame % this.Anim.FrameCount];
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 location)
+        public void Draw(SpriteBatch spriteBatch, Vector2 location, bool drawSourceRect = false)
         {
             // set the destination within the tile map, passed to the spritebatch draw
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, this.Width, this.Height);
+
+            // TODO: remove or tie into debug
+            if (drawSourceRect)
+                Utilities.DrawRectangle(destinationRectangle, Color.White, spriteBatch);
 
             // draw the selected frame
             spriteBatch.Draw(this.Anim.Sprites.Texture, destinationRectangle, this.CurrentSource(), Color.White);

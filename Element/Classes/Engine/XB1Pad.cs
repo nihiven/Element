@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Element.Interfaces;
+using TexturePackerLoader;
 
 namespace Element
 {
@@ -148,7 +149,7 @@ namespace Element
             return Utilities.GetCardinalDirection(currentState.ThumbSticks.Right);
         }
 
-        public void Draw(SpriteBatch spriteBatch) { }
+        public void Draw(SpriteRender spriteRender) { }
 
         public void LoadContent(ContentManager content) { }
 

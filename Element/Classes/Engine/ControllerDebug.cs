@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Element.Interfaces;
+using TexturePackerLoader;
 
 namespace Element.Classes
 {
@@ -27,7 +28,7 @@ namespace Element.Classes
     {
         public Vector2 Size;
         public Vector2 Position { get; set; }
-        private SpriteSheet sprite;
+        private SpriteSheetJB sprite;
         private SpriteFont font;
         public List<Buttons> buttons;
         public Dictionary<Buttons, Vector2> positions;
@@ -45,7 +46,7 @@ namespace Element.Classes
             this._graphics = graphics ?? throw new ArgumentNullException("graphics");
 
             this.Enabled = true;
-            this.sprite = _contentManager.GetSpriteSheet("controllerDebug");
+            this.sprite = _contentManager.GetSpriteSheetJB("controllerDebug");
             this.font = _contentManager.GetFont("Arial");
 
             Size = new Vector2(242.0f, 103.0f);
@@ -126,21 +127,21 @@ namespace Element.Classes
 
         public void Update(GameTime gameTime) { }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
             if (this.Enabled)
             { 
                 foreach (Buttons button in buttons)
                 {
                     if (_input.GetButtonState(button) == ButtonState.Held || _input.GetButtonState(button) == ButtonState.Pressed)
-                        sprite.Draw(spriteBatch, frames[button], Position + positions[button]);
+                        sprite.Draw(spriteRender.spriteBatch, frames[button], Position + positions[button]);
                     else
-                        sprite.Draw(spriteBatch, frames[button]+18, Position + positions[button]);
+                        sprite.Draw(spriteRender.spriteBatch, frames[button]+18, Position + positions[button]);
                 }
 
-                spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
-                spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
-                spriteBatch.DrawString(font, Cardinal.String(_input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, Cardinal.String(_input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
             }
         }
     }

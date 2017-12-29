@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using TexturePackerLoader;
 
 namespace Element.Classes
 {
@@ -18,7 +19,7 @@ namespace Element.Classes
             this.itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
             
         }

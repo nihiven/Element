@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using Element;
+
 using Element.Interfaces;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+using TexturePackerLoader;
 
 namespace Element.Classes
 {
@@ -32,9 +32,9 @@ namespace Element.Classes
             this.Position += new Vector2((float)movementFactor, (float)movementFactor);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteRender spriteRender)
         {
-            this.AnimatedSprite.Draw(spriteBatch, this.Position);
+            this.AnimatedSprite.Draw(spriteRender.spriteBatch, this.Position);
         }
 
         public void LoadContent(ContentManager content)
