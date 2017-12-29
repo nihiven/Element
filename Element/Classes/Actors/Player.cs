@@ -17,7 +17,7 @@ namespace Element
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
         public AnimatedSprite AnimatedSprite { get; set; }
-        public IItem ItemEquiped { get; set; }
+        public IGun EquippedWeapon { get; set; }
 
 
         // inventory
@@ -71,7 +71,7 @@ namespace Element
             this.PickupRadius = 30;
 
             // items
-            this.ItemEquiped = null;
+            this.EquippedWeapon = null;
 
             // inventory 
             this.Inventory = new List<IItem>(32);
@@ -262,7 +262,7 @@ namespace Element
                         this._itemManager.Remove(item);
                         _contentManager.GetSoundEffect("Inv_Pickup").Play();
 
-                        if (this.ItemEquiped == null)
+                        if (this.EquippedWeapon == null && item is IGun)
                             this.EquipItem(item);
                     }
                     else
@@ -274,9 +274,9 @@ namespace Element
         }
 
         // player method
-        public void EquipItem(IItem item)
+        public void EquipWeapon(IGun item)
         {
-            this.ItemEquiped = item;
+            this.EquippedWeapon = item;
             _contentManager.GetSoundEffect("Equip").Play();
         }
 

@@ -75,7 +75,7 @@ namespace Element.Classes
 
         public void Draw(SpriteRender spriteRender)
         {
-            this.AnimatedSprite.Draw(spriteRender.spriteBatch, this.Position);
+            spriteRender.Draw(this.SpriteSheet.Sprite(TexturePackerMonoGameDefinitions.TexturePacker.JadeRabbit_hero), this.Position);
         }
 
         public void Attach(Vector2 position)
