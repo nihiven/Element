@@ -2,7 +2,6 @@
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using TexturePackerLoader;
@@ -12,21 +11,13 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IMoveable, IAttachable
+    public class Player : IComponent, IMoveable, IAttachable, IOwner
     {
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
         public AnimatedSprite AnimatedSprite { get; set; }
         public IGun EquippedWeapon { get; set; }
-
-
-        // inventory
-        // TODO: make this a component
-        public List<IItem> Inventory;
-        public bool ShowInventory;
-        public double InventoryTimeout;
-        public int InventorySelected;
-        public int InventoryMaxItems;
+        public IInventory Inventory;
 
         // stats
         public bool Active { get; set; }
@@ -38,7 +29,6 @@ namespace Element
         private Vector2 _position;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
-        private IItemManager _itemManager;
 
         // IAttachPoints
         public List<IItem> Attachments;
@@ -55,12 +45,12 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager, IItemManager itemManager)
+        public Player(IInput input, IContentManager contentManager)
         {
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
-            this._itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
 
+            this.Inventory = ObjectFactory.NewInventory(this);
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
 
             this.MinPosition = new Vector2(0, 0);
@@ -72,13 +62,6 @@ namespace Element
 
             // items
             this.EquippedWeapon = null;
-
-            // inventory 
-            this.Inventory = new List<IItem>(32);
-            this.ShowInventory = false;
-            this.InventoryTimeout = 5;
-            this.InventorySelected = 0;
-            this.InventoryMaxItems = 5;
         }
 
         /// <summary>
@@ -99,6 +82,11 @@ namespace Element
 
                 this._position = new Vector2(x, y);
             } 
+        }
+
+        public Vector2 DropPosition
+        {
+            get { return new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
         }
 
         public Vector2 PickupPosition
@@ -147,7 +135,6 @@ namespace Element
         /// </summary>
         public void LoadContent(ContentManager content)
         {
-           
         }
 
         /// <summary>
@@ -189,177 +176,34 @@ namespace Element
             if (this.Position != oldPosition)
                 this.AnimatedSprite.Update(gameTime);
 
-            if (this.ShowInventory)
-            {
-                this.InventoryTimeout -= gameTime.ElapsedGameTime.TotalSeconds;
-                if (this.InventoryTimeout <= 0)
-                {
-                    this.InventoryClose();
-                }
-            }
-
-
-            if (_input.GetButtonState(Buttons.LeftShoulder) == ButtonState.Pressed)
-            {
-                this.InventoryOpen();
-
-                if (this.Inventory.Count > 0)
-                {
-                    this.InventorySelected--;
-                    this.InventorySelected = (this.InventorySelected < 0) ? this.Inventory.Count - 1 : this.InventorySelected;
-                    _contentManager.GetSoundEffect("Inv_Vertical").Play(1, 0.1f, -0.6f);
-                }
-            }
-
-            if (_input.GetButtonState(Buttons.RightShoulder) == ButtonState.Pressed)
-            {
-                this.InventoryOpen();
-
-                if (this.Inventory.Count > 0)
-                {
-                    this.InventorySelected++;
-                    this.InventorySelected = (this.InventorySelected > Inventory.Count - 1) ? 0 : this.InventorySelected;
-                    _contentManager.GetSoundEffect("Inv_Vertical").Play(1, -0.2f, -0.6f); ;
-                }
-            }
-
-
-            if (_input.GetButtonState(Buttons.X) == ButtonState.Pressed)
-            {
-                if (this.Inventory.Count > 0)
-                {
-                    this.InventoryOpen();
-                    this.InventorySelectedItem().Position = this.Position;
-                    this._itemManager.Add(this.InventorySelectedItem());
-                    this.Inventory.Remove(this.InventorySelectedItem());
-                    
-                    // TODO: if you drop your equipped weapon, remove it from your player
-
-                    if (InventorySelected != 0)
-                    {
-                        InventorySelected--;
-                    }
-                    
-                }
-            }
-
-            if (_input.GetButtonState(Buttons.Y) == ButtonState.Pressed)
-            {
-                this.InventoryToggle();
-            }
-
-            // look for items near me ?
-            if (_input.GetButtonState(Buttons.A) == ButtonState.Pressed)
-            {
-                List<IItem> nearbyItems = this._itemManager.GetItemsInVicinity(this.PickupPosition, 30);
-                
-                if(nearbyItems.Count > 0)
-                {
-                    if (this.Inventory.Count < this.InventoryMaxItems)
-                    {
-                        IItem item = nearbyItems[0];
-                        this.Inventory.Add(item);
-                        this._itemManager.Remove(item);
-                        _contentManager.GetSoundEffect("Inv_Pickup").Play();
-
-                        if (this.EquippedWeapon == null && item is IGun)
-                            this.EquipItem(item);
-                    }
-                    else
-                    {
-                        _contentManager.GetSoundEffect("buzzer1").Play();
-                    }
-                }
-            }
+            // inventory
+            this.Inventory.Update(gameTime);
         }
 
         // player method
-        public void EquipWeapon(IGun item)
+        public void EquipWeapon(IGun gun)
         {
-            this.EquippedWeapon = item;
+            this.EquippedWeapon = gun;
             _contentManager.GetSoundEffect("Equip").Play();
         }
 
-        public IItem InventorySelectedItem()
-        {
-            return (this.Inventory.Count > 0) ? this.Inventory[this.InventorySelected] : null;
-        }
-
-        public void InventoryToggle()
-        {
-            if (this.ShowInventory)
-                this.InventoryClose();
-            else
-                this.InventoryOpen();
-        }
-
-        public void InventoryOpen()
-        {
-            if (!this.ShowInventory)
-            {
-                this.ShowInventory = true;
-                _contentManager.GetSoundEffect("Inv_Open").Play(1, 0, -0.6f);
-            }
-            this.InventoryTimeout = 5;
-        }
-
-        public void InventoryClose()
-        {
-            if (this.ShowInventory)
-            {
-                this.ShowInventory = false;
-                _contentManager.GetSoundEffect("Inv_Open").Play(1, -0.2f, -0.6f); ;
-            }
-            this.InventoryTimeout = 0;
-        }
-
+  
         /// <summary>
         /// Draw the player character and child actors
         /// </summary>
         public void Draw(SpriteRender spriteRender)
         {
-            // draw inventory first
-            if (this.ShowInventory)
-            {
-                Utilities.DrawRectangle(new Rectangle(5, 95, 125, 40 + (this.Inventory.Count * 30)), Color.DarkSlateGray, spriteRender.spriteBatch);
-
-                // draw title
-                int y = 100;
-                spriteRender.spriteBatch.DrawString(_contentManager.GetFont("Arial"), "Inventory", new Vector2(10, y), Color.Orange);
-
-                // draw selected rectangle
-                IItem selected = (this.Inventory.Count > 0) ? Inventory[InventorySelected] : null;
-
-                // draw inventory
-                foreach (IItem item in this.Inventory)
-                {
-                    y += 32;
-
-                    if (item.Equals(selected))
-                    { 
-                        Utilities.DrawRectangle(new Rectangle(12-1, y-1, item.AnimatedSprite.Width+2, item.AnimatedSprite.Height+2), Color.Red, spriteRender.spriteBatch);
-                    }
-
-                    if (item.Equals(this.ItemEquiped))
-                    {
-                        Utilities.DrawRectangle(new Rectangle(12, y, item.AnimatedSprite.Width, item.AnimatedSprite.Height), Color.Green, spriteRender.spriteBatch);
-                    }
-
-                    item.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(12, y));
-
-                }
-            }
-
-
-            // draw Player
             // the animated sprite draws its current frame by default
             this.AnimatedSprite.Draw(spriteRender.spriteBatch, Position);
 
             // draw attached items
-            if (this.ItemEquiped != null)
+            if (this.EquippedWeapon != null)
             {
-                this.ItemEquiped.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(this.Position.X+6, this.Position.Y+36));
+                this.EquippedWeapon.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(this.Position.X+6, this.Position.Y+36));
             }
+
+            // inventory
+            this.Inventory.Draw(spriteRender);
 
         }
     }

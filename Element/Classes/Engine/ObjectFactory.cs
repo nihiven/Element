@@ -46,12 +46,24 @@ namespace Element
                 case ("player"):
                     return new Player(
                         input: ObjectManager.Get<IInput>("input"), 
-                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
-                        itemManager: ObjectManager.Get<IItemManager>("itemManager")
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager")
                     );
                 default:
                     return null;
             }
+        }
+    }
+
+    public static class ObjectFactory
+    {
+        public static IInventory NewInventory(IOwner owner)
+        {
+            return new Inventory(
+                input: ObjectManager.Get<IInput>("input"),
+                contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                itemManager: ObjectManager.Get<IItemManager>("itemManager"),
+                owner: owner
+            );
         }
     }
 
