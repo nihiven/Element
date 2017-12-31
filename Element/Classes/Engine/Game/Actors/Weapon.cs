@@ -23,13 +23,20 @@ namespace Element.Classes
 
         // IGun
         public IOwner Owner { get => _owner; set => this._owner = value; }
-        public int BaseRPM { get => 180;  }
-        public int BaseRPS { get => this.BaseRPM / 60; }
-        public float BaseDamage { get; set; }
-        public float BaseVelocity { get; set; }
-        public float BaseRange { get; set; }
+        public int BaseRPM { get => 1100;  }
+        public double BaseRPS { get => this.BaseRPM / 60; }
+        public double BaseFiringDelay { get => 1 / this.BaseRPS;  }
+        public double BaseReloadDelay { get => 1; }
+        public double BaseDamage { get; set; }
+        public double BaseVelocity { get; set; }
+        public double BaseRange { get; set; }
         public int BaseMagSize { get; set; } // size is how big it can get, count is how many it currently has
         public int BaseReserveSize { get; set; }
+        // internal
+        private double _timeSinceLastBullet; // 
+        private double _dryFireDelay = 0.25; // minimum amount of time between out of ammo clicks in seconds
+        private double _timeReloading;
+        private bool _reloading;
 
         // current stats
         public int MagCount { get; set; }
@@ -56,13 +63,19 @@ namespace Element.Classes
             this.Guid = guid;
             this.Position = spawnLocation;
             this.BaseDamage = 10;
-            this.BaseVelocity = 450;
+            this.BaseVelocity = 1600;
             this.BaseRange = 400;
-            this.BaseMagSize = 190;
-            this.BaseReserveSize = 190;
-            this._bullets = new List<Bullet>();
+            this.BaseMagSize = 64;
+            this.BaseReserveSize = 192;
 
-            this._contentManager = contentManager;
+            this.MagCount = this.BaseMagSize;
+            this.ReserveCount = this.BaseReserveSize;
+
+            this._bullets = new List<Bullet>();
+            this._timeSinceLastBullet = 0;
+            this._timeReloading = 0;
+            this._reloading = false;
+
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite(itemId);
             this.SpriteSheet = this._contentManager.GetSpriteSheet("Guns");
             
@@ -76,6 +89,7 @@ namespace Element.Classes
 
         public void Update(GameTime gameTime)
         {
+            this._timeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
             AnimatedSprite.Update(gameTime);
 
             foreach (Bullet bullet in this._bullets)
@@ -83,12 +97,32 @@ namespace Element.Classes
                 bullet.Update(gameTime);
             }
 
-            if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed)
+            if (!this._reloading)
             {
-                // TODO: KEY MAPPING
-                // get the angle to fire at from the right thumbstick
-                double angle = Utilities.GetAngleFromVectors(new Vector2(0, 0), _input.GetRightThumbstickVector());
-                this.Fire(angle);
+                if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || _input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held)
+                {
+                    // TODO: KEY MAPPING
+                    // get the angle to fire at from the right thumbstick
+                    double angle = Utilities.GetAngleFromVectors(new Vector2(0, 0), _input.GetRightThumbstickVector());
+                    this.Fire(angle);
+                }
+
+                if (_input.GetButtonState(Buttons.RightStick) == ButtonState.Pressed)
+                {
+                    this.Reload();
+                }
+            }
+            else
+            {
+                this._timeReloading += gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (this._timeReloading > this.BaseReloadDelay)
+                {
+                    string insertSound = Utilities.GetRandomListMember<string>(new List<string> { "insert1", "insert2", "insert3" });
+                    this._reloading = false;
+                    this._timeReloading = 0;
+                    _contentManager.GetSoundEffect(insertSound).Play();
+                }
             }
         }
 
@@ -97,26 +131,55 @@ namespace Element.Classes
             spriteRender.Draw(this.SpriteSheet.Sprite(TexturePackerMonoGameDefinitions.TexturePacker.JadeRabbit_item), this._owner.WeaponAttachPosition);
 
             foreach (Bullet bullet in this._bullets)
-            {
                 bullet.Draw(spriteRender);
-            }
         }
 
         public Rectangle BoundingBox
         {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
-            }
+            get { return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height); }
         }
 
         public void Fire(double angle)
         {
-            if (this.BaseMagSize > 0)
+            if (this.MagCount > 0)
             {
-                _input.SetVibration(leftMotor: 0.1f, rightMotor: 0.25f, duration: 0.25f);
-                this._bullets.Add(new Bullet(contentManager: this._contentManager, gun: this, position: this.FirePosition, angle: angle));
-                this.MagCount -= 1;
+                if (this._timeSinceLastBullet > this.BaseFiringDelay)
+                {
+                    string sound = Utilities.GetRandomListMember<string>(new List<string> { "shot1", "shot2", "shot3", "shot4", "shot5", "shot6" });
+
+                    _input.SetVibration(leftMotor: 0.1f, rightMotor: 0.25f, duration: 0.25f);
+                    _contentManager.GetSoundEffect(sound).Play();
+                    this._bullets.Add(new Bullet(contentManager: this._contentManager, gun: this, position: this.FirePosition, angle: angle));
+                    this.MagCount -= 1;
+                    this._timeSinceLastBullet = 0;
+                }
+            }
+            else
+            {
+                if (this._timeSinceLastBullet > this._dryFireDelay)
+                {
+                    string sound = Utilities.GetRandomListMember<string>(new List<string> { "dryfire1", "dryfire2" });
+                    _contentManager.GetSoundEffect(sound).Play();
+                    this._timeSinceLastBullet = 0;
+                }
+            }
+        }
+
+        public void Reload()
+        {
+            if (this.MagCount != this.BaseMagSize)
+            {
+                this._reloading = true;
+                int needForMag = this.BaseMagSize - this.MagCount;
+
+                if (needForMag <= this.ReserveCount)
+                {
+                    this.ReserveCount -= needForMag;
+                    this.MagCount += needForMag;
+
+                    string ejectSound = Utilities.GetRandomListMember<string>(new List<string> { "eject1", "eject2", "eject3" });
+                    _contentManager.GetSoundEffect(ejectSound).Play();
+                }
             }
         }
     }

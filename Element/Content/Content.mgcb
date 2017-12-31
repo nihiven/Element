@@ -170,3 +170,123 @@
 /processorParam:TextureFormat=Color
 /build:Guns.png
 
+#begin soundEffects/weapons/smg/snd_BREECH_PULL_01.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_PULL_01.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_BREECH_PULL_02.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_PULL_02.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_BREECH_PULL_03.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_PULL_03.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_BREECH_RELEASE_01.SoundNodeWave_0000012c.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_RELEASE_01.SoundNodeWave_0000012c.ogg
+
+#begin soundEffects/weapons/smg/snd_BREECH_RELEASE_02.SoundNodeWave_0000012c.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_RELEASE_02.SoundNodeWave_0000012c.ogg
+
+#begin soundEffects/weapons/smg/snd_BREECH_RELEASE_03.SoundNodeWave_0000012c.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_BREECH_RELEASE_03.SoundNodeWave_0000012c.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_EJECT_01.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_EJECT_01.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_EJECT_02.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_EJECT_02.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_EJECT_03.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_EJECT_03.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_INSERT_01.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_INSERT_01.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_INSERT_02.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_INSERT_02.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_CLIP_INSERT_03.SoundNodeWave_00000129.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_CLIP_INSERT_03.SoundNodeWave_00000129.ogg
+
+#begin soundEffects/weapons/smg/snd_DRYFIRE_01.SoundNodeWave_00000125.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_DRYFIRE_01.SoundNodeWave_00000125.ogg
+
+#begin soundEffects/weapons/smg/snd_DRYFIRE_02.SoundNodeWave_00000125.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_DRYFIRE_02.SoundNodeWave_00000125.ogg
+
+#begin soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/weapons/smg/snd_SHOT_04.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_SHOT_04.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/weapons/smg/snd_Shot_05.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_Shot_05.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/weapons/smg/snd_Shot_06.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_Shot_06.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122.ogg
+

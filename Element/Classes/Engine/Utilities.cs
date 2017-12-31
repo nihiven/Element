@@ -2,12 +2,14 @@
 using Microsoft.Xna.Framework.Graphics;
 using Element.Classes;
 using System;
+using System.Collections.Generic;
 
 namespace Element
 {
     public static class Utilities
     {
         private static Texture2D rect;
+        private static Random rnd = new Random();
 
         public static int GetCardinalDirection(Vector2 vector)
         {
@@ -49,6 +51,11 @@ namespace Element
             }
 
             spriteBatch.Draw(rect, coords, color);
+        }
+
+        public static T GetRandomListMember<T>(List<T> list)
+        {
+            return list[rnd.Next(0, list.Count - 1)];
         }
     }
 }

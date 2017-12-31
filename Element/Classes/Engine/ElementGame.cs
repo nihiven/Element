@@ -102,6 +102,21 @@ namespace Element
             _contentManager.AddAnimation(identifier: "JadeRabbit:Fire", spriteSheetIdentifier: "JadeRabbit", startFrame: 1, frameCount: 1, framesPerSecond: 1);
             _contentManager.AddAnimatedSprite("JadeRabbit", new AnimatedSprite());
             _contentManager.GetAnimatedSprite("JadeRabbit").AddAnimation(_contentManager.GetAnimation("JadeRabbit:Fire"));
+            // audio
+            _contentManager.AddSoundEffect("shot1", "soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("shot2", "soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("shot3", "soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("shot4", "soundEffects/weapons/smg/snd_SHOT_04.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("shot5", "soundEffects/weapons/smg/snd_SHOT_05.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("shot6", "soundEffects/weapons/smg/snd_SHOT_06.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("dryfire1", "soundEffects/weapons/smg/snd_DRYFIRE_01.SoundNodeWave_00000125");
+            _contentManager.AddSoundEffect("dryfire2", "soundEffects/weapons/smg/snd_DRYFIRE_02.SoundNodeWave_00000125");
+            _contentManager.AddSoundEffect("eject1", "soundEffects/weapons/smg/snd_CLIP_EJECT_01.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("eject2", "soundEffects/weapons/smg/snd_CLIP_EJECT_02.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("eject3", "soundEffects/weapons/smg/snd_CLIP_EJECT_03.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("insert1", "soundEffects/weapons/smg/snd_CLIP_insert_01.SoundNodeWave_00000129");
+            _contentManager.AddSoundEffect("insert2", "soundEffects/weapons/smg/snd_CLIP_insert_02.SoundNodeWave_00000129");
+            _contentManager.AddSoundEffect("insert3", "soundEffects/weapons/smg/snd_CLIP_insert_03.SoundNodeWave_00000129");
 
             // BULLET
             _contentManager.AddSpriteSheetJB("bullet", "weapons/bullet", 1, 1);
