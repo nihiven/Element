@@ -17,10 +17,17 @@ namespace Element.Classes
 
     public class ItemManager : IComponent, IItemManager
     {
+        private bool _enabled = false;
         Dictionary<string, IItem> Items = new Dictionary<string, IItem>();
 
         public ItemManager()
         {
+        }
+
+        public bool Enabled
+        {
+            get { return this._enabled; }
+            private set { this._enabled = value; }
         }
 
         public void NewWeapon(Vector2 position)

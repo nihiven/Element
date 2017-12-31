@@ -48,6 +48,8 @@ namespace Element
                         input: ObjectManager.Get<IInput>("input"), 
                         contentManager: ObjectManager.Get<IContentManager>("contentManager")
                     );
+                case ("theGame"):
+                    return new GameOptions();
                 default:
                     return null;
             }
@@ -59,6 +61,7 @@ namespace Element
         public static IInventory NewInventory(IOwner owner)
         {
             return new Inventory(
+                theGame: ObjectManager.Get<IGameOptions>("theGame"),
                 input: ObjectManager.Get<IInput>("input"),
                 contentManager: ObjectManager.Get<IContentManager>("contentManager"),
                 itemManager: ObjectManager.Get<IItemManager>("itemManager"),

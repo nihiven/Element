@@ -12,6 +12,7 @@ namespace Element
     /// </summary>
     public class ElementGame : Game
     {
+        IGameOptions _theGame;
         IContentManager _contentManager;
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -20,6 +21,9 @@ namespace Element
 
         public ElementGame()
         {
+            this._theGame = (IGameOptions)ComponentFactory.New("theGame");
+            ObjectManager.Add("theGame", this._theGame); // core
+
             // we use the object manager with our 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
             // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
             ObjectManager.Add("graphics", new GraphicsManager(this));

@@ -18,10 +18,13 @@ namespace Element
 
     public class XB1Pad : IComponent, IInput
     {
+        public bool Enabled { get => true; }
         private GamePadState currentState;
         private GamePadState previousState;
         private List<Buttons> buttons;
         private Dictionary<Buttons, int> states;
+
+        private double _vibrateDuration = 0;
 
         public XB1Pad()
         {
@@ -72,6 +75,17 @@ namespace Element
 
                 previousState = currentState;
             }
+
+            if (this._vibrateDuration > 0)
+            {
+                this._vibrateDuration -= gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (this._vibrateDuration <= 0)
+                {
+                    this.StopVibration();
+                }
+            }
+
         }
 
         private void updateState(Buttons button, bool isButtonDown)
@@ -136,7 +150,7 @@ namespace Element
 
         public Vector2 GetRightThumbstickVector()
         {
-            return currentState.ThumbSticks.Left;
+            return currentState.ThumbSticks.Right;
         }
 
         public int GetLeftThumbstickCardinal()
@@ -147,6 +161,17 @@ namespace Element
         public int GetRightThumbstickCardinal()
         {
             return Utilities.GetCardinalDirection(currentState.ThumbSticks.Right);
+        }
+
+        public void SetVibration(float leftMotor, float rightMotor, float duration)
+        {
+            this._vibrateDuration = (double)duration;
+            GamePad.SetVibration(PlayerIndex.One, leftMotor, rightMotor);
+        }
+
+        public void StopVibration()
+        {
+            GamePad.SetVibration(PlayerIndex.One, 0, 0);
         }
 
         public void Draw(SpriteRender spriteRender) { }

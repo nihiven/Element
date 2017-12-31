@@ -10,5 +10,6 @@ namespace Element.Interfaces
         Guid Guid { get; }
         Vector2 Position { get; set; }
         Rectangle BoundingBox { get; }
+        IOwner Owner { get; set; }
     }
 }

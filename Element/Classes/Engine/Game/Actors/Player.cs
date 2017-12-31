@@ -11,10 +11,13 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IMoveable, IAttachable, IOwner
+    public class Player : IComponent, IMoveable, IOwner
     {
+        private bool _enabled;
+
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
+        public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(25, 43); }
         public AnimatedSprite AnimatedSprite { get; set; }
         public IGun EquippedWeapon { get; set; }
         public IInventory Inventory;
@@ -25,22 +28,11 @@ namespace Element
         public float Acceleration { get; set; }
         public float Velocity { get; set; }
         public float PickupRadius { get; set; }
+        public float BaseSpeed { get; set; }
 
         private Vector2 _position;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
-
-        // IAttachPoints
-        public List<IItem> Attachments;
-        public Vector2 HighArmor { get => this.Position; set => this.HighArmor = value; }
-        public Vector2 MidArmor { get => this.Position; set => this.HighArmor = value; }
-        public Vector2 LowArmor { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 HighWeapon { get => this.Position; set => this.HighArmor = value; }
-        public Vector2 MidWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 LowWeapon { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 HighPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 MidPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        public Vector2 LowPet { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
@@ -59,9 +51,16 @@ namespace Element
             this.Active = true;
             this.Health = 100;
             this.PickupRadius = 30;
+            this.BaseSpeed = 5;
 
             // items
             this.EquippedWeapon = null;
+        }
+
+        public bool Enabled
+        {
+            get { return this._enabled; }
+            private set { this._enabled = value; }
         }
 
         /// <summary>
@@ -153,7 +152,7 @@ namespace Element
             Vector2 oldPosition = this.Position;
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
-            this.Position += new Vector2(_input.GetLeftThumbstickVector().X, -_input.GetLeftThumbstickVector().Y) + new Vector2(_input.GetRightThumbstickVector().X, -_input.GetRightThumbstickVector().Y);
+            this.Position += new Vector2(this._input.GetLeftThumbstickVector().X, -this._input.GetLeftThumbstickVector().Y) * new Vector2(this.BaseSpeed);
 
             // cardinal direction will determine which animation is used
             // animations should be the same number of frames
@@ -178,6 +177,8 @@ namespace Element
 
             // inventory
             this.Inventory.Update(gameTime);
+            if (EquippedWeapon != null)
+                this.EquippedWeapon.Update(gameTime);
         }
 
         // player method
@@ -199,12 +200,11 @@ namespace Element
             // draw attached items
             if (this.EquippedWeapon != null)
             {
-                this.EquippedWeapon.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(this.Position.X+6, this.Position.Y+36));
+                this.EquippedWeapon.Draw(spriteRender);
             }
 
             // inventory
             this.Inventory.Draw(spriteRender);
-
         }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
     public interface IComponent
     {
+        // properties
+        bool Enabled { get; }
+
+        // methods
         void Initialize();
         void Update(GameTime gameTime);
         void Draw(SpriteRender spriteRender);

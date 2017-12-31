@@ -10,5 +10,7 @@ namespace Element.Interfaces
         Vector2 GetRightThumbstickVector();
         int GetLeftThumbstickCardinal();
         int GetRightThumbstickCardinal();
+
+        void SetVibration(float leftMotor, float rightMotor, float duration);
     }
 }
