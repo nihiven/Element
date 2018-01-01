@@ -10,15 +10,27 @@ namespace Element
     {
         public static IGun RandomWeapon(Vector2 spawnLocation)
         {
-            return new Weapon(
-                ObjectManager.Get<IInput>("input"), 
-                ObjectManager.Get<IContentManager>("contentManager"), 
-                Guid.NewGuid(), 
-                "JadeRabbit", 
-                "Jade Rabbit", 
-                spawnLocation
-           );
-        }
+            List<string> weapons = new List<string> { "JadeRabbit", "HardLight", "HardLight", "HardLight", "HardLight" };
+            string weapon = weapons[Utilities.SeededRand.Next(weapons.Count-1)];
+
+            switch (weapon)
+            { 
+                case "JadeRabbit":
+                    return new JadeRabbit(
+                        input: ObjectManager.Get<IInput>("input"), 
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager"), 
+                        guid: Guid.NewGuid(),
+                        spawnLocation: spawnLocation
+                    );
+                default:
+                    return new HardLight(
+                        input: ObjectManager.Get<IInput>("input"),
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                        guid: Guid.NewGuid(),
+                        spawnLocation: spawnLocation
+                    );
+            }
+    }
     }
 
     // the object factory returns 'singleton' objects for our game components
@@ -41,6 +53,8 @@ namespace Element
                         input: ObjectManager.Get<IInput>("input"), 
                         itemManager: ObjectManager.Get<IItemManager>("itemManager")
                     );
+                case ("debug"):
+                    return new Debug(contentManager: ObjectManager.Get<IContentManager>("contentManager"));
                 case ("itemManager"):
                     return new ItemManager();
                 case ("player"):

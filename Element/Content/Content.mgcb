@@ -110,54 +110,6 @@
 /processorParam:TextureFormat=Color
 /build:weapons/jadeRabbitTiny.png
 
-#begin audio/Buzzer1.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/Buzzer1.ogg
-
-#begin audio/inventory/Inv_Close.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Inv_Close.ogg
-
-#begin audio/inventory/Inv_Open.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Inv_Open.ogg
-
-#begin audio/inventory/Inv_Equip.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Inv_Equip.ogg
-
-#begin audio/inventory/Inv_Vertical.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Inv_Vertical.ogg
-
-#begin audio/inventory/Close.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Close.ogg
-
-#begin audio/inventory/Open.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Open.ogg
-
-#begin audio/inventory/Pickup.ogg
-/importer:OggImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:audio/inventory/Pickup.ogg
-
 #begin Guns.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -289,4 +241,124 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_07.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_07.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_08.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_08.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_09.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_09.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_10.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_10.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_11.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_11.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_12.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_12.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_01.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_01.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_02.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_02.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_03.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_03.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_04.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_04.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_05.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_05.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/player/footsteps/Footstep_Concrete_Run_06.SoundNodeWave_00000174.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/player/footsteps/Footstep_Concrete_Run_06.SoundNodeWave_00000174.ogg
+
+#begin soundEffects/ui/inventory/Close.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Close.ogg
+
+#begin soundEffects/ui/inventory/Inv_Close.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Inv_Close.ogg
+
+#begin soundEffects/ui/inventory/Inv_Equip.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Inv_Equip.ogg
+
+#begin soundEffects/ui/inventory/Inv_Open.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Inv_Open.ogg
+
+#begin soundEffects/ui/inventory/Inv_Vertical.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Inv_Vertical.ogg
+
+#begin soundEffects/ui/inventory/Open.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Open.ogg
+
+#begin soundEffects/ui/inventory/Pickup.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Pickup.ogg
+
+#begin soundEffects/ui/inventory/Buzzer1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/ui/inventory/Buzzer1.ogg
 

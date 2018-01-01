@@ -27,7 +27,6 @@ namespace Element.Classes
 
     public class Inventory : IInventory
     {
-        // TODO: make this a component
         public bool IsOpen { get; private set; }
         public int SelectedIndex { get; private set; }
         private List<IItem> _inventory { get; }
@@ -197,14 +196,18 @@ namespace Element.Classes
             }
         }
 
+
+        // TODO: player needs to drop weapon, not the inventory
         private void DropItem()
         {
             if (this.Count > 0)
             {
+                IItem item = this.SelectedItem();
                 this.Open();
-                this.SelectedItem().Position = this._owner.DropPosition;
-                this._itemManager.Add(this.SelectedItem());
-                this._inventory.Remove(this.SelectedItem());
+                item.Position = this._owner.DropPosition;
+                item.Owner = null;
+                this._itemManager.Add(item);
+                this._inventory.Remove(item);
 
                 // TODO: if you drop your equipped weapon, remove it from your player
 
@@ -237,16 +240,16 @@ namespace Element.Classes
 
                     if (item.Equals(selected))
                     {
-                        Utilities.DrawRectangle(new Rectangle(12 - 1, y - 1, item.AnimatedSprite.Width + 2, item.AnimatedSprite.Height + 2), Color.Red, spriteRender.spriteBatch);
+                        Utilities.DrawRectangle(new Rectangle(12 - 1, y - 1, (int)item.Width + 2, (int)item.Height + 2), Color.Red, spriteRender.spriteBatch);
                     }
 
                     if (item.Equals(this._owner.EquippedWeapon))
                     {
-                        Utilities.DrawRectangle(new Rectangle(12, y, item.AnimatedSprite.Width, item.AnimatedSprite.Height), Color.Green, spriteRender.spriteBatch);
+                        Utilities.DrawRectangle(new Rectangle(12, y, (int)item.Width, (int)item.Height), Color.Green, spriteRender.spriteBatch);
                     }
 
-                    item.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(12, y));
-
+                    spriteRender.Draw(item.SpriteSheet.Sprite(item.ItemIcon), item.Owner.WeaponAttachPosition);
+                    //item.AnimatedSprite.Draw(spriteRender.spriteBatch, new Vector2(12, y));
                 }
             }
         }

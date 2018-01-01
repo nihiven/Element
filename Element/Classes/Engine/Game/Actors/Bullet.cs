@@ -39,6 +39,17 @@ namespace Element.Classes
             this.AnimatedSprite = _contentManager.GetAnimatedSprite("bullet");
         }
 
+        public bool Expired
+        {
+            get
+            {
+                if (this._traveled > this._gun.BaseRange)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
         public void Initialize()
         {
 

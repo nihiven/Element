@@ -7,66 +7,103 @@ using TexturePackerLoader;
 
 namespace Element.Classes
 {
-    public class Weapon : IGun
+    [Flags]
+    public enum WeaponModifiers // last line of code written in 2017
     {
-        // replace with Projectile Manager
-        public List<Bullet> _bullets;
+        None = 0,
+        Auto = 1,
+        Range = 2,
+        Damage = 4,
+        Reload = 8
+    }
 
+    public class HardLight : Weapon
+    {
+        public override string Name { get => "Hard Light"; }
+        public override string ItemID { get => "HardLight"; }
+        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_HardLight_popup; }
+        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_HardLight_item; }
 
-        // sprite and positioning related
-        public Vector2 Position { get; set; }
-        public Vector2 FirePosition { get => new Vector2(this.Width, 2) + this._owner.WeaponAttachPosition; } // position at which the bullets are created
-        public AnimatedSprite AnimatedSprite { get; set; }
+        public override WeaponModifiers Modifiers { get => WeaponModifiers.Auto;  }
+        public override double BaseDamage { get => 15; }
+        public override int BaseRPM { get => 900; }
+
+        public HardLight(
+            IInput input,
+            IContentManager contentManager,
+            Guid guid,
+            Vector2 spawnLocation
+        ) : base(input, contentManager, guid, spawnLocation) { }
+    }
+
+    public class JadeRabbit : Weapon
+    {
+        public override string Name { get => "Jade Rabbit"; }
+        public override string ItemID { get => "JadeRabbit"; }
+        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_popup; }
+        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_item; }
+
+        public override WeaponModifiers Modifiers { get => WeaponModifiers.Range; }
+        public override double BaseDamage { get => 60; }
+        public override int BaseRPM { get => 225; }
+
+        public JadeRabbit(
+            IInput input, 
+            IContentManager contentManager, 
+            Guid guid, 
+            Vector2 spawnLocation
+        ) : base(input, contentManager, guid, spawnLocation) { }
+    }
+
+    public abstract class Weapon : IGun
+    {
+        // IItem
         public SpriteSheet SpriteSheet { get; set; }
-        public int Width => this.AnimatedSprite.Width;
-        public int Height => this.AnimatedSprite.Height;
+        public virtual string Name { get => "Weapon"; }
+        public virtual string ItemID { get => "WeaponID"; }
+        public Guid Guid { get; set; }
+        public Vector2 Position { get => (this._owner == null) ? this._position : this._owner.WeaponAttachPosition; set => this._position = value; }
+        public Rectangle BoundingBox { get => new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height); }
+        public IOwner Owner { get => _owner; set => this._owner = value; }
+        public virtual string PopupIcon { get => "ERROR_WeaponPopupIcon"; }
+        public virtual string ItemIcon { get => "ERROR_WeaponItemIcon"; }
+        public float Width => this.SpriteSheet.Sprite(this.ItemIcon).Size.X;
+        public float Height => this.SpriteSheet.Sprite(this.ItemIcon).Size.Y;
 
         // IGun
-        public IOwner Owner { get => _owner; set => this._owner = value; }
-        public int BaseRPM { get => 1100;  }
-        public double BaseRPS { get => this.BaseRPM / 60; }
-        public double BaseFiringDelay { get => 1 / this.BaseRPS;  }
-        public double BaseReloadDelay { get => 1; }
-        public double BaseDamage { get; set; }
-        public double BaseVelocity { get; set; }
-        public double BaseRange { get; set; }
-        public int BaseMagSize { get; set; } // size is how big it can get, count is how many it currently has
-        public int BaseReserveSize { get; set; }
-        // internal
+        public virtual WeaponModifiers Modifiers { get => WeaponModifiers.None; }
+        public virtual double BaseDamage { get => 10; }
+        public virtual double BaseVelocity { get => 1600; }
+        public virtual double BaseRange { get => 400; }
+        public virtual int BaseRPM { get => 1100;  }
+        public virtual double BaseRPS { get => this.BaseRPM / 60; }
+        public virtual double BaseFiringDelay { get => 1 / this.BaseRPS;  }
+        public virtual double BaseReloadDelay { get => 1; }
+        public virtual int BaseMagSize { get => 64; } // size is how big it can get, count is how many it currently has
+        public virtual int BaseReserveSize { get => 960; }
+        public virtual int MagCount { get; set; }
+        public virtual int ReserveCount { get; set; }
+        public virtual Vector2 FirePosition { get => new Vector2(this.Width, 2) + this.Position; } // position at which the bullets are created
+
+        // Weapon
+        private Vector2 _position;
         private double _timeSinceLastBullet; // 
         private double _dryFireDelay = 0.25; // minimum amount of time between out of ammo clicks in seconds
         private double _timeReloading;
         private bool _reloading;
-
-        // current stats
-        public int MagCount { get; set; }
-        public int ReserveCount { get; set; }
-
-        public string Name { get; set; }
-        public Guid Guid { get; set; }
-
-
-        // components
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
         private IOwner _owner;
-
-        //Testing 
         public bool PlayerClose;
-
-        public Weapon(IInput input, IContentManager contentManager, Guid guid, string itemId, string name, Vector2 spawnLocation)
+        public List<Bullet> _bullets;
+        
+        public Weapon(IInput input, IContentManager contentManager, Guid guid, Vector2 spawnLocation)
         {
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
 
-            this.Name = name;
             this.Guid = guid;
-            this.Position = spawnLocation;
-            this.BaseDamage = 10;
-            this.BaseVelocity = 1600;
-            this.BaseRange = 400;
-            this.BaseMagSize = 64;
-            this.BaseReserveSize = 192;
+            this._position = spawnLocation;
 
             this.MagCount = this.BaseMagSize;
             this.ReserveCount = this.BaseReserveSize;
@@ -76,7 +113,6 @@ namespace Element.Classes
             this._timeReloading = 0;
             this._reloading = false;
 
-            this.AnimatedSprite = this._contentManager.GetAnimatedSprite(itemId);
             this.SpriteSheet = this._contentManager.GetSpriteSheet("Guns");
             
 
@@ -90,24 +126,30 @@ namespace Element.Classes
         public void Update(GameTime gameTime)
         {
             this._timeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
-            AnimatedSprite.Update(gameTime);
+            //AnimatedSprite.Update(gameTime);
 
             foreach (Bullet bullet in this._bullets)
             {
                 bullet.Update(gameTime);
             }
 
+            // TODO: remember the tooth
+            for (int i = 0; i < this._bullets.Count; i++)
+            {
+                if (this._bullets[i].Expired)
+                {
+                    this._bullets[i] = null;
+                    this._bullets.RemoveAt(i);
+                    i--;
+                }
+            }
+
             if (!this._reloading)
             {
-                if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || _input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held)
+                if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held && this.Modifiers.HasFlag(WeaponModifiers.Auto)))
                 {
-                    // TODO: KEY MAPPING
                     // get the angle to fire at from the right thumbstick
-                    Vector2 normalized = _input.GetRightThumbstickVector();
-                    normalized.Normalize();
-
-                    double angle = Utilities.GetAngleFromVectors(new Vector2(0, 0), );
-                    this.Fire(angle);
+                    this.Fire(Math.Atan2(_input.GetRightThumbstickVector().Y, _input.GetRightThumbstickVector().X));
                 }
 
                 if (_input.GetButtonState(Buttons.RightStick) == ButtonState.Pressed)
@@ -131,15 +173,10 @@ namespace Element.Classes
 
         public void Draw(SpriteRender spriteRender)
         {
-            spriteRender.Draw(this.SpriteSheet.Sprite(TexturePackerMonoGameDefinitions.TexturePacker.JadeRabbit_item), this._owner.WeaponAttachPosition);
+            spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position);
 
             foreach (Bullet bullet in this._bullets)
                 bullet.Draw(spriteRender);
-        }
-
-        public Rectangle BoundingBox
-        {
-            get { return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height); }
         }
 
         public void Fire(double angle)

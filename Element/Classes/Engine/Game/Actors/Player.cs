@@ -46,7 +46,7 @@ namespace Element
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
 
             this.MinPosition = new Vector2(0, 0);
-            this.MaxPosition = new Vector2(640, 480); // TODO: tie to something. maybe the map?
+            this.MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
             this.Position = this.MinPosition;
             this.Active = true;
             this.Health = 100;

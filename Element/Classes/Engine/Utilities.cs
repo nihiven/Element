@@ -9,7 +9,7 @@ namespace Element
     public static class Utilities
     {
         private static Texture2D rect;
-        private static Random rnd = new Random();
+        public static Random SeededRand = new Random(Guid.NewGuid().GetHashCode());
 
         public static int GetCardinalDirection(Vector2 vector)
         {
@@ -55,7 +55,7 @@ namespace Element
 
         public static T GetRandomListMember<T>(List<T> list)
         {
-            return list[rnd.Next(0, list.Count - 1)];
+            return list[SeededRand.Next(0, list.Count - 1)];
         }
     }
 }

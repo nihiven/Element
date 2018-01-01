@@ -33,8 +33,8 @@ namespace Element
             // run fast
             //this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             //graphics.SynchronizeWithVerticalRetrace = true; // vsync
-            graphics.PreferredBackBufferWidth = 640;
-            graphics.PreferredBackBufferHeight = 480;
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             graphics.ApplyChanges();
         }
 
@@ -98,11 +98,14 @@ namespace Element
             _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_right"));
 
             // JADE RABBIT
+            /*
             _contentManager.AddSpriteSheetJB(identifier: "JadeRabbit", contentLocation: "weapons/jadeRabbitTiny", rows: 1, columns: 1);
             _contentManager.AddAnimation(identifier: "JadeRabbit:Fire", spriteSheetIdentifier: "JadeRabbit", startFrame: 1, frameCount: 1, framesPerSecond: 1);
             _contentManager.AddAnimatedSprite("JadeRabbit", new AnimatedSprite());
             _contentManager.GetAnimatedSprite("JadeRabbit").AddAnimation(_contentManager.GetAnimation("JadeRabbit:Fire"));
-            // audio
+            */
+            
+            // Weapon audio
             _contentManager.AddSoundEffect("shot1", "soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122");
             _contentManager.AddSoundEffect("shot2", "soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122");
             _contentManager.AddSoundEffect("shot3", "soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122");
@@ -118,6 +121,21 @@ namespace Element
             _contentManager.AddSoundEffect("insert2", "soundEffects/weapons/smg/snd_CLIP_insert_02.SoundNodeWave_00000129");
             _contentManager.AddSoundEffect("insert3", "soundEffects/weapons/smg/snd_CLIP_insert_03.SoundNodeWave_00000129");
 
+            // PLAYER audio
+            _contentManager.AddSoundEffect("footstep1", "soundEffects/player/footsteps/Footstep_Concrete_Run_01.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep2", "soundEffects/player/footsteps/Footstep_Concrete_Run_02.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep3", "soundEffects/player/footsteps/Footstep_Concrete_Run_03.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep4", "soundEffects/player/footsteps/Footstep_Concrete_Run_04.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep5", "soundEffects/player/footsteps/Footstep_Concrete_Run_05.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep6", "soundEffects/player/footsteps/Footstep_Concrete_Run_06.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep7", "soundEffects/player/footsteps/Footstep_Concrete_Run_07.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep8", "soundEffects/player/footsteps/Footstep_Concrete_Run_08.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep9", "soundEffects/player/footsteps/Footstep_Concrete_Run_09.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep10", "soundEffects/player/footsteps/Footstep_Concrete_Run_10.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep11", "soundEffects/player/footsteps/Footstep_Concrete_Run_11.SoundNodeWave_00000174");
+            _contentManager.AddSoundEffect("footstep12", "soundEffects/player/footsteps/Footstep_Concrete_Run_12.SoundNodeWave_00000174");
+            
+
             // BULLET
             _contentManager.AddSpriteSheetJB("bullet", "weapons/bullet", 1, 1);
             _contentManager.AddAnimation("bullet", "bullet", 1, 1, 1);
@@ -125,17 +143,18 @@ namespace Element
             _contentManager.GetAnimatedSprite("bullet").AddAnimation(_contentManager.GetAnimation("bullet"));
 
             // INVENTORY
-            _contentManager.AddSoundEffect("buzzer1", "audio/buzzer1");
-            _contentManager.AddSoundEffect("Inv_Close", "audio/inventory/Close");
-            _contentManager.AddSoundEffect("Inv_Open", "audio/inventory/Open");
-            _contentManager.AddSoundEffect("Equip", "audio/inventory/Inv_Equip");
-            _contentManager.AddSoundEffect("Inv_Vertical", "audio/inventory/Inv_Vertical");
-            _contentManager.AddSoundEffect("Inv_Pickup", "audio/inventory/Pickup");
+            _contentManager.AddSoundEffect("buzzer1", "soundEffects/ui/inventory/buzzer1");
+            _contentManager.AddSoundEffect("Inv_Close", "soundEffects/ui/inventory/Close");
+            _contentManager.AddSoundEffect("Inv_Open", "soundEffects/ui/inventory/Open");
+            _contentManager.AddSoundEffect("Equip", "soundEffects/ui/inventory/Inv_Equip");
+            _contentManager.AddSoundEffect("Inv_Vertical", "soundEffects/ui/inventory/Inv_Vertical");
+            _contentManager.AddSoundEffect("Inv_Pickup", "soundEffects/ui/inventory/Pickup");
 
 
             // create the game components
             ObjectManager.Add("itemManager", ComponentFactory.New("itemManager")); // core
             ObjectManager.Add("input", ComponentFactory.New("input")); // core
+            ObjectManager.Add("debug", ComponentFactory.New("debug")); // core
             ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
             ObjectManager.Add("itemDebug", ComponentFactory.New("itemDebug")); // core
             ObjectManager.Add("player", ComponentFactory.New("player")); // game
@@ -144,6 +163,7 @@ namespace Element
             components.Add(ObjectManager.Get<IComponent>("itemManager")); // core
             components.Add(ObjectManager.Get<IComponent>("input")); // core
             components.Add(ObjectManager.Get<IComponent>("controllerDebug")); // core
+            components.Add(ObjectManager.Get<IComponent>("debug")); // core
             components.Add(ObjectManager.Get<IComponent>("itemDebug")); // core
             components.Add(ObjectManager.Get<IComponent>("player")); // game
 
