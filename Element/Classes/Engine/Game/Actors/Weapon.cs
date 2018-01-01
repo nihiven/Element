@@ -103,7 +103,10 @@ namespace Element.Classes
                 {
                     // TODO: KEY MAPPING
                     // get the angle to fire at from the right thumbstick
-                    double angle = Utilities.GetAngleFromVectors(new Vector2(0, 0), _input.GetRightThumbstickVector());
+                    Vector2 normalized = _input.GetRightThumbstickVector();
+                    normalized.Normalize();
+
+                    double angle = Utilities.GetAngleFromVectors(new Vector2(0, 0), );
                     this.Fire(angle);
                 }
 
@@ -121,7 +124,7 @@ namespace Element.Classes
                     string insertSound = Utilities.GetRandomListMember<string>(new List<string> { "insert1", "insert2", "insert3" });
                     this._reloading = false;
                     this._timeReloading = 0;
-                    _contentManager.GetSoundEffect(insertSound).Play();
+                    _contentManager.GetSoundEffect(insertSound).Play(0.6f, 0, 0);
                 }
             }
         }
@@ -148,7 +151,7 @@ namespace Element.Classes
                     string sound = Utilities.GetRandomListMember<string>(new List<string> { "shot1", "shot2", "shot3", "shot4", "shot5", "shot6" });
 
                     _input.SetVibration(leftMotor: 0.1f, rightMotor: 0.25f, duration: 0.25f);
-                    _contentManager.GetSoundEffect(sound).Play();
+                    _contentManager.GetSoundEffect(sound).Play(0.6f, 0, 0);
                     this._bullets.Add(new Bullet(contentManager: this._contentManager, gun: this, position: this.FirePosition, angle: angle));
                     this.MagCount -= 1;
                     this._timeSinceLastBullet = 0;
@@ -159,7 +162,7 @@ namespace Element.Classes
                 if (this._timeSinceLastBullet > this._dryFireDelay)
                 {
                     string sound = Utilities.GetRandomListMember<string>(new List<string> { "dryfire1", "dryfire2" });
-                    _contentManager.GetSoundEffect(sound).Play();
+                    _contentManager.GetSoundEffect(sound).Play(0.6f, 0, 0);
                     this._timeSinceLastBullet = 0;
                 }
             }
@@ -178,7 +181,7 @@ namespace Element.Classes
                     this.MagCount += needForMag;
 
                     string ejectSound = Utilities.GetRandomListMember<string>(new List<string> { "eject1", "eject2", "eject3" });
-                    _contentManager.GetSoundEffect(ejectSound).Play();
+                    _contentManager.GetSoundEffect(ejectSound).Play(0.6f, 0, 0);
                 }
             }
         }
