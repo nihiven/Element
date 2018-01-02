@@ -79,7 +79,6 @@ namespace Element
             // TEXTURE PACKER
             _contentManager.AddSpriteSheet("Guns", "Guns");
 
-
             // CONTROLLER DEBUG
             _contentManager.AddSpriteSheetJB(identifier: "controllerDebug", contentLocation: "controllerDebug/Xbox360PixelPadtrans", rows: 4, columns: 9);
             _contentManager.AddFont("Arial", Content.Load<SpriteFont>("Arial"));

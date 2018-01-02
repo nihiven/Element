@@ -7,14 +7,6 @@ using TexturePackerLoader;
 
 namespace Element.Classes
 {
-    public interface IItemManager
-    {
-        void NewWeapon(Vector2 position);
-        void Add(IItem item);
-        void Remove(IItem item);
-        List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance);
-    }
-
     public class ItemManager : IComponent, IItemManager
     {
         private bool _enabled = false;

@@ -7,12 +7,6 @@ using TexturePackerLoader;
 
 namespace Element.Classes
 {
-    public interface IGameOptions
-    {
-        bool GetBoolOption(string option, bool defaultValue);
-        void SetBoolOption(string option, bool value);
-    }
-
     [Serializable]
     public class GameOptions : IGameOptions, IComponent
     {

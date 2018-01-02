@@ -12,9 +12,31 @@ namespace Element.Classes
     {
         None = 0,
         Auto = 1,
-        Range = 2,
-        Damage = 4,
-        Reload = 8
+        RangeBoost = 2,
+        DamageBoost = 4,
+        ReloadBoost = 8
+    }
+
+    public class Thorn : Weapon
+    {
+        public override string Name { get => "Thorn"; }
+        public override string ItemID { get => "Thorn"; }
+        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_Thorn_popup; }
+        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_Thorn_item; }
+
+        public override WeaponModifiers Modifiers { get => WeaponModifiers.Auto; }
+        public override double BaseDamage { get => 180; }
+        public override double BaseRange { get => 200; }
+        public override int BaseRPM { get => 100; }
+        public override int BaseMagSize { get => 7; }
+        public override int BaseReserveSize { get => 84; }
+
+        public Thorn(
+            IInput input,
+            IContentManager contentManager,
+            Guid guid,
+            Vector2 spawnLocation
+        ) : base(input, contentManager, guid, spawnLocation) { }
     }
 
     public class HardLight : Weapon
@@ -25,8 +47,11 @@ namespace Element.Classes
         public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_HardLight_item; }
 
         public override WeaponModifiers Modifiers { get => WeaponModifiers.Auto;  }
-        public override double BaseDamage { get => 15; }
+        public override double BaseDamage { get => 20; }
+        public override double BaseRange { get => 400; }
         public override int BaseRPM { get => 900; }
+        public override int BaseMagSize { get => 63; }
+        public override int BaseReserveSize { get => 756; }
 
         public HardLight(
             IInput input,
@@ -43,9 +68,12 @@ namespace Element.Classes
         public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_popup; }
         public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_item; }
 
-        public override WeaponModifiers Modifiers { get => WeaponModifiers.Range; }
+        public override WeaponModifiers Modifiers { get => WeaponModifiers.RangeBoost; }
         public override double BaseDamage { get => 60; }
-        public override int BaseRPM { get => 225; }
+        public override double BaseRange { get => 800; }
+        public override int BaseRPM { get => 300; }
+        public override int BaseMagSize { get => 21; }
+        public override int BaseReserveSize { get => 252; }
 
         public JadeRabbit(
             IInput input, 
@@ -83,7 +111,7 @@ namespace Element.Classes
         public virtual int BaseReserveSize { get => 960; }
         public virtual int MagCount { get; set; }
         public virtual int ReserveCount { get; set; }
-        public virtual Vector2 FirePosition { get => new Vector2(this.Width, 2) + this.Position; } // position at which the bullets are created
+        public virtual Vector2 FirePosition { get => new Vector2(this.Width, 7) + this.Position; } // position at which the bullets are created
 
         // Weapon
         private Vector2 _position;
@@ -134,6 +162,8 @@ namespace Element.Classes
             }
 
             // TODO: remember the tooth
+            // put this in the particle manager?
+            // something like that, bullet manager mabye??
             for (int i = 0; i < this._bullets.Count; i++)
             {
                 if (this._bullets[i].Expired)
@@ -186,6 +216,7 @@ namespace Element.Classes
                 if (this._timeSinceLastBullet > this.BaseFiringDelay)
                 {
                     string sound = Utilities.GetRandomListMember<string>(new List<string> { "shot1", "shot2", "shot3", "shot4", "shot5", "shot6" });
+                    ObjectManager.Get<Debug>("debug").Add(sound, 3);
 
                     _input.SetVibration(leftMotor: 0.1f, rightMotor: 0.25f, duration: 0.25f);
                     _contentManager.GetSoundEffect(sound).Play(0.6f, 0, 0);
@@ -221,6 +252,17 @@ namespace Element.Classes
                     _contentManager.GetSoundEffect(ejectSound).Play(0.6f, 0, 0);
                 }
             }
+        }
+
+        public void Pickup(IOwner owner)
+        {
+            this._owner = owner;
+        }
+
+        public void Drop(Vector2 position)
+        {
+            this._owner = null;
+            this._position = position;
         }
     }
 }

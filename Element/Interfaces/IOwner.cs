@@ -8,6 +8,10 @@ namespace Element.Interfaces
         Vector2 PickupPosition { get; }
         Vector2 WeaponAttachPosition { get; }
         void EquipWeapon(IGun gun);
+        void RemoveItem(IItem item);
         IGun EquippedWeapon { get; }
+
+        void Pickup(IItem item);
+        void Drop(IItem item);
     }
 }

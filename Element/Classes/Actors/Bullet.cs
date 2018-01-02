@@ -4,12 +4,16 @@ using Microsoft.Xna.Framework.Content;
 using System;
 using TexturePackerLoader;
 
-namespace Element.Classes
+namespace Element.Interfaces
 {
     public interface IProjectile
     {
 
     }
+}
+
+namespace Element.Classes
+{
 
     public class Bullet : IProjectile
     {

@@ -16,6 +16,9 @@ namespace Element.Interfaces
         float Width { get; }
         float Height { get; }
 
+        void Pickup(IOwner owner);
+        void Drop(Vector2 position);
+
         string PopupIcon { get; }
         string ItemIcon { get; }
     }

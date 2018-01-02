@@ -17,7 +17,7 @@ namespace Element
 
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
-        public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(25, 43); }
+        public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(15, 30); }
         public AnimatedSprite AnimatedSprite { get; set; }
         public IGun EquippedWeapon { get; set; }
         public IInventory Inventory;
@@ -177,6 +177,7 @@ namespace Element
 
             // inventory
             this.Inventory.Update(gameTime);
+
             if (EquippedWeapon != null)
                 this.EquippedWeapon.Update(gameTime);
         }
@@ -186,6 +187,12 @@ namespace Element
         {
             this.EquippedWeapon = gun;
             _contentManager.GetSoundEffect("Equip").Play();
+        }
+
+        public void RemoveItem(IItem item)
+        {
+            // just remove it from the player
+            this.EquippedWeapon = (IGun)this.Inventory.SelectedItem;
         }
 
   
@@ -205,6 +212,22 @@ namespace Element
 
             // inventory
             this.Inventory.Draw(spriteRender);
+        }
+
+        public void Pickup(IItem item)
+        {
+            if (item is IGun && this.EquippedWeapon == null)
+            {
+                this.EquippedWeapon = (IGun)item;
+            }
+        }
+
+        public void Drop(IItem item)
+        {
+            if (item == this.EquippedWeapon)
+            {
+                this.EquippedWeapon = (IGun)this.Inventory.SelectedItem;
+            }
         }
     }
 }
