@@ -23,7 +23,7 @@ namespace Element
 
         }
 
-        public static IGun RandomWeapon(Vector2 spawnLocation)
+        public static IWeapon RandomWeapon(Vector2 spawnLocation)
         {
             List<string> weapons = new List<string> { null, "Thorn", "HardLight", "JadeRabbette" };
             string weapon = weapons[Utilities.SeededRand.Next(weapons.Count)];
@@ -79,6 +79,11 @@ namespace Element
                     return new Debug(contentManager: ObjectManager.Get<IContentManager>("contentManager"));
                 case ("itemManager"):
                     return new ItemManager();
+                case ("hud"):
+                    return new Hud(
+                        ObjectManager.Get<IPlayer>("player"),
+                        contentManager: ObjectManager.Get<IContentManager>("contentManager")
+                        );
                 case ("player"):
                     return new Player(
                         input: ObjectManager.Get<IInput>("input"), 
@@ -94,7 +99,7 @@ namespace Element
 
     public static class ObjectFactory
     {
-        public static IInventory NewInventory(IOwner owner)
+        public static IInventory NewInventory(IPlayer owner)
         {
             return new Inventory(
                 theGame: ObjectManager.Get<IGameOptions>("theGame"),

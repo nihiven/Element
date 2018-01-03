@@ -11,7 +11,7 @@ namespace Element.Interfaces
         double TimeOut { get; }
         bool IsOpen { get; }
         int Count { get; }
-        IOwner Owner { get; set; }
+        IPlayer Owner { get; set; }
 
         void Open();
         void Close();

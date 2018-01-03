@@ -157,6 +157,7 @@ namespace Element
             ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
             ObjectManager.Add("itemDebug", ComponentFactory.New("itemDebug")); // core
             ObjectManager.Add("player", ComponentFactory.New("player")); // game
+            ObjectManager.Add("hud", ComponentFactory.New("hud")); // game
 
             // add the components
             components.Add(ObjectManager.Get<IComponent>("itemManager")); // core
@@ -165,6 +166,7 @@ namespace Element
             components.Add(ObjectManager.Get<IComponent>("debug")); // core
             components.Add(ObjectManager.Get<IComponent>("itemDebug")); // core
             components.Add(ObjectManager.Get<IComponent>("player")); // game
+            components.Add(ObjectManager.Get<IComponent>("hud")); // core
 
             // llooooaadd some content
             foreach (IComponent component in components)
@@ -206,7 +208,7 @@ namespace Element
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.DarkRed);
             spriteBatch.Begin();
             
             // draw everything

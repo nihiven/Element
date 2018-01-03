@@ -4,7 +4,7 @@ using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IGun : IItem
+    public interface IWeapon : IItem
     {
         WeaponModifiers Modifiers { get; }
 

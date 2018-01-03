@@ -11,24 +11,36 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    public class Player : IComponent, IMoveable, IOwner
+    /// 
+    public class Player : IComponent, IMoveable, IPlayer
     {
         private bool _enabled;
 
+        // IOwner
+        public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(15, 30); }
+        public Vector2 DropPosition { get => new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
+        public Vector2 PickupPosition { get => new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
+
+        // IPlayer
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
-        public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(15, 30); }
+        
         public AnimatedSprite AnimatedSprite { get; set; }
-        public IGun EquippedWeapon { get; set; }
-        public IInventory Inventory;
+        public IWeapon EquippedWeapon { get; set; }
+        public IInventory Inventory { get; }
 
-        // stats
-        public bool Active { get; set; }
-        public int Health { get; set; }
-        public float Acceleration { get; set; }
-        public float Velocity { get; set; }
-        public float PickupRadius { get; set; }
-        public float BaseSpeed { get; set; }
+        // base stats
+        public float BaseHealth { get; set; }
+        public float BaseShield { get; set; }
+        public float BaseAcceleration { get; set; }
+        public float BaseVelocity { get; set; }
+        public float BasePickupRadius { get; set; }
+        
+        // adjusted stats
+        public float Health { get => this.BaseHealth; }
+        public float Shield { get => this.BaseShield; }
+        public float Acceleration { get => this.BaseAcceleration; }
+        public float Velocity { get => this.BaseVelocity; }
 
         private Vector2 _position;
         private readonly IInput _input;
@@ -48,10 +60,10 @@ namespace Element
             this.MinPosition = new Vector2(0, 0);
             this.MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
             this.Position = this.MinPosition;
-            this.Active = true;
-            this.Health = 100;
-            this.PickupRadius = 30;
-            this.BaseSpeed = 5;
+            this.BaseHealth = 100.0f;
+            this.BaseShield = 100.0f;
+            this.BasePickupRadius = 30;
+            this.BaseVelocity = 5;
 
             // items
             this.EquippedWeapon = null;
@@ -83,15 +95,6 @@ namespace Element
             } 
         }
 
-        public Vector2 DropPosition
-        {
-            get { return new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
-        }
-
-        public Vector2 PickupPosition
-        {
-            get { return new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
-        }
 
         /// <summary>
         /// Returns player width, assumes width of the player is the width of the player texture.
@@ -152,7 +155,7 @@ namespace Element
             Vector2 oldPosition = this.Position;
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
-            this.Position += new Vector2(this._input.GetLeftThumbstickVector().X, -this._input.GetLeftThumbstickVector().Y) * new Vector2(this.BaseSpeed);
+            this.Position += new Vector2(this._input.GetLeftThumbstickVector().X, -this._input.GetLeftThumbstickVector().Y) * new Vector2(this.BaseVelocity);
 
             // cardinal direction will determine which animation is used
             // animations should be the same number of frames
@@ -183,7 +186,7 @@ namespace Element
         }
 
         // player method
-        public void EquipWeapon(IGun gun)
+        public void EquipWeapon(IWeapon gun)
         {
             this.EquippedWeapon = gun;
             _contentManager.GetSoundEffect("Equip").Play();
@@ -192,7 +195,7 @@ namespace Element
         public void RemoveItem(IItem item)
         {
             // just remove it from the player
-            this.EquippedWeapon = (IGun)this.Inventory.SelectedItem;
+            this.EquippedWeapon = (IWeapon)this.Inventory.SelectedItem;
         }
 
   
@@ -216,9 +219,9 @@ namespace Element
 
         public void Pickup(IItem item)
         {
-            if (item is IGun && this.EquippedWeapon == null)
+            if (item is IWeapon && this.EquippedWeapon == null)
             {
-                this.EquippedWeapon = (IGun)item;
+                this.EquippedWeapon = (IWeapon)item;
             }
         }
 
@@ -226,7 +229,7 @@ namespace Element
         {
             if (item == this.EquippedWeapon)
             {
-                this.EquippedWeapon = (IGun)this.Inventory.SelectedItem;
+                this.EquippedWeapon = (IWeapon)this.Inventory.SelectedItem;
             }
         }
     }

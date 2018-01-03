@@ -1,6 +1,5 @@
 ﻿using Element.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace Element.Classes
         public double TimeOut { get; private set; }
         public bool IsOpen { get; private set; }
         public int Count { get => this._inventory.Count; }
-        public IOwner Owner { get => this._owner; set => this._owner = value; }
+        public IPlayer Owner { get => this._owner; set => this._owner = value; }
 
         // options
         public bool AutoEquip { get; private set; }
@@ -28,9 +27,9 @@ namespace Element.Classes
         private readonly IContentManager _contentManager;
         private readonly IInput _input;
         private IItemManager _itemManager;
-        private IOwner _owner;
+        private IPlayer _owner;
 
-        public Inventory(IGameOptions theGame, IInput input, IContentManager contentManager, IItemManager itemManager, IOwner owner)
+        public Inventory(IGameOptions theGame, IInput input, IContentManager contentManager, IItemManager itemManager, IPlayer owner)
         {
             this._theGame = theGame ?? throw new ArgumentNullException("theGame");
             this._input = input ?? throw new ArgumentNullException("input");
@@ -129,7 +128,7 @@ namespace Element.Classes
             {
                 this.SelectedIndex--;
                 this.SelectedIndex = (this.SelectedIndex < 0) ? this.Count - 1 : this.SelectedIndex;
-                this.Owner.EquipWeapon((IGun)this.SelectedItem);
+                this.Owner.EquipWeapon((IWeapon)this.SelectedItem);
                 _contentManager.GetSoundEffect("Inv_Vertical").Play(1, 0.1f, -0.6f);
             }
         }
@@ -142,7 +141,7 @@ namespace Element.Classes
             {
                 this.SelectedIndex++;
                 this.SelectedIndex = (this.SelectedIndex > this.Count - 1) ? 0 : this.SelectedIndex;
-                this.Owner.EquipWeapon((IGun)this.SelectedItem);
+                this.Owner.EquipWeapon((IWeapon)this.SelectedItem);
                 _contentManager.GetSoundEffect("Inv_Vertical").Play(1, -0.2f, -0.6f); ;
             }
         }
@@ -202,7 +201,7 @@ namespace Element.Classes
             // draw inventory first
             if (this.IsOpen)
             {
-                Utilities.DrawRectangle(new Rectangle(5, 95, 125, 40 + (this.Count * 40)), Color.DarkSlateGray, spriteRender.spriteBatch);
+                Utilities.DrawRectangle(new Rectangle(5, 95, 125, 40 + (this.Count * 30)), Color.DarkSlateGray, spriteRender.spriteBatch);
 
                 // draw title
                 int y = 100;
@@ -214,7 +213,7 @@ namespace Element.Classes
                 // draw inventory
                 foreach (IItem item in this._inventory)
                 {
-                    y += 5 + (int)item.SpriteSheet.Sprite(item.ItemIcon).Size.Y;
+                    y += 10 + (int)item.ItemFrame.Size.Y;
 
                     if (item.Equals(selected))
                     {
@@ -226,7 +225,7 @@ namespace Element.Classes
                         Utilities.DrawRectangle(new Rectangle(12, y, (int)item.Width, (int)item.Height), Color.Green, spriteRender.spriteBatch);
                     }
 
-                    spriteRender.Draw(sprite: item.SpriteSheet.Sprite(item.ItemIcon), position: new Vector2(12, y));
+                    spriteRender.Draw(sprite: item.ItemFrame, position: new Vector2(12, y));
                 }
             }
         }

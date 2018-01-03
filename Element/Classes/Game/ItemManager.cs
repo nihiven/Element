@@ -38,21 +38,12 @@ namespace Element.Classes
 
         public void Update(GameTime gameTime)
         {
-            /*
-            foreach (IItem item in this.Items.Values)
-            {
-                item.AnimatedSprite.Update(gameTime);
-            }
-            */
         }
 
         public void Draw(SpriteRender spriteRender)
         {
             foreach (IItem item in this.Items.Values)
-            {
-                spriteRender.Draw(item.SpriteSheet.Sprite(item.ItemIcon), item.Position);
-                //item.AnimatedSprite.Draw(spriteRender.spriteBatch, item.Position);
-            }
+                spriteRender.Draw(item.ItemFrame, item.Position);
         }
 
         public void LoadContent(ContentManager content)

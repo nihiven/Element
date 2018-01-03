@@ -24,12 +24,12 @@ namespace Element.Classes
         public Vector2 Position { get; set; }
         public AnimatedSprite AnimatedSprite { get; set; }
 
-        private IGun _gun;
+        private IWeapon _gun;
         private double _traveled;
 
         private IContentManager _contentManager;
 
-        public Bullet(IContentManager contentManager, IGun gun, Vector2 position, double angle)
+        public Bullet(IContentManager contentManager, IWeapon gun, Vector2 position, double angle)
         {
             this._gun = gun ?? throw new ArgumentNullException("gun");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");

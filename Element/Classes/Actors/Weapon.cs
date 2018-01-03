@@ -83,16 +83,16 @@ namespace Element.Classes
         ) : base(input, contentManager, guid, spawnLocation) { }
     }
 
-    public abstract class Weapon : IGun
+    public abstract class Weapon : IWeapon
     {
         // IItem
-        public SpriteSheet SpriteSheet { get; set; }
+        private SpriteSheet SpriteSheet { get; set; }
         public virtual string Name { get => "Weapon"; }
         public virtual string ItemID { get => "WeaponID"; }
         public Guid Guid { get; set; }
         public Vector2 Position { get => (this._owner == null) ? this._position : this._owner.WeaponAttachPosition; set => this._position = value; }
         public Rectangle BoundingBox { get => new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height); }
-        public IOwner Owner { get => _owner; set => this._owner = value; }
+        public IPlayer Owner { get => _owner; set => this._owner = value; }
         public virtual string PopupIcon { get => "ERROR_WeaponPopupIcon"; }
         public virtual string ItemIcon { get => "ERROR_WeaponItemIcon"; }
         public float Width => this.SpriteSheet.Sprite(this.ItemIcon).Size.X;
@@ -113,6 +113,9 @@ namespace Element.Classes
         public virtual int ReserveCount { get; set; }
         public virtual Vector2 FirePosition { get => new Vector2(this.Width, 7) + this.Position; } // position at which the bullets are created
 
+        public SpriteFrame PopupFrame { get => this.SpriteSheet.Sprite(this.PopupIcon); }
+        public SpriteFrame ItemFrame { get => this.SpriteSheet.Sprite(this.ItemIcon); }
+
         // Weapon
         private Vector2 _position;
         private double _timeSinceLastBullet; // 
@@ -121,7 +124,7 @@ namespace Element.Classes
         private bool _reloading;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
-        private IOwner _owner;
+        private IPlayer _owner;
         public bool PlayerClose;
         public List<Bullet> _bullets;
         
@@ -203,7 +206,11 @@ namespace Element.Classes
 
         public void Draw(SpriteRender spriteRender)
         {
-            spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position);
+            // tilt gun down to give a little reload animation
+            if (!_reloading)
+                spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position);
+            else
+                spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position, null, 0.25f);
 
             foreach (Bullet bullet in this._bullets)
                 bullet.Draw(spriteRender);
@@ -254,7 +261,7 @@ namespace Element.Classes
             }
         }
 
-        public void Pickup(IOwner owner)
+        public void Pickup(IPlayer owner)
         {
             this._owner = owner;
         }
