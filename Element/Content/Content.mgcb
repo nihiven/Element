@@ -37,13 +37,6 @@
 /processorParam:TextureFormat=Color
 /build:female_walkcycle.png
 
-#begin Arial.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Arial.spritefont
-
 #begin soundEffects/button.ogg
 /importer:OggImporter
 /processor:SoundEffectProcessor
@@ -361,4 +354,140 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:soundEffects/ui/inventory/Buzzer1.ogg
+
+#begin soundEffects/weapons/revolver/snd_SHOT_02.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SHOT_02.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/revolver/snd_SHOT_03.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SHOT_03.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/revolver/snd_SHOT_04.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SHOT_04.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/revolver/snd_Shot_05.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_Shot_05.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/revolver/snd_Shot_06.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_Shot_06.SoundNodeWave_00000128.ogg
+
+#begin soundEffects/weapons/revolver/snd_Spindle_Spin_01.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_Spindle_Spin_01.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_Spindle_Spin_02.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_Spindle_Spin_02.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleClose_01.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleClose_01.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleClose_02.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleClose_02.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleEject_01.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleEject_01.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleEject_02.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleEject_02.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleEject_03.SoundNodeWave_00000130.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleEject_03.SoundNodeWave_00000130.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleInsert_01.SoundNodeWave_00000131.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleInsert_01.SoundNodeWave_00000131.ogg
+
+#begin soundEffects/weapons/revolver/snd_SpindleInsert_02.SoundNodeWave_00000131.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SpindleInsert_02.SoundNodeWave_00000131.ogg
+
+#begin soundEffects/weapons/revolver/snd_GunSpin_01.SoundNodeWave_0000012b.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_GunSpin_01.SoundNodeWave_0000012b.ogg
+
+#begin soundEffects/weapons/revolver/snd_GunSpin_02.SoundNodeWave_0000012b.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_GunSpin_02.SoundNodeWave_0000012b.ogg
+
+#begin soundEffects/weapons/revolver/snd_Holster_In.SoundNodeWave_0000012b.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_Holster_In.SoundNodeWave_0000012b.ogg
+
+#begin soundEffects/weapons/revolver/snd_SHOT_01.SoundNodeWave_00000128.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:soundEffects/weapons/revolver/snd_SHOT_01.SoundNodeWave_00000128.ogg
+
+#begin fonts/Impact.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Impact.spritefont
+
+#begin fonts/ImpactBig.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/ImpactBig.spritefont
+
+#begin fonts/Arial.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/Arial.spritefont
+
+#begin fonts/ArialBig.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/ArialBig.spritefont
 

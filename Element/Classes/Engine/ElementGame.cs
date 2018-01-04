@@ -81,7 +81,10 @@ namespace Element
 
             // CONTROLLER DEBUG
             _contentManager.AddSpriteSheetJB(identifier: "controllerDebug", contentLocation: "controllerDebug/Xbox360PixelPadtrans", rows: 4, columns: 9);
-            _contentManager.AddFont("Arial", Content.Load<SpriteFont>("Arial"));
+            _contentManager.AddFont("Arial", Content.Load<SpriteFont>("fonts/Arial"));
+            _contentManager.AddFont("ArialBig", Content.Load<SpriteFont>("fonts/ArialBig"));
+            _contentManager.AddFont("Impact", Content.Load<SpriteFont>("fonts/Impact"));
+            _contentManager.AddFont("ImpactBig", Content.Load<SpriteFont>("fonts/ImpactBig"));
 
             // PLAYER
             // TODO: read this data from a file
@@ -105,20 +108,20 @@ namespace Element
             */
             
             // Weapon audio
-            _contentManager.AddSoundEffect("shot1", "soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("shot2", "soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("shot3", "soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("shot4", "soundEffects/weapons/smg/snd_SHOT_04.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("shot5", "soundEffects/weapons/smg/snd_SHOT_05.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("shot6", "soundEffects/weapons/smg/snd_SHOT_06.SoundNodeWave_00000122");
-            _contentManager.AddSoundEffect("dryfire1", "soundEffects/weapons/smg/snd_DRYFIRE_01.SoundNodeWave_00000125");
-            _contentManager.AddSoundEffect("dryfire2", "soundEffects/weapons/smg/snd_DRYFIRE_02.SoundNodeWave_00000125");
-            _contentManager.AddSoundEffect("eject1", "soundEffects/weapons/smg/snd_CLIP_EJECT_01.SoundNodeWave_00000128");
-            _contentManager.AddSoundEffect("eject2", "soundEffects/weapons/smg/snd_CLIP_EJECT_02.SoundNodeWave_00000128");
-            _contentManager.AddSoundEffect("eject3", "soundEffects/weapons/smg/snd_CLIP_EJECT_03.SoundNodeWave_00000128");
-            _contentManager.AddSoundEffect("insert1", "soundEffects/weapons/smg/snd_CLIP_insert_01.SoundNodeWave_00000129");
-            _contentManager.AddSoundEffect("insert2", "soundEffects/weapons/smg/snd_CLIP_insert_02.SoundNodeWave_00000129");
-            _contentManager.AddSoundEffect("insert3", "soundEffects/weapons/smg/snd_CLIP_insert_03.SoundNodeWave_00000129");
+            _contentManager.AddSoundEffect("smg/shot1", "soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/shot2", "soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/shot3", "soundEffects/weapons/smg/snd_SHOT_03.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/shot4", "soundEffects/weapons/smg/snd_SHOT_04.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/shot5", "soundEffects/weapons/smg/snd_SHOT_05.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/shot6", "soundEffects/weapons/smg/snd_SHOT_06.SoundNodeWave_00000122");
+            _contentManager.AddSoundEffect("smg/dryfire1", "soundEffects/weapons/smg/snd_DRYFIRE_01.SoundNodeWave_00000125");
+            _contentManager.AddSoundEffect("smg/dryfire2", "soundEffects/weapons/smg/snd_DRYFIRE_02.SoundNodeWave_00000125");
+            _contentManager.AddSoundEffect("smg/eject1", "soundEffects/weapons/smg/snd_CLIP_EJECT_01.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("smg/eject2", "soundEffects/weapons/smg/snd_CLIP_EJECT_02.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("smg/eject3", "soundEffects/weapons/smg/snd_CLIP_EJECT_03.SoundNodeWave_00000128");
+            _contentManager.AddSoundEffect("smg/insert1", "soundEffects/weapons/smg/snd_CLIP_insert_01.SoundNodeWave_00000129");
+            _contentManager.AddSoundEffect("smg/insert2", "soundEffects/weapons/smg/snd_CLIP_insert_02.SoundNodeWave_00000129");
+            _contentManager.AddSoundEffect("smg/insert3", "soundEffects/weapons/smg/snd_CLIP_insert_03.SoundNodeWave_00000129");
 
             // PLAYER audio
             _contentManager.AddSoundEffect("footstep1", "soundEffects/player/footsteps/Footstep_Concrete_Run_01.SoundNodeWave_00000174");
