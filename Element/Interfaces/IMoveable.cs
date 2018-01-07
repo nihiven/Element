@@ -2,7 +2,7 @@
 
 namespace Element.Interfaces
 {
-    interface IMoveable
+    public interface IMoveable : IUpdate
     {
         int Width { get; }
         int Height { get; }
@@ -11,7 +11,5 @@ namespace Element.Interfaces
         Vector2 Position { get; } // bottom right corner of the player's movement box
         Vector2 MinPosition { get; } // top left corner of the player's movement box
         Vector2 MaxPosition { get; } // bottom right corner of the player's movement box
-
-        void Update(GameTime gameTime);
     }
 }

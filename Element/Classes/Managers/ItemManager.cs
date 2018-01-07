@@ -1,20 +1,26 @@
-﻿using Element.Interfaces;
+﻿using Element.Factories;
+using Element.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using TexturePackerLoader;
 
+namespace Element.Interfaces
+{
+    public interface IItemManager
+    {
+        void NewWeapon(Vector2 position);
+        void Add(IItem item);
+        void Remove(IItem item);
+        List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance);
+    }
+}
+
 namespace Element.Classes
 {
-    public class ItemManager : IComponent, IItemManager
+    public class ItemManager : IItemManager
     {
         private bool _enabled = false;
         Dictionary<string, IItem> Items = new Dictionary<string, IItem>();
-
-        public ItemManager()
-        {
-        }
 
         public bool Enabled
         {
@@ -30,30 +36,10 @@ namespace Element.Classes
             Items.Add(guid, item);
         }
 
-        // IComponent
-        public void Initialize()
-        {
-
-        }
-
-        public void Update(GameTime gameTime)
-        {
-        }
-
         public void Draw(SpriteRender spriteRender)
         {
             foreach (IItem item in this.Items.Values)
                 spriteRender.Draw(item.ItemFrame, item.Position);
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-
-        }
-
-        public void UnloadContent()
-        {
-
         }
 
         public void Add(IItem item)

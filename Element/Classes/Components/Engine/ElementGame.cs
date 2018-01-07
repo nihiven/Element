@@ -1,4 +1,5 @@
 ﻿using Element.Classes;
+using Element.Factories;
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,30 +13,32 @@ namespace Element
     /// </summary>
     public class ElementGame : Game
     {
-        IGameOptions _theGame;
         IContentManager _contentManager;
-        GraphicsDeviceManager graphics;
+        GraphicsDeviceManager _graphics;
         SpriteBatch spriteBatch;
         SpriteRender spriteRender; // TexturePacker
-        List<IComponent> components = new List<IComponent>();
+
+        // Components
+        IInput _input;
+        IControllerDebug _controllerDebug;
+        IDebug _debug;
+        IUpdate _itemDebug;
+        IGameManager _gameManager;
 
         public ElementGame()
         {
-            this._theGame = (IGameOptions)ComponentFactory.New("theGame");
-            ObjectManager.Add("theGame", this._theGame); // core
-
             // we use the object manager with our 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
             // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
             ObjectManager.Add("graphics", new GraphicsManager(this));
-            graphics = ObjectManager.Get<GraphicsDeviceManager>("graphics");
+            _graphics = ObjectManager.Get<GraphicsDeviceManager>("graphics");
 
             // TODO: move this
             // run fast
             //this.TargetElapsedTime = TimeSpan.FromSeconds(FPS.ONEFORTYFOUR);
             //graphics.SynchronizeWithVerticalRetrace = true; // vsync
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-            graphics.ApplyChanges();
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -46,17 +49,13 @@ namespace Element
         /// </summary>
         protected override void Initialize()
         {
-            // intialize every component
-            foreach (IComponent component in components)
-                component.Initialize();
-            
             // call base class initialize
             base.Initialize();
         }
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
+        /// all of your managed content.
         /// </summary>
         protected override void LoadContent()
         {
@@ -67,10 +66,83 @@ namespace Element
             this.spriteRender = new SpriteRender(this.spriteBatch);
 
             /// the master blaster
-            this._contentManager = new ContentManagement(Content);
+            this._contentManager = new AssetManager(Content);
             Content.RootDirectory = "Content";
             ObjectManager.Add("contentManager", this._contentManager);
 
+            LoadAssets();
+
+            // create the game components
+            _input = ObjectFactory.NewInput();
+            ObjectManager.Add("input", _input);
+
+            _debug = ObjectFactory.NewDebug();
+            ObjectManager.Add("debug", _debug);
+
+            _controllerDebug = ObjectFactory.NewControllerDebug();
+            ObjectManager.Add("controllerDebug", _controllerDebug);
+
+            // TODO: convert these to object factory
+            ObjectManager.Add("itemManager", ObjectFactory.NewItemManager()); // game
+            ObjectManager.Add("gameOptions", ObjectFactory.NewGameOptions()); // game
+
+            ObjectManager.Add("player", ObjectFactory.NewPlayer()); // game
+
+            ObjectManager.Add("hud", ObjectFactory.NewHud()); // game
+
+            _itemDebug = ObjectFactory.NewItemDebug();
+            ObjectManager.Add("itemDebug", _itemDebug);
+
+            _gameManager = ObjectFactory.NewGameManager();
+            ObjectManager.Add("gameManager", ObjectFactory.NewGameManager());
+        }
+
+
+        /// <summary>
+        /// UnloadContent will be called once per game and is the place to unload
+        /// game-specific content.
+        /// </summary>
+        protected override void UnloadContent()
+        {
+            // TODO: Unload any non ContentManager content here
+            Content.Unload();
+        }
+
+        /// <summary>
+        /// Allows the game to run logic such as updating the world,
+        /// checking for collisions, gathering input, and playing audio.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            _input.Update(gameTime);
+            _debug.Update(gameTime);
+            _itemDebug.Update(gameTime);
+            _gameManager.Update(gameTime);
+
+            // TODO: Add your update logic here
+            base.Update(gameTime);
+        }
+
+        /// <summary>
+        /// This is called when the game should draw itself.
+        /// </summary>
+        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.DarkRed);
+            spriteBatch.Begin();
+
+            _controllerDebug.Draw(spriteRender);
+            _debug.Draw(spriteRender);
+            _gameManager.Draw(spriteRender);
+
+            spriteBatch.End();
+            base.Draw(gameTime);
+        }
+
+        private void LoadAssets()
+        {
 
             // load all of the textures here for now
             // eventually we will move them into a resource file
@@ -99,14 +171,6 @@ namespace Element
             _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_left"));
             _contentManager.GetAnimatedSprite("female").AddAnimation(_contentManager.GetAnimation("female_walk_right"));
 
-            // JADE RABBIT
-            /*
-            _contentManager.AddSpriteSheetJB(identifier: "JadeRabbit", contentLocation: "weapons/jadeRabbitTiny", rows: 1, columns: 1);
-            _contentManager.AddAnimation(identifier: "JadeRabbit:Fire", spriteSheetIdentifier: "JadeRabbit", startFrame: 1, frameCount: 1, framesPerSecond: 1);
-            _contentManager.AddAnimatedSprite("JadeRabbit", new AnimatedSprite());
-            _contentManager.GetAnimatedSprite("JadeRabbit").AddAnimation(_contentManager.GetAnimation("JadeRabbit:Fire"));
-            */
-            
             // Weapon audio
             _contentManager.AddSoundEffect("smg/shot1", "soundEffects/weapons/smg/snd_SHOT_01.SoundNodeWave_00000122");
             _contentManager.AddSoundEffect("smg/shot2", "soundEffects/weapons/smg/snd_SHOT_02.SoundNodeWave_00000122");
@@ -136,7 +200,7 @@ namespace Element
             _contentManager.AddSoundEffect("footstep10", "soundEffects/player/footsteps/Footstep_Concrete_Run_10.SoundNodeWave_00000174");
             _contentManager.AddSoundEffect("footstep11", "soundEffects/player/footsteps/Footstep_Concrete_Run_11.SoundNodeWave_00000174");
             _contentManager.AddSoundEffect("footstep12", "soundEffects/player/footsteps/Footstep_Concrete_Run_12.SoundNodeWave_00000174");
-            
+
 
             // BULLET
             _contentManager.AddSpriteSheetJB("bullet", "weapons/bullet", 1, 1);
@@ -151,75 +215,7 @@ namespace Element
             _contentManager.AddSoundEffect("Equip", "soundEffects/ui/inventory/Inv_Equip");
             _contentManager.AddSoundEffect("Inv_Vertical", "soundEffects/ui/inventory/Inv_Vertical");
             _contentManager.AddSoundEffect("Inv_Pickup", "soundEffects/ui/inventory/Pickup");
-
-
-            // create the game components
-            ObjectManager.Add("itemManager", ComponentFactory.New("itemManager")); // core
-            ObjectManager.Add("input", ComponentFactory.New("input")); // core
-            ObjectManager.Add("debug", ComponentFactory.New("debug")); // core
-            ObjectManager.Add("controllerDebug", ComponentFactory.New("controllerDebug")); // core
-            ObjectManager.Add("itemDebug", ComponentFactory.New("itemDebug")); // core
-            ObjectManager.Add("player", ComponentFactory.New("player")); // game
-            ObjectManager.Add("hud", ComponentFactory.New("hud")); // game
-
-            // add the components
-            components.Add(ObjectManager.Get<IComponent>("itemManager")); // core
-            components.Add(ObjectManager.Get<IComponent>("input")); // core
-            components.Add(ObjectManager.Get<IComponent>("controllerDebug")); // core
-            components.Add(ObjectManager.Get<IComponent>("debug")); // core
-            components.Add(ObjectManager.Get<IComponent>("itemDebug")); // core
-            components.Add(ObjectManager.Get<IComponent>("player")); // game
-            components.Add(ObjectManager.Get<IComponent>("hud")); // core
-
-            // llooooaadd some content
-            foreach (IComponent component in components)
-                component.LoadContent(this.Content);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
-        {
-            // llooooaadd some content
-            foreach (IComponent component in components)
-                component.UnloadContent();
-
-            // TODO: Unload any non ContentManager content here
-            Content.Unload();
-        }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            // it's gametime
-            foreach (IComponent component in components)
-                component.Update(gameTime);
-
-            // TODO: Add your update logic here
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.DarkRed);
-            spriteBatch.Begin();
-            
-            // draw everything
-            foreach (IComponent component in components)
-                component.Draw(this.spriteRender);
-
-            spriteBatch.End();
-            base.Draw(gameTime);
-        }
     }
 }

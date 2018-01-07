@@ -7,24 +7,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Element.Interfaces;
 using TexturePackerLoader;
 
+namespace Element.Interfaces
+{
+    public interface IControllerDebug : IDraw
+    {
+    }
+}
+
 namespace Element.Classes
 {
     // TODO: convert buttons to this class
-    class ButtonInfo
-    {
-        public Buttons button;
-        public Vector2 position;
-        public int frame;
-
-        ButtonInfo(Buttons button, Vector2 position, int frame)
-        {
-            this.button = button;
-            this.position = position;
-            this.frame = frame;
-        }
-    }
-
-    class ControllerDebug : IComponent
+    class ControllerDebug : IControllerDebug
     {
         public Vector2 Size;
         public Vector2 Position { get; set; }
@@ -50,7 +43,7 @@ namespace Element.Classes
             this.font = _contentManager.GetFont("Arial");
 
             Size = new Vector2(242.0f, 103.0f);
-            Position = new Vector2(_graphics.GetViewPortSize().X - Size.X - 5, 5);
+            Position = new Vector2(_graphics.GetViewPortSize.X - Size.X - 5, 5);
 
             buttons = new List<Buttons>
             {
@@ -112,20 +105,6 @@ namespace Element.Classes
                 { Buttons.DPadRight, new Vector2(47, 63) }
             };
         }
-
-        public void Initialize()
-        {
-
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-
-        }
-        
-        public void UnloadContent() { }
-
-        public void Update(GameTime gameTime) { }
 
         public void Draw(SpriteRender spriteRender)
         {

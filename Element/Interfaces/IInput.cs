@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Element.Interfaces
 {
-    public interface IInput
+    public interface IInput : IUpdate
     {
         int GetButtonState(Buttons button);
         Vector2 GetLeftThumbstickVector();

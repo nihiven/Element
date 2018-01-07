@@ -3,8 +3,33 @@ using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
-using System.Collections.Generic;
 using TexturePackerLoader;
+
+namespace Element.Interfaces
+{
+    public interface IPlayer: IDraw, IUpdate, ICollideable, IMoveable
+    {
+        // stats
+        float Health { get; }
+        float Shield { get; }
+        float Acceleration { get; }
+        float Velocity { get; }
+
+        // inventory
+        IInventory Inventory { get; }
+        IWeapon EquippedWeapon { get; }
+
+        Vector2 Position { get; }
+        Vector2 DropPosition { get; }
+        Vector2 PickupPosition { get; }
+        Vector2 WeaponAttachPosition { get; }
+
+        void EquipWeapon(IWeapon gun);
+        void RemoveItem(IItem item);
+        void Pickup(IItem item);
+        void Drop(IItem item);
+    }
+}
 
 namespace Element
 {
@@ -12,7 +37,7 @@ namespace Element
     /// This will hold all player logic and controls.
     /// </summary>
     /// 
-    public class Player : IComponent, IMoveable, IPlayer
+    public class Player : IPlayer
     {
         private bool _enabled;
 
@@ -49,12 +74,12 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager)
+        public Player(IInput input, IContentManager contentManager, IInventory inventory)
         {
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
 
-            this.Inventory = ObjectFactory.NewInventory(this);
+            this.Inventory = inventory;
             this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
 
             this.MinPosition = new Vector2(0, 0);
@@ -71,8 +96,8 @@ namespace Element
 
         public bool Enabled
         {
-            get { return this._enabled; }
-            private set { this._enabled = value; }
+            get => this._enabled;
+            private set => this._enabled = value;
         }
 
         /// <summary>
@@ -99,53 +124,13 @@ namespace Element
         /// <summary>
         /// Returns player width, assumes width of the player is the width of the player texture.
         /// </summary>
-        public int Width
-        {
-            get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;  }
-        }
+        public int Width => (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;
 
         /// <summary>
         /// Returns player height, assumes height of the player is the height of the player texture.
         /// </summary>
-        public int Height
-        {
-            get { return (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0; }
-        }
-
-        public Rectangle BoundingBox
-        {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
-            }
-        }
-
-        // TODO: uncouple the recalc from the intialization
-        // move the recalc to it's own function so it can be called when screen size changes
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Initialize()
-        {
-
-        }
-
-
-        // TODO: load this from a file??
-        /// <summary>
-        /// Load the art assests for the player
-        /// </summary>
-        public void LoadContent(ContentManager content)
-        {
-        }
-
-        /// <summary>
-        /// Unload unmanaged assests (none yet)
-        /// </summary>
-        public void UnloadContent()
-        {
-            // unload unmanaged content
-        }
+        public int Height => (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0;
+        public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
 
         /// <summary>
         /// Update the player character and all children actors
@@ -220,17 +205,13 @@ namespace Element
         public void Pickup(IItem item)
         {
             if (item is IWeapon && this.EquippedWeapon == null)
-            {
                 this.EquippedWeapon = (IWeapon)item;
-            }
         }
 
         public void Drop(IItem item)
         {
             if (item == this.EquippedWeapon)
-            {
                 this.EquippedWeapon = (IWeapon)this.Inventory.SelectedItem;
-            }
         }
     }
 }

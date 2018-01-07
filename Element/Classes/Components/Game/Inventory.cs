@@ -5,6 +5,27 @@ using System;
 using System.Collections.Generic;
 using TexturePackerLoader;
 
+namespace Element.Interfaces
+{
+    public interface IInventory
+    {
+        int SelectedIndex { get; }
+        IItem SelectedItem { get; }
+        int MaxItems { get; }
+        double TimeOut { get; }
+        bool IsOpen { get; }
+        int Count { get; }
+        IPlayer Owner { get; set; }
+
+        void Open();
+        void Close();
+        bool Toggle();
+        void Draw(SpriteRender spriteRender);
+        void Update(GameTime gameTime);
+    }
+
+}
+
 namespace Element.Classes
 {
     public class Inventory : IInventory
@@ -23,15 +44,15 @@ namespace Element.Classes
 
         // implementation
         private List<IItem> _inventory { get; }
-        private IGameOptions _theGame;
+        private IGameOptions _gameOptions;
         private readonly IContentManager _contentManager;
         private readonly IInput _input;
         private IItemManager _itemManager;
         private IPlayer _owner;
 
-        public Inventory(IGameOptions theGame, IInput input, IContentManager contentManager, IItemManager itemManager, IPlayer owner)
+        public Inventory(IGameOptions gameOptions, IInput input, IContentManager contentManager, IItemManager itemManager, IPlayer owner)
         {
-            this._theGame = theGame ?? throw new ArgumentNullException("theGame");
+            this._gameOptions = gameOptions ?? throw new ArgumentNullException("gameOptions");
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
             this._itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
@@ -42,7 +63,7 @@ namespace Element.Classes
             this.TimeOut = 5;
             this.SelectedIndex = 0;
             this.MaxItems = 5;
-            this.AutoEquip = _theGame.GetBoolOption(option: "Inv_AutoEquip", defaultValue: false);
+            this.AutoEquip = _gameOptions.GetBoolOption(option: "Inv_AutoEquip", defaultValue: false);
         }
 
         public bool Toggle()

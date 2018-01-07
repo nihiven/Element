@@ -1,0 +1,35 @@
+﻿Weapon Design
+---------------------
+Need to implement weapon states
+if a weapon is reloading, call Reload()
+if a weapon is firing, call Fire()
+and; Idle(), Empty()
+
+Prevent having to set explicit timers for things by using the states, and tracking the amount of time spent in each state
+
+
+Sound Effect Component
+---------------------
+Build a way to load a 'sound bank' which will be a group of related sounds. For example,
+firing sounds for the SMG, would be one bank. Then, have a way to play a random sound from
+an specified bank.
+
+During content load, individual weapon configuration files are read to create the weapon banks. 
+
+
+World Manager
+---------------------
+Some things to think about for world management...
+ 1: Do we need managers for related entities? ie; Items (drops, gear, weapons, mats), Projectiles (bullets, casts, bombs), Actors (player, enemies, NPCS)
+ 2: Is the world instanced or static? What do we get from either method?
+ 3: When do we start thinking about serialization?
+
+
+Misc
+---------------------
+Size = how big something is or how many something can hold
+Count = how many something currently has
+
+ex:
+MagSize = how many rounds a magazine can hold
+MagCount = how many rounds a magazine currently holds

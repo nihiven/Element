@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Element.Interfaces;
-using TexturePackerLoader;
 
 namespace Element
 {
@@ -16,7 +13,7 @@ namespace Element
         public const int Released = 4;
     }
 
-    public class XB1Pad : IComponent, IInput
+    public class XB1Pad : IInput
     {
         public bool Enabled { get => true; }
         private GamePadState currentState;
@@ -53,11 +50,6 @@ namespace Element
                 states[button] = ButtonState.None;
 
             previousState = GamePad.GetState(PlayerIndex.One);
-        }
-
-        public void Initialize()
-        {
-
         }
 
         public void Update(GameTime gameTime)
@@ -173,11 +165,5 @@ namespace Element
         {
             GamePad.SetVibration(PlayerIndex.One, 0, 0);
         }
-
-        public void Draw(SpriteRender spriteRender) { }
-
-        public void LoadContent(ContentManager content) { }
-
-        public void UnloadContent() { }
     }
 }

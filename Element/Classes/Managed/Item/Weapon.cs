@@ -1,9 +1,41 @@
-﻿using Element.Interfaces;
+﻿using Element.Classes;
+using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using TexturePackerLoader;
+
+namespace Element.Interfaces
+{
+    public interface IWeapon : IItem
+    {
+        WeaponModifiers Modifiers { get; }
+
+        // base numbers
+        double BaseDamage { get; }
+        double BaseVelocity { get; }
+        double BaseRange { get; }
+        int BaseRPM { get; }
+        double BaseRPS { get; }
+        double BaseFiringDelay { get; }
+        double BaseReloadDelay { get; }
+        int BaseMagSize { get; }
+        int BaseReserveSize { get; }
+
+        // current status
+        int MagCount { get; set; }
+        int ReserveCount { get; set; }
+
+        // sprite related
+        Vector2 FirePosition { get; }
+
+        // methods
+        void Fire(double angle);
+        void Update(GameTime gameTime);
+        void Draw(SpriteRender spriteRender);
+    }
+}
 
 namespace Element.Classes
 {
@@ -17,70 +49,12 @@ namespace Element.Classes
         ReloadBoost = 8
     }
 
-    public class Thorn : Weapon
+    public enum WeaponState
     {
-        public override string Name { get => "Thorn"; }
-        public override string ItemID { get => "Thorn"; }
-        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_Thorn_popup; }
-        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_Thorn_item; }
-
-        public override WeaponModifiers Modifiers { get => WeaponModifiers.Auto; }
-        public override double BaseDamage { get => 180; }
-        public override double BaseRange { get => 200; }
-        public override int BaseRPM { get => 100; }
-        public override int BaseMagSize { get => 7; }
-        public override int BaseReserveSize { get => 84; }
-
-        public Thorn(
-            IInput input,
-            IContentManager contentManager,
-            Guid guid,
-            Vector2 spawnLocation
-        ) : base(input, contentManager, guid, spawnLocation) { }
-    }
-
-    public class HardLight : Weapon
-    {
-        public override string Name { get => "Hard Light"; }
-        public override string ItemID { get => "HardLight"; }
-        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_HardLight_popup; }
-        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_HardLight_item; }
-
-        public override WeaponModifiers Modifiers { get => WeaponModifiers.Auto;  }
-        public override double BaseDamage { get => 20; }
-        public override double BaseRange { get => 400; }
-        public override int BaseRPM { get => 900; }
-        public override int BaseMagSize { get => 63; }
-        public override int BaseReserveSize { get => 756; }
-
-        public HardLight(
-            IInput input,
-            IContentManager contentManager,
-            Guid guid,
-            Vector2 spawnLocation
-        ) : base(input, contentManager, guid, spawnLocation) { }
-    }
-
-    public class JadeRabbit : Weapon
-    {
-        public override string Name { get => "Jade Rabbit"; }
-        public override string ItemID { get => "JadeRabbit"; }
-        public override string PopupIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_popup; }
-        public override string ItemIcon { get => TexturePackerMonoGameDefinitions.Element.Destiny_JadeRabbette_item; }
-
-        public override WeaponModifiers Modifiers { get => WeaponModifiers.RangeBoost; }
-        public override double BaseDamage { get => 60; }
-        public override double BaseRange { get => 800; }
-        public override int BaseRPM { get => 300; }
-        public override int BaseMagSize { get => 21; }
-        public override int BaseReserveSize { get => 252; }
-
-        public JadeRabbit(
-            IInput input, 
-            IContentManager contentManager, 
-            Guid guid, 
-            Vector2 spawnLocation
-        ) : base(input, contentManager, guid, spawnLocation) { }
+        Idle = 0,
+        Firing = 1,
+        Empty = 2,
+        Reloading = 4
     }
 
     public abstract class Weapon : IWeapon
@@ -119,7 +93,7 @@ namespace Element.Classes
         // Weapon
         private Vector2 _position;
         private double _timeSinceLastBullet; // 
-        private double _dryFireDelay = 0.25; // minimum amount of time between out of ammo clicks in seconds
+        private double _dryFireDelay = 0.15; // minimum amount of time between out of ammo clicks in seconds
         private double _timeReloading;
         private bool _reloading;
         private readonly IInput _input;
