@@ -64,37 +64,34 @@ namespace Element
             this.spriteRender = new SpriteRender(this.spriteBatch);
 
             /// the master blaster
-            this._contentManager = new AssetManager(Content);
+            
             Content.RootDirectory = "Content";
-            ObjectManager.Add(ComponentStrings.ContentManager, _contentManager);
+            ObjectManager.Add(ComponentStrings.ContentManager, new AssetManager(Content));
+            ObjectManager.Add(ComponentStrings.ContentManager, new Microsoft.Xna.Framework.Content.ContentManager(this.Services.GetService<Game, "Content"));
+            _contentManager = ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager);
 
-            LoadAssets();
+            LoadAssets(); // requires content manager
 
             // create the game components
-            _input = ObjectFactory.NewInput();
-            ObjectManager.Add(ComponentStrings.Input, _input);
-
-            _debug = ObjectFactory.NewDebug();
-            ObjectManager.Add(ComponentStrings.Debug, _debug);
-
-            _controllerDebug = ObjectFactory.NewControllerDebug();
-            ObjectManager.Add(ComponentStrings.ControllerDebug, _controllerDebug);
-
-            // TODO: convert these to object factory
+            ObjectManager.Add(ComponentStrings.Input, ObjectFactory.NewInput());
+            ObjectManager.Add(ComponentStrings.Debug, ObjectFactory.NewDebug());
+            ObjectManager.Add(ComponentStrings.ControllerDebug, ObjectFactory.NewControllerDebug());
             ObjectManager.Add(ComponentStrings.ItemManager, ObjectFactory.NewItemManager()); // game
             ObjectManager.Add(ComponentStrings.GameOptions, ObjectFactory.NewGameOptions()); // game
-
             ObjectManager.Add(ComponentStrings.ActiveGear, ObjectFactory.NewActiveGear()); // game
             ObjectManager.Add(ComponentStrings.Inventory, ObjectFactory.NewInventory()); // game
             ObjectManager.Add(ComponentStrings.Player, ObjectFactory.NewPlayer()); // game
-
             ObjectManager.Add(ComponentStrings.HUD, ObjectFactory.NewHud()); // game
-
-            _itemDebug = ObjectFactory.NewItemDebug();
-            ObjectManager.Add(ComponentStrings.ItemDebug, _itemDebug);
-
-            _gameManager = ObjectFactory.NewGameManager();
+            ObjectManager.Add(ComponentStrings.ItemDebug, ObjectFactory.NewItemDebug());
             ObjectManager.Add(ComponentStrings.GameManager, ObjectFactory.NewGameManager());
+
+            _input = ObjectManager.Get<IInput>(ComponentStrings.Input);
+            _debug = ObjectManager.Get<IDebug>(ComponentStrings.Debug);
+            _controllerDebug = ObjectManager.Get<IControllerDebug>(ComponentStrings.ControllerDebug);
+            _itemDebug = ObjectManager.Get<IItemDebug>(ComponentStrings.ItemDebug);
+            _gameManager = ObjectManager.Get<IGameManager>(ComponentStrings.GameManager);
+            
+
         }
 
 
