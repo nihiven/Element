@@ -23,14 +23,15 @@ namespace Element.Classes
     {
         public bool Enabled => true;
         public Vector2 AmmoPosition => new Vector2(_ammoX, _ammoY);
-        public Vector2 WeaponPosition => new Vector2(AmmoPosition.X - 10 - _player.EquippedWeapon.PopupFrame.Size.X / 4, AmmoPosition.Y);
+        public Vector2 WeaponPosition => new Vector2(AmmoPosition.X - 10 - _activeGear.Weapon.PopupFrame.Size.X / 4, AmmoPosition.Y);
         public Vector2 HealthPosition { get; set; }
-        public string MagCount => (this._player.EquippedWeapon != null) ? this._player.EquippedWeapon.MagCount.ToString().PadLeft(2, '0') : "00";
-        public string ReserveCount => (this._player.EquippedWeapon != null) ? this._player.EquippedWeapon.ReserveCount.ToString().PadLeft(3, '0') : "000";
+        public string MagCount => (_activeGear.Weapon != null) ? _activeGear.Weapon.MagCount.ToString().PadLeft(2, '0') : "00";
+        public string ReserveCount => (_activeGear.Weapon != null) ? _activeGear.Weapon.ReserveCount.ToString().PadLeft(3, '0') : "000";
 
         private IGraphics _graphics;
         private IPlayer _player;
         private IContentManager _contentManager;
+        private IActiveGear _activeGear;
         private SpriteFont _font;
         private SpriteFont _fontBig;
         
@@ -40,11 +41,12 @@ namespace Element.Classes
         private int _viewportHeight => (int)_graphics.GetViewPortSize.Y;
         private int _viewportCenterWidth => (int)_graphics.GetViewPortCenter.X;
 
-        public Hud(IGraphics graphics, IPlayer player, IContentManager contentManager)
+        public Hud(IGraphics graphics, IPlayer player, IContentManager contentManager, IActiveGear activeGear)
         {
-            _graphics = graphics ?? throw new ArgumentNullException("graphics");
-            _player = player ?? throw new ArgumentNullException("player");
-            _contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+            _graphics = graphics ?? throw new ArgumentNullException(ComponentStrings.Graphics);
+            _player = player ?? throw new ArgumentNullException(ComponentStrings.Player);
+            _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
+            _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
 
             _font = this._contentManager.GetFont("Arial");
             _fontBig = this._contentManager.GetFont("ArialBig");
@@ -58,7 +60,7 @@ namespace Element.Classes
 
         public void DrawAmmo(SpriteRender spriteRender)
         {
-            if (this._player.EquippedWeapon != null)
+            if (_activeGear.Weapon != null)
             {
                 // draw ammo
                 spriteRender.spriteBatch.DrawString(
@@ -92,7 +94,7 @@ namespace Element.Classes
                 // draw weapon
                 // TODO: fix references to _ammoX _ammoY
                 Utilities.DrawRectangle(new Rectangle((int)_ammoX - 5, (int)_ammoY - 5, 1, _font.LineSpacing + _fontBig.LineSpacing + 10), Color.Black, spriteRender.spriteBatch);
-                spriteRender.Draw(_player.EquippedWeapon.PopupFrame, WeaponPosition, Color.White, 0, 0.25f);
+                spriteRender.Draw(_activeGear.Weapon.PopupFrame, WeaponPosition, Color.White, 0, 0.25f);
             }
         }
 

@@ -1,9 +1,7 @@
 ﻿using Element.Classes;
-using Element.Factories;
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using TexturePackerLoader;
 
 namespace Element
@@ -29,8 +27,8 @@ namespace Element
         {
             // we use the object manager with our 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
             // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
-            ObjectManager.Add("graphics", new GraphicsManager(this));
-            _graphics = ObjectManager.Get<GraphicsDeviceManager>("graphics");
+            ObjectManager.Add(ComponentStrings.Graphics, new GraphicsManager(this));
+            _graphics = ObjectManager.Get<GraphicsDeviceManager>(ComponentStrings.Graphics);
 
             // TODO: move this
             // run fast
@@ -68,33 +66,35 @@ namespace Element
             /// the master blaster
             this._contentManager = new AssetManager(Content);
             Content.RootDirectory = "Content";
-            ObjectManager.Add("contentManager", this._contentManager);
+            ObjectManager.Add(ComponentStrings.ContentManager, _contentManager);
 
             LoadAssets();
 
             // create the game components
             _input = ObjectFactory.NewInput();
-            ObjectManager.Add("input", _input);
+            ObjectManager.Add(ComponentStrings.Input, _input);
 
             _debug = ObjectFactory.NewDebug();
-            ObjectManager.Add("debug", _debug);
+            ObjectManager.Add(ComponentStrings.Debug, _debug);
 
             _controllerDebug = ObjectFactory.NewControllerDebug();
-            ObjectManager.Add("controllerDebug", _controllerDebug);
+            ObjectManager.Add(ComponentStrings.ControllerDebug, _controllerDebug);
 
             // TODO: convert these to object factory
-            ObjectManager.Add("itemManager", ObjectFactory.NewItemManager()); // game
-            ObjectManager.Add("gameOptions", ObjectFactory.NewGameOptions()); // game
+            ObjectManager.Add(ComponentStrings.ItemManager, ObjectFactory.NewItemManager()); // game
+            ObjectManager.Add(ComponentStrings.GameOptions, ObjectFactory.NewGameOptions()); // game
 
-            ObjectManager.Add("player", ObjectFactory.NewPlayer()); // game
+            ObjectManager.Add(ComponentStrings.ActiveGear, ObjectFactory.NewActiveGear()); // game
+            ObjectManager.Add(ComponentStrings.Inventory, ObjectFactory.NewInventory()); // game
+            ObjectManager.Add(ComponentStrings.Player, ObjectFactory.NewPlayer()); // game
 
-            ObjectManager.Add("hud", ObjectFactory.NewHud()); // game
+            ObjectManager.Add(ComponentStrings.HUD, ObjectFactory.NewHud()); // game
 
             _itemDebug = ObjectFactory.NewItemDebug();
-            ObjectManager.Add("itemDebug", _itemDebug);
+            ObjectManager.Add(ComponentStrings.ItemDebug, _itemDebug);
 
             _gameManager = ObjectFactory.NewGameManager();
-            ObjectManager.Add("gameManager", ObjectFactory.NewGameManager());
+            ObjectManager.Add(ComponentStrings.GameManager, ObjectFactory.NewGameManager());
         }
 
 

@@ -1,33 +1,23 @@
 ﻿using Element.Classes;
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using System;
 using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IPlayer: IDraw, IUpdate, ICollideable, IMoveable
+    public interface IPlayer : IDraw, IUpdate, ICollideable, IMoveable
     {
         // stats
         float Health { get; }
         float Shield { get; }
-        float Acceleration { get; }
-        float Velocity { get; }
 
         // inventory
         IInventory Inventory { get; }
-        IWeapon EquippedWeapon { get; }
 
-        Vector2 Position { get; }
         Vector2 DropPosition { get; }
         Vector2 PickupPosition { get; }
         Vector2 WeaponAttachPosition { get; }
-
-        void EquipWeapon(IWeapon gun);
-        void RemoveItem(IItem item);
-        void Pickup(IItem item);
-        void Drop(IItem item);
     }
 }
 
@@ -36,33 +26,43 @@ namespace Element
     /// <summary>
     /// This will hold all player logic and controls.
     /// </summary>
-    /// 
+    ///
     public class Player : IPlayer
     {
         private bool _enabled;
 
+        // IMoveable
+        public int Width => (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;
+        public int Height => (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0;
+
+
+        // ICollideable
+        public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
+
         // IOwner
         public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(15, 30); }
+
         public Vector2 DropPosition { get => new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
         public Vector2 PickupPosition { get => new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
 
         // IPlayer
         public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
         public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
-        
+
         public AnimatedSprite AnimatedSprite { get; set; }
-        public IWeapon EquippedWeapon { get; set; }
         public IInventory Inventory { get; }
 
         // base stats
         public float BaseHealth { get; set; }
+
         public float BaseShield { get; set; }
         public float BaseAcceleration { get; set; }
         public float BaseVelocity { get; set; }
         public float BasePickupRadius { get; set; }
-        
+
         // adjusted stats
         public float Health { get => this.BaseHealth; }
+
         public float Shield { get => this.BaseShield; }
         public float Acceleration { get => this.BaseAcceleration; }
         public float Velocity { get => this.BaseVelocity; }
@@ -74,30 +74,26 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager, IInventory inventory)
+        public Player(IInput input, IContentManager contentManager)
         {
-            this._input = input ?? throw new ArgumentNullException("input");
-            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+            _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
+            _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
 
-            this.Inventory = inventory;
-            this.AnimatedSprite = this._contentManager.GetAnimatedSprite("female");
+            AnimatedSprite = _contentManager.GetAnimatedSprite("female");
 
-            this.MinPosition = new Vector2(0, 0);
-            this.MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
-            this.Position = this.MinPosition;
-            this.BaseHealth = 100.0f;
-            this.BaseShield = 100.0f;
-            this.BasePickupRadius = 30;
-            this.BaseVelocity = 5;
-
-            // items
-            this.EquippedWeapon = null;
+            MinPosition = new Vector2(0, 0);
+            MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
+            Position = MinPosition;
+            BaseHealth = 100.0f;
+            BaseShield = 100.0f;
+            BasePickupRadius = 30;
+            BaseVelocity = 5;
         }
 
         public bool Enabled
         {
-            get => this._enabled;
-            private set => this._enabled = value;
+            get => _enabled;
+            private set => _enabled = value;
         }
 
         /// <summary>
@@ -106,31 +102,19 @@ namespace Element
         /// </summary>
         public Vector2 Position
         {
-            get { return this._position; }
+            get => _position;
             set
             {
                 // clamp min an max values
-                float x = (value.X < MinPosition.X) ? MinPosition.X: value.X;
-                float y = (value.Y < MinPosition.Y) ? MinPosition.Y: value.Y;
+                float x = (value.X < MinPosition.X) ? MinPosition.X : value.X;
+                float y = (value.Y < MinPosition.Y) ? MinPosition.Y : value.Y;
 
-                x = (x > MaxPosition.X - this.Height) ? MaxPosition.X - this.Width : x;
-                y = (y > MaxPosition.Y - this.Width) ? MaxPosition.Y - this.Height : y;
+                x = (x > MaxPosition.X - Height) ? MaxPosition.X - Width : x;
+                y = (y > MaxPosition.Y - Width) ? MaxPosition.Y - Height : y;
 
-                this._position = new Vector2(x, y);
-            } 
+                _position = new Vector2(x, y);
+            }
         }
-
-
-        /// <summary>
-        /// Returns player width, assumes width of the player is the width of the player texture.
-        /// </summary>
-        public int Width => (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;
-
-        /// <summary>
-        /// Returns player height, assumes height of the player is the height of the player texture.
-        /// </summary>
-        public int Height => (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0;
-        public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
 
         /// <summary>
         /// Update the player character and all children actors
@@ -162,28 +146,8 @@ namespace Element
 
             if (this.Position != oldPosition)
                 this.AnimatedSprite.Update(gameTime);
-
-            // inventory
-            this.Inventory.Update(gameTime);
-
-            if (EquippedWeapon != null)
-                this.EquippedWeapon.Update(gameTime);
         }
 
-        // player method
-        public void EquipWeapon(IWeapon gun)
-        {
-            this.EquippedWeapon = gun;
-            _contentManager.GetSoundEffect("Equip").Play();
-        }
-
-        public void RemoveItem(IItem item)
-        {
-            // just remove it from the player
-            this.EquippedWeapon = (IWeapon)this.Inventory.SelectedItem;
-        }
-
-  
         /// <summary>
         /// Draw the player character and child actors
         /// </summary>
@@ -191,27 +155,6 @@ namespace Element
         {
             // the animated sprite draws its current frame by default
             this.AnimatedSprite.Draw(spriteRender.spriteBatch, Position);
-
-            // draw attached items
-            if (this.EquippedWeapon != null)
-            {
-                this.EquippedWeapon.Draw(spriteRender);
-            }
-
-            // inventory
-            this.Inventory.Draw(spriteRender);
-        }
-
-        public void Pickup(IItem item)
-        {
-            if (item is IWeapon && this.EquippedWeapon == null)
-                this.EquippedWeapon = (IWeapon)item;
-        }
-
-        public void Drop(IItem item)
-        {
-            if (item == this.EquippedWeapon)
-                this.EquippedWeapon = (IWeapon)this.Inventory.SelectedItem;
         }
     }
 }

@@ -6,24 +6,25 @@ namespace Element
 {
     public static class ObjectFactory
     {
-        public static IInventory NewInventory(IPlayer owner)
+        public static IInventory NewInventory()
         {
             return new Inventory(
-                gameOptions: ObjectManager.Get<IGameOptions>("gameOptions"),
-                input: ObjectManager.Get<IInput>("input"),
-                contentManager: ObjectManager.Get<IContentManager>("contentManager"),
-                itemManager: ObjectManager.Get<IItemManager>("itemManager"),
-                owner: owner
+                gameOptions: ObjectManager.Get<IGameOptions>(ComponentStrings.GameOptions),
+                input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                itemManager: ObjectManager.Get<IItemManager>(ComponentStrings.ItemManager),
+                activeGear: ObjectManager.Get<IActiveGear>(ComponentStrings.ActiveGear)
             );
         }
 
         public static IHud NewHud()
         {
             return new Hud(
-                graphics: ObjectManager.Get<IGraphics>("graphics"),
-                player: ObjectManager.Get<IPlayer>("player"),
-                contentManager: ObjectManager.Get<IContentManager>("contentManager")
-                );
+                graphics: ObjectManager.Get<IGraphics>(ComponentStrings.Graphics),
+                player: ObjectManager.Get<IPlayer>(ComponentStrings.Player),
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                activeGear: ObjectManager.Get<IActiveGear>(ComponentStrings.ActiveGear)
+            );
         }
 
         public static IGameOptions NewGameOptions()
@@ -34,9 +35,8 @@ namespace Element
         public static IPlayer NewPlayer()
         {
             return new Player(
-                input: ObjectManager.Get<IInput>("input"),
-                contentManager: ObjectManager.Get<IContentManager>("contentManager"),
-                inventory: ObjectFactory.NewInventory()
+                input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager)
             );
         }
 
@@ -53,36 +53,43 @@ namespace Element
         public static IControllerDebug NewControllerDebug()
         {
             return new ControllerDebug(
-                input: ObjectManager.Get<IInput>("input"),
-                contentManager: ObjectManager.Get<IContentManager>("contentManager"),
-                graphics: ObjectManager.Get<IGraphics>("graphics")
+                input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                graphics: ObjectManager.Get<IGraphics>(ComponentStrings.Graphics)
             );
         }
 
         public static IDebug NewDebug()
         {
             return new Debug(
-                contentManager: ObjectManager.Get<IContentManager>("contentManager")
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager)
             );
         }
 
         public static IUpdate NewItemDebug()
         {
             return new ItemDebug(
-                input: ObjectManager.Get<IInput>("input"),
-                itemManager: ObjectManager.Get<IItemManager>("itemManager")
+                input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                itemManager: ObjectManager.Get<IItemManager>(ComponentStrings.ItemManager)
             );
         }
 
         public static IGameManager NewGameManager()
         {
             return new GameManager(
-                gameOptions: ObjectManager.Get<IGameOptions>("gameOptions"),
-                debug: ObjectManager.Get<IDebug>("debug"),
-                player: ObjectManager.Get<IPlayer>("player"),
-                itemManager: ObjectManager.Get<IItemManager>("itemManager"),
-                hud: ObjectManager.Get<IHud>("hud")
+                gameOptions: ObjectManager.Get<IGameOptions>(ComponentStrings.GameOptions),
+                debug: ObjectManager.Get<IDebug>(ComponentStrings.Debug),
+                itemManager: ObjectManager.Get<IItemManager>(ComponentStrings.ItemManager),
+                hud: ObjectManager.Get<IHud>(ComponentStrings.HUD),
+                player: ObjectManager.Get<IPlayer>(ComponentStrings.Player),
+                inventory: ObjectManager.Get<IInventory>(ComponentStrings.Inventory),
+                activeGear: ObjectManager.Get<IActiveGear>(ComponentStrings.ActiveGear)
             );
+        }
+
+        public static IActiveGear NewActiveGear()
+        {
+            return new ActiveGear();
         }
     }
 }

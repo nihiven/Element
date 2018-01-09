@@ -4,6 +4,6 @@ namespace Element.Interfaces
 {
     public interface IDraw
     {
-        void Draw(SpriteRender spriteBatch);
+        void Draw(SpriteRender spriteRender);
     }
 }

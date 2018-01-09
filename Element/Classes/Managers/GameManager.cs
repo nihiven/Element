@@ -1,4 +1,5 @@
-﻿using Element.Interfaces;
+﻿using Element.Classes;
+using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using System;
@@ -14,52 +15,66 @@ namespace Element.Interfaces
 
 namespace Element.Managers
 {
-    class GameManager : IGameManager
+    internal class GameManager : IGameManager
     {
         public bool Enabled => true;
 
-        IGameOptions _gameOptions;
-        IDebug _debug;
-        IPlayer _player;
-        IItemManager _itemManager;
-        IHud _hud;
+        private IDebug _debug;
+        private IGameOptions _gameOptions;
+        private IHud _hud;
+        private IInventory _inventory;
+        private IItemManager _itemManager;
+        private IPlayer _player;
+        private IActiveGear _activeGear;
 
-        List<IProjectile> _projectiles;
-        
+        private List<IProjectile> _projectiles;
 
-        public GameManager(IGameOptions gameOptions, IDebug debug, IItemManager itemManager, IHud hud, IPlayer player)
+        public GameManager(IGameOptions gameOptions, IDebug debug, IItemManager itemManager, IHud hud, IPlayer player, IInventory inventory, IActiveGear activeGear)
         {
-            _gameOptions = gameOptions ?? throw new ArgumentNullException("gameOptions");
-            _debug = debug ?? throw new ArgumentNullException("debug");
-            _player = player ?? throw new ArgumentNullException("player");
-            _itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
-            _hud = hud ?? throw new ArgumentNullException("hud");
-        }
+            // components
+            _debug = debug ?? throw new ArgumentNullException(ComponentStrings.Debug);
+            _gameOptions = gameOptions ?? throw new ArgumentNullException(ComponentStrings.GameOptions);
+            _hud = hud ?? throw new ArgumentNullException(ComponentStrings.HUD);
+            _inventory = inventory ?? throw new ArgumentNullException(ComponentStrings.Inventory);
+            _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
+            _player = player ?? throw new ArgumentNullException(ComponentStrings.Player);
+            _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
 
-        public void Draw(SpriteRender spriteRender)
-        {
-            _player.Draw(spriteRender);
-        }
-
-        public void Initialize()
-        {
-            
-        }
-
-        public void LoadContent(ContentManager content)
-        {
-            
-        }
-
-        public void UnloadContent()
-        {
-            
+            // happy projectiles
+            _projectiles = new List<IProjectile>();
         }
 
         public void Update(GameTime gameTime)
         {
+            // components that implement IUpdate
+            _debug.Update(gameTime);
+            _inventory.Update(gameTime);
             _player.Update(gameTime);
-            _debug.Add(text: "This is me!", duration: 0);
+
+            foreach (IProjectile projectile in _projectiles)
+                projectile.Update(gameTime);
         }
+
+        public void Draw(SpriteRender spriteRender)
+        {
+            // components that implement IDraw
+            _debug.Draw(spriteRender);
+            _hud.Draw(spriteRender);
+            _inventory.Draw(spriteRender);
+            _player.Draw(spriteRender);
+            _activeGear.Draw(spriteRender);
+
+            foreach (IProjectile projectile in _projectiles)
+                projectile.Draw(spriteRender);
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+        }
+
+        public void UnloadContent()
+        {
+        }
+
     }
 }

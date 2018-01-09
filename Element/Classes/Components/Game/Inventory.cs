@@ -1,29 +1,25 @@
 ﻿using Element.Interfaces;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System;
 using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IInventory
+    public interface IInventory : IDraw, IUpdate
     {
-        int SelectedIndex { get; }
         IItem SelectedItem { get; }
         int MaxItems { get; }
-        double TimeOut { get; }
         bool IsOpen { get; }
         int Count { get; }
-        IPlayer Owner { get; set; }
 
+        void Add(IItem item);
+        void Remove(IItem item);
         void Open();
         void Close();
         bool Toggle();
-        void Draw(SpriteRender spriteRender);
-        void Update(GameTime gameTime);
     }
-
 }
 
 namespace Element.Classes
@@ -31,39 +27,39 @@ namespace Element.Classes
     public class Inventory : IInventory
     {
         // IInventory
-        public int SelectedIndex { get; private set; }
-        public IItem SelectedItem { get => (this._inventory.Count > 0) ? this._inventory[this.SelectedIndex] : null; }
+        public IItem SelectedItem { get => (this._inventory.Count > 0) ? this._inventory[this._selectedIndex] : null; }
         public int MaxItems { get; private set; }
-        public double TimeOut { get; private set; }
         public bool IsOpen { get; private set; }
-        public int Count { get => this._inventory.Count; }
-        public IPlayer Owner { get => this._owner; set => this._owner = value; }
+        public int Count => _inventory.Count;
 
         // options
         public bool AutoEquip { get; private set; }
 
-        // implementation
-        private List<IItem> _inventory { get; }
+        // components
         private IGameOptions _gameOptions;
         private readonly IContentManager _contentManager;
-        private readonly IInput _input;
         private IItemManager _itemManager;
-        private IPlayer _owner;
+        private readonly IInput _input;
+        private IActiveGear _activeGear;
 
-        public Inventory(IGameOptions gameOptions, IInput input, IContentManager contentManager, IItemManager itemManager, IPlayer owner)
+        private List<IItem> _inventory { get; }
+        private int _selectedIndex;
+        private double _timeOut;
+
+        public Inventory(IGameOptions gameOptions, IInput input, IContentManager contentManager, IItemManager itemManager, IActiveGear activeGear)
         {
-            this._gameOptions = gameOptions ?? throw new ArgumentNullException("gameOptions");
-            this._input = input ?? throw new ArgumentNullException("input");
-            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
-            this._itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
-            this.Owner = owner;
+            _gameOptions = gameOptions ?? throw new ArgumentNullException(ComponentStrings.GameOptions);
+            _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
+            _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
+            _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
+            _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
 
-            this._inventory = new List<IItem>(32);
-            this.IsOpen = false;
-            this.TimeOut = 5;
-            this.SelectedIndex = 0;
-            this.MaxItems = 5;
-            this.AutoEquip = _gameOptions.GetBoolOption(option: "Inv_AutoEquip", defaultValue: false);
+            IsOpen = false;
+            _inventory = new List<IItem>(32);
+            _timeOut = 5;
+            _selectedIndex = 0;
+            MaxItems = 5;
+            AutoEquip = _gameOptions.GetBoolOption(option: "Inv_AutoEquip", defaultValue: false);
         }
 
         public bool Toggle()
@@ -83,7 +79,7 @@ namespace Element.Classes
                 this.IsOpen = true;
                 _contentManager.GetSoundEffect("Inv_Open").Play(1, 0, -0.6f);
             }
-            this.TimeOut = 5;
+            this._timeOut = 5;
         }
 
         public void Close()
@@ -93,48 +89,32 @@ namespace Element.Classes
                 this.IsOpen = false;
                 _contentManager.GetSoundEffect("Inv_Open").Play(1, -0.2f, -0.6f); ;
             }
-            this.TimeOut = 0;
+            this._timeOut = 0;
         }
 
         public void Update(GameTime gameTime)
         {
-            this.CheckTimeout(gameTime);
+            CheckTimeout(gameTime);
 
             if (_input.GetButtonState(Buttons.LeftShoulder) == ButtonState.Pressed)
-            {
-                this.MoveSelectionUp();
-            }
+                MoveSelectionUp();
 
             if (_input.GetButtonState(Buttons.RightShoulder) == ButtonState.Pressed)
             {
-                this.Open();
-                this.MoveSelectionDown();
-            }
-
-
-            if (_input.GetButtonState(Buttons.X) == ButtonState.Pressed)
-            {
-                this.DropItem();
+                Open();
+                MoveSelectionDown();
             }
 
             if (_input.GetButtonState(Buttons.Y) == ButtonState.Pressed)
-            {
-                this.Toggle();
-            }
-
-            // look for items near me ?
-            if (_input.GetButtonState(Buttons.A) == ButtonState.Pressed)
-            {
-                PickupItem();
-            }
+                Toggle();
         }
 
         private void CheckTimeout(GameTime gameTime)
         {
             if (this.IsOpen)
             {
-                this.TimeOut -= gameTime.ElapsedGameTime.TotalSeconds;
-                if (this.TimeOut <= 0)
+                this._timeOut -= gameTime.ElapsedGameTime.TotalSeconds;
+                if (this._timeOut <= 0)
                 {
                     this.Close();
                 }
@@ -143,13 +123,12 @@ namespace Element.Classes
 
         private void MoveSelectionUp()
         {
-            this.Open();
+            Open();
 
-            if (this.Count > 0)
+            if (Count > 0)
             {
-                this.SelectedIndex--;
-                this.SelectedIndex = (this.SelectedIndex < 0) ? this.Count - 1 : this.SelectedIndex;
-                this.Owner.EquipWeapon((IWeapon)this.SelectedItem);
+                this._selectedIndex--;
+                this._selectedIndex = (this._selectedIndex < 0) ? this.Count - 1 : this._selectedIndex;
                 _contentManager.GetSoundEffect("Inv_Vertical").Play(1, 0.1f, -0.6f);
             }
         }
@@ -160,60 +139,44 @@ namespace Element.Classes
 
             if (this.Count > 0)
             {
-                this.SelectedIndex++;
-                this.SelectedIndex = (this.SelectedIndex > this.Count - 1) ? 0 : this.SelectedIndex;
-                this.Owner.EquipWeapon((IWeapon)this.SelectedItem);
+                this._selectedIndex++;
+                this._selectedIndex = (this._selectedIndex > this.Count - 1) ? 0 : this._selectedIndex;
                 _contentManager.GetSoundEffect("Inv_Vertical").Play(1, -0.2f, -0.6f); ;
             }
         }
 
-        private void PickupItem()
+        public void Add(IItem item)
         {
-            List<IItem> nearbyItems = this._itemManager.GetItemsInVicinity(this._owner.PickupPosition, 60);
-
-            if (nearbyItems.Count > 0)
+            if (this.Count < this.MaxItems)
             {
-                if (this.Count < this.MaxItems)
-                {
-                    // add the item to the inventory
-                    IItem item = nearbyItems[0];  // TODO: make sure it's the closest item
-                    this._inventory.Add(item);
-                    this._itemManager.Remove(item);
+                // add the item to the inventory
+                _inventory.Add(item);
+                _itemManager.Remove(item);
 
-                    // tell item and owner about the pickup
-                    item.Pickup(this.Owner);
-                    this.Owner.Pickup(item);
-
-                    // play sound
-                    _contentManager.GetSoundEffect("Inv_Pickup").Play();
-                }
-                else
-                {
-                    // inventory is full, play wah wah sound
-                    _contentManager.GetSoundEffect("buzzer1").Play();
-                }
+                // play sound
+                _contentManager.GetSoundEffect("Inv_Pickup").Play();
+            }
+            else
+            {
+                // inventory is full, play wah wah sound
+                _contentManager.GetSoundEffect("buzzer1").Play();
             }
         }
 
 
         // TODO: player needs to drop weapon, not the inventory
-        private void DropItem()
+        public void Remove(IItem item)
         {
             if (this.Count > 0)
             {
                 this.Open(); // show the inventory, is that right?
 
-                IItem item = this.SelectedItem;
                 this._inventory.Remove(item);
                 this._itemManager.Add(item);
 
                 // adjust selected value for removed item
-                if (this.SelectedIndex > 0)
-                    this.SelectedIndex--;
-
-                // tell owner and item about the drop
-                this._owner.Drop(item); // handle drop on player
-                item.Drop(this._owner.DropPosition); // handle drop on weapon
+                if (this._selectedIndex > 0)
+                    this._selectedIndex--;
             }
         }
 
@@ -229,7 +192,7 @@ namespace Element.Classes
                 spriteRender.spriteBatch.DrawString(_contentManager.GetFont("Arial"), "Inventory", new Vector2(10, y), Color.Orange);
 
                 // draw selected rectangle
-                IItem selected = (this.Count > 0) ? _inventory[SelectedIndex] : null;
+                IItem selected = (this.Count > 0) ? _inventory[_selectedIndex] : null;
 
                 // draw inventory
                 foreach (IItem item in this._inventory)
@@ -241,7 +204,7 @@ namespace Element.Classes
                         Utilities.DrawRectangle(new Rectangle(12 - 1, y - 1, (int)item.Width + 2, (int)item.Height + 2), Color.Red, spriteRender.spriteBatch);
                     }
 
-                    if (item.Equals(this._owner.EquippedWeapon))
+                    if (item.Equals(_activeGear.Weapon))
                     {
                         Utilities.DrawRectangle(new Rectangle(12, y, (int)item.Width, (int)item.Height), Color.Green, spriteRender.spriteBatch);
                     }

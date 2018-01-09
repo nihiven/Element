@@ -6,7 +6,7 @@ using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IProjectile
+    public interface IProjectile : IDraw, IUpdate
     {
 
     }
