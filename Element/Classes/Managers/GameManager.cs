@@ -61,6 +61,7 @@ namespace Element.Managers
             _debug.Draw(spriteRender);
             _hud.Draw(spriteRender);
             _inventory.Draw(spriteRender);
+            _itemManager.Draw(spriteRender);
             _player.Draw(spriteRender);
             _activeGear.Draw(spriteRender);
 

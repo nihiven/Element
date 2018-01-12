@@ -16,8 +16,8 @@ namespace Element.Interfaces
         double BaseDamage { get; }
         double BaseVelocity { get; }
         double BaseRange { get; }
-        int BaseRPM { get; }
-        double BaseRPS { get; }
+        int BaseRPM { get; } // rounds per minute
+        double BaseRPS { get; } // rounds per second
         double BaseFiringDelay { get; }
         double BaseReloadDelay { get; }
         int BaseMagSize { get; }
@@ -61,34 +61,34 @@ namespace Element.Classes
     {
         // IItem
         private SpriteSheet SpriteSheet { get; set; }
-        public virtual string Name { get => "Weapon"; }
-        public virtual string ItemID { get => "WeaponID"; }
+        public virtual string Name => "Weapon";
+        public virtual string ItemID => "WeaponID";
         public Guid Guid { get; set; }
         public Vector2 Position { get => (this._owner == null) ? this._position : this._owner.WeaponAttachPosition; set => this._position = value; }
-        public Rectangle BoundingBox { get => new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height); }
+        public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, (int)this.Width, (int)this.Height);
         public IPlayer Owner { get => _owner; set => this._owner = value; }
-        public virtual string PopupIcon { get => "ERROR_WeaponPopupIcon"; }
-        public virtual string ItemIcon { get => "ERROR_WeaponItemIcon"; }
+        public virtual string PopupIcon => "ERROR_WeaponPopupIcon"; 
+        public virtual string ItemIcon => "ERROR_WeaponItemIcon"; 
         public float Width => this.SpriteSheet.Sprite(this.ItemIcon).Size.X;
         public float Height => this.SpriteSheet.Sprite(this.ItemIcon).Size.Y;
 
         // IGun
-        public virtual WeaponModifiers Modifiers { get => WeaponModifiers.None; }
-        public virtual double BaseDamage { get => 10; }
-        public virtual double BaseVelocity { get => 1600; }
-        public virtual double BaseRange { get => 400; }
-        public virtual int BaseRPM { get => 1100;  }
-        public virtual double BaseRPS { get => this.BaseRPM / 60; }
-        public virtual double BaseFiringDelay { get => 1 / this.BaseRPS;  }
-        public virtual double BaseReloadDelay { get => 1; }
-        public virtual int BaseMagSize { get => 64; } // size is how big it can get, count is how many it currently has
-        public virtual int BaseReserveSize { get => 960; }
+        public virtual WeaponModifiers Modifiers => WeaponModifiers.None;
+        public virtual double BaseDamage => 10;
+        public virtual double BaseVelocity => 1600;
+        public virtual double BaseRange => 400;
+        public virtual int BaseRPM => 1100; 
+        public virtual double BaseRPS => this.BaseRPM / 60;
+        public virtual double BaseFiringDelay => 1 / this.BaseRPS;
+        public virtual double BaseReloadDelay => 1;
+        public virtual int BaseMagSize => 64; // size is how big it can get, count is how many it currently has
+        public virtual int BaseReserveSize => 960;
         public virtual int MagCount { get; set; }
         public virtual int ReserveCount { get; set; }
-        public virtual Vector2 FirePosition { get => new Vector2(this.Width, 7) + this.Position; } // position at which the bullets are created
+        public virtual Vector2 FirePosition => new Vector2(this.Width, 7) + this.Position; // position at which the bullets are created
 
-        public SpriteFrame PopupFrame { get => this.SpriteSheet.Sprite(this.PopupIcon); }
-        public SpriteFrame ItemFrame { get => this.SpriteSheet.Sprite(this.ItemIcon); }
+        public SpriteFrame PopupFrame => this.SpriteSheet.Sprite(this.PopupIcon);
+        public SpriteFrame ItemFrame => this.SpriteSheet.Sprite(this.ItemIcon);
 
         // Weapon
         private Vector2 _position;
@@ -100,27 +100,21 @@ namespace Element.Classes
         private readonly IContentManager _contentManager;
         private IPlayer _owner;
         public bool PlayerClose;
-        public List<Bullet> _bullets;
+        public List<Bullet> _bullets; // TODO: replace with world projectiles
         
         public Weapon(IInput input, IContentManager contentManager, Guid guid, Vector2 spawnLocation)
         {
             this._input = input ?? throw new ArgumentNullException("input");
             this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
-
             this.Guid = guid;
             this._position = spawnLocation;
-
             this.MagCount = this.BaseMagSize;
             this.ReserveCount = this.BaseReserveSize;
-
             this._bullets = new List<Bullet>();
             this._timeSinceLastBullet = 0;
             this._timeReloading = 0;
             this._reloading = false;
-
             this.SpriteSheet = this._contentManager.GetSpriteSheet("Guns");
-            
-
             this.PlayerClose = false;
         }
 
@@ -134,9 +128,7 @@ namespace Element.Classes
             //AnimatedSprite.Update(gameTime);
 
             foreach (Bullet bullet in this._bullets)
-            {
                 bullet.Update(gameTime);
-            }
 
             // TODO: remember the tooth
             // put this in the particle manager?

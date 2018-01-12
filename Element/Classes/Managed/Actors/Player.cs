@@ -1,7 +1,9 @@
 ﻿using Element.Classes;
 using Element.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using TexturePackerLoader;
 
 namespace Element.Interfaces
@@ -70,14 +72,20 @@ namespace Element
         private Vector2 _position;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
+        private IActiveGear _activeGear;
+        private IItemManager _itemManager;
+        private IInventory _inventory;
 
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager)
+        public Player(IInput input, IContentManager contentManager, IActiveGear activeGear, IItemManager itemManager, IInventory inventory)
         {
             _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
             _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
+            _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
+            _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
+            _inventory = inventory ?? throw new ArgumentNullException(ComponentStrings.Inventory);
 
             AnimatedSprite = _contentManager.GetAnimatedSprite("female");
 
@@ -86,7 +94,7 @@ namespace Element
             Position = MinPosition;
             BaseHealth = 100.0f;
             BaseShield = 100.0f;
-            BasePickupRadius = 30;
+            BasePickupRadius = 50;
             BaseVelocity = 5;
         }
 
@@ -113,6 +121,7 @@ namespace Element
                 y = (y > MaxPosition.Y - Width) ? MaxPosition.Y - Height : y;
 
                 _position = new Vector2(x, y);
+                _activeGear.WeaponPosition = WeaponAttachPosition;
             }
         }
 
@@ -132,20 +141,41 @@ namespace Element
             // so the animations should be synced on the spritesheet in order to move smoothly from one to another
             int cardinal = _input.GetRightThumbstickCardinal();
 
-            if (cardinal == Cardinal.North)
-                this.AnimatedSprite.SetAnimation("female_walk_up");
-
-            if (cardinal == Cardinal.South)
-                this.AnimatedSprite.SetAnimation("female_walk_down");
-
-            if (cardinal == Cardinal.East)
-                this.AnimatedSprite.SetAnimation("female_walk_right");
-
-            if (cardinal == Cardinal.West)
-                this.AnimatedSprite.SetAnimation("female_walk_left");
+            switch (cardinal)
+            {
+                case Cardinal.North:
+                    this.AnimatedSprite.SetAnimation("female_walk_up");
+                    break;
+                case Cardinal.South:
+                    this.AnimatedSprite.SetAnimation("female_walk_down");
+                    break;
+                case Cardinal.East:
+                    this.AnimatedSprite.SetAnimation("female_walk_right");
+                    break;
+                case Cardinal.West:
+                    this.AnimatedSprite.SetAnimation("female_walk_left");
+                    break;
+            }
 
             if (this.Position != oldPosition)
                 this.AnimatedSprite.Update(gameTime);
+
+            // pick up items
+            if (_input.GetButtonState(Buttons.A) == ButtonState.Pressed)
+            {
+                List<IItem> items = _itemManager.ItemsInVicinity(PickupPosition, BasePickupRadius); //  TODO: replace base with final value
+                if (items.Count > 0)
+                {
+                    _inventory.Add(items[0]);
+                    _itemManager.Remove(items[0]);
+                }
+            }
+
+            if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || _input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held)
+            {
+                if (_activeGear.Weapon != null)
+                    _activeGear.Weapon.Fire(90);
+            }
         }
 
         /// <summary>

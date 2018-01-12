@@ -6,12 +6,12 @@ using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IItemManager
+    public interface IItemManager : IDraw
     {
         void NewWeapon(Vector2 position);
         void Add(IItem item);
         void Remove(IItem item);
-        List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance);
+        List<IItem> ItemsInVicinity(Vector2 searchVector, double searchDistance);
     }
 }
 
@@ -52,7 +52,7 @@ namespace Element.Classes
             Items.Remove(item.Guid.ToString());
         }
 
-        public List<IItem> GetItemsInVicinity(Vector2 searchVector, double searchDistance)
+        public List<IItem> ItemsInVicinity(Vector2 searchVector, double searchDistance)
         {
             List<IItem> hits = new List<IItem>();
             foreach (IItem item in Items.Values)

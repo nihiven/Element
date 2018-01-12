@@ -107,6 +107,15 @@ namespace Element.Classes
 
             if (_input.GetButtonState(Buttons.Y) == ButtonState.Pressed)
                 Toggle();
+
+            if (_input.GetButtonState(Buttons.A) == ButtonState.Pressed)
+            {
+                if (IsOpen)
+                {
+                    if (SelectedItem != null)
+                        _activeGear.Equip(SelectedItem, Slots.Weapon);
+                }
+            }
         }
 
         private void CheckTimeout(GameTime gameTime)
@@ -151,7 +160,6 @@ namespace Element.Classes
             {
                 // add the item to the inventory
                 _inventory.Add(item);
-                _itemManager.Remove(item);
 
                 // play sound
                 _contentManager.GetSoundEffect("Inv_Pickup").Play();
@@ -172,7 +180,6 @@ namespace Element.Classes
                 this.Open(); // show the inventory, is that right?
 
                 this._inventory.Remove(item);
-                this._itemManager.Add(item);
 
                 // adjust selected value for removed item
                 if (this._selectedIndex > 0)

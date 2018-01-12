@@ -1,5 +1,6 @@
 ﻿using Element.Classes;
 using Element.Interfaces;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using TexturePackerLoader;
 
@@ -7,9 +8,10 @@ namespace Element.Interfaces
 {
     public interface IActiveGear : IDraw
     {
-        IWeapon Weapon { get; }
-
         void Equip(IItem item, Slots slots);
+        IWeapon Weapon { get; }
+        Vector2 WeaponPosition { get; set; }
+
     }
 }
 
@@ -48,12 +50,20 @@ namespace Element.Classes
         };
 
         public IWeapon Weapon => _weapon;
-
         private IWeapon _weapon;
 
-        public ActiveGear()
+        public Vector2 WeaponPosition
         {
-            _weapon = null;
+            get
+            {
+                return (_weapon == null) ? new Vector2(0) : _weapon.Position;
+            }
+            set
+            {
+                if (_weapon != null)
+                    _weapon.Position = value;
+            }
+            
         }
 
         public void Equip(IItem item, Slots slot)
@@ -67,10 +77,11 @@ namespace Element.Classes
                     throw new System.NotImplementedException("This weapon type is not implementied: ActiveGear.cs");
             }
         }
-
+    
         public void Draw(SpriteRender spriteRender)
         {
-
+            if (_weapon != null)
+            _weapon.Draw(spriteRender);
         }
 
     }

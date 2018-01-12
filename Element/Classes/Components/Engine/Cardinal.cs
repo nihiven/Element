@@ -5,14 +5,14 @@ namespace Element.Classes
     public static class Cardinal
     {
         // TODO: Should this be bitwise?
-        public static int North = 1;
-        public static int Northeast = 11;
-        public static int East = 10;
-        public static int Southeast = 12;
-        public static int South = 2;
-        public static int Southwest = 22;
-        public static int West = 20;
-        public static int Northwest = 21;
+        public const int North = 1;
+        public const int Northeast = 11;
+        public const int East = 10;
+        public const int Southeast = 12;
+        public const int South = 2;
+        public const int Southwest = 22;
+        public const int West = 20;
+        public const int Northwest = 21;
 
         public static string String(int cardinal)
         {

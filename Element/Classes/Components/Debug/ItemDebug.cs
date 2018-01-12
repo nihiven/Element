@@ -21,16 +21,16 @@ namespace Element.Classes
 
         public ItemDebug(IInput input, IItemManager itemManager)
         {
-            this._input = input ?? throw new ArgumentNullException("input");
-            this._itemManager = itemManager ?? throw new ArgumentNullException("itemManager");
+            _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
+            _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
         }
 
         public void Update(GameTime gameTime)
         {
             if (_input.GetButtonState(Buttons.B) == ButtonState.Pressed)
             {
-                Player player = ObjectManager.Get<Player>("player");
-                this._itemManager.NewWeapon(player.Position);
+                Player player = ObjectManager.Get<Player>(ComponentStrings.Player);
+                _itemManager.NewWeapon(player.Position);
             }
         }
     }

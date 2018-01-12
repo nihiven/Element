@@ -64,10 +64,8 @@ namespace Element
             this.spriteRender = new SpriteRender(this.spriteBatch);
 
             /// the master blaster
-            
             Content.RootDirectory = "Content";
             ObjectManager.Add(ComponentStrings.ContentManager, new AssetManager(Content));
-            ObjectManager.Add(ComponentStrings.ContentManager, new Microsoft.Xna.Framework.Content.ContentManager(this.Services.GetService<Game, "Content"));
             _contentManager = ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager);
 
             LoadAssets(); // requires content manager
@@ -90,8 +88,6 @@ namespace Element
             _controllerDebug = ObjectManager.Get<IControllerDebug>(ComponentStrings.ControllerDebug);
             _itemDebug = ObjectManager.Get<IItemDebug>(ComponentStrings.ItemDebug);
             _gameManager = ObjectManager.Get<IGameManager>(ComponentStrings.GameManager);
-            
-
         }
 
 

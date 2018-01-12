@@ -36,7 +36,10 @@ namespace Element
         {
             return new Player(
                 input: ObjectManager.Get<IInput>(ComponentStrings.Input),
-                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager)
+                contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                activeGear: ObjectManager.Get<IActiveGear>(ComponentStrings.ActiveGear),
+                itemManager: ObjectManager.Get<IItemManager>(ComponentStrings.ItemManager),
+                inventory: ObjectManager.Get<IInventory>(ComponentStrings.Inventory)
             );
         }
 
