@@ -30,7 +30,7 @@ namespace Element.Classes
             if (_input.GetButtonState(Buttons.B) == ButtonState.Pressed)
             {
                 Player player = ObjectManager.Get<Player>(ComponentStrings.Player);
-                _itemManager.NewWeapon(player.Position);
+                _itemManager.NewWeapon();
             }
         }
     }

@@ -26,29 +26,32 @@ namespace Element.Factories
 
         public static IWeapon RandomWeapon(Vector2 spawnLocation)
         {
-            List<string> weapons = new List<string> { null, "Thorn", "HardLight", "JadeRabbette" };
+            List<string> weapons = new List<string> { "Thorn", "HardLight", "JadeRabbette" };
             string weapon = weapons[Utilities.SeededRand.Next(weapons.Count)];
 
             switch (weapon)
             {
                 case "Thorn":
                     return new Thorn(
-                        input: ObjectManager.Get<IInput>("input"),
-                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                        input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                        contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                        entityManager: ObjectManager.Get<IEntityManager>(ComponentStrings.EntityManager),
                         guid: Guid.NewGuid(),
                         spawnLocation: spawnLocation
                     );
                 case "JadeRabbette":
                     return new JadeRabbit(
-                        input: ObjectManager.Get<IInput>("input"),
-                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                        input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                        contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                        entityManager: ObjectManager.Get<IEntityManager>(ComponentStrings.EntityManager),
                         guid: Guid.NewGuid(),
                         spawnLocation: spawnLocation
                     );
                 default:
                     return new HardLight(
-                        input: ObjectManager.Get<IInput>("input"),
-                        contentManager: ObjectManager.Get<IContentManager>("contentManager"),
+                        input: ObjectManager.Get<IInput>(ComponentStrings.Input),
+                        contentManager: ObjectManager.Get<IContentManager>(ComponentStrings.ContentManager),
+                        entityManager: ObjectManager.Get<IEntityManager>(ComponentStrings.EntityManager),
                         guid: Guid.NewGuid(),
                         spawnLocation: spawnLocation
                     );

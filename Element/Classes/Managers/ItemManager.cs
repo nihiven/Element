@@ -8,7 +8,7 @@ namespace Element.Interfaces
 {
     public interface IItemManager : IDraw
     {
-        void NewWeapon(Vector2 position);
+        void NewWeapon();
         void Add(IItem item);
         void Remove(IItem item);
         List<IItem> ItemsInVicinity(Vector2 searchVector, double searchDistance);
@@ -28,9 +28,9 @@ namespace Element.Classes
             private set { this._enabled = value; }
         }
 
-        public void NewWeapon(Vector2 position)
+        public void NewWeapon()
         {
-            IItem item = ItemFactory.RandomWeapon(position);
+            IItem item = ItemFactory.RandomWeapon(ObjectManager.Get<IPlayer>(ComponentStrings.Player).DropPosition);
             string guid = item.Guid.ToString();
 
             Items.Add(guid, item);

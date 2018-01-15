@@ -21,8 +21,9 @@ namespace Element.Classes
         public HardLight(
             IInput input,
             IContentManager contentManager,
+            IEntityManager entityManager,
             Guid guid,
             Vector2 spawnLocation
-        ) : base(input, contentManager, guid, spawnLocation) { }
+        ) : base(input, contentManager, entityManager, guid, spawnLocation) { }
     }
 }

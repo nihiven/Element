@@ -118,9 +118,9 @@ namespace Element.Classes
                         sprite.Draw(spriteRender.spriteBatch, frames[button]+18, Position + positions[button]);
                 }
 
-                spriteRender.spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().X.ToString(), new Vector2(10, 10), Color.Yellow);
-                spriteRender.spriteBatch.DrawString(font, _input.GetLeftThumbstickVector().Y.ToString(), new Vector2(10, 35), Color.Yellow);
-                spriteRender.spriteBatch.DrawString(font, Cardinal.String(_input.GetRightThumbstickCardinal()), new Vector2(10, 60), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, _input.LeftThumbstickVector.X.ToString(), new Vector2(10, 10), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, _input.LeftThumbstickVector.Y.ToString(), new Vector2(10, 35), Color.Yellow);
+                spriteRender.spriteBatch.DrawString(font, Cardinal.String(_input.RightThumbstickCardinal), new Vector2(10, 60), Color.Yellow);
             }
         }
     }

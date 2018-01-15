@@ -4,7 +4,7 @@ using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IItem
+    public interface IItem : IEntity
     {
        // SpriteSheet SpriteSheet { get; }
         string Name { get; }

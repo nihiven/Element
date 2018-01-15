@@ -7,6 +7,9 @@ namespace Element.Classes
     {
         private static Dictionary<string, object> _objects = new Dictionary<string, object>(32);
 
+        public static Dictionary<string, object> Objects => _objects;
+        public static Dictionary<string, object>.KeyCollection ListIdentifiers() => _objects.Keys;
+
         public static void Add(string identifier, object obj)
         {
             // remove an old key,value pair if it exists
@@ -26,20 +29,9 @@ namespace Element.Classes
                 return default(T);
         }
 
-        public static Dictionary<string, object> Objects
-        {
-            get { return _objects; }
-        }
-
         public static void Clear()
         {
             _objects = new Dictionary<string, object>(32);
-        }
-
-        public static Dictionary<string, object>.KeyCollection ListIdentifiers()
-        {
-            // returns a list that can be iterated over
-            return _objects.Keys;
         }
     }
 }

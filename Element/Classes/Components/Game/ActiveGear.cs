@@ -6,7 +6,7 @@ using TexturePackerLoader;
 
 namespace Element.Interfaces
 {
-    public interface IActiveGear : IDraw
+    public interface IActiveGear : IDraw, IUpdate
     {
         void Equip(IItem item, Slots slots);
         IWeapon Weapon { get; }
@@ -78,10 +78,16 @@ namespace Element.Classes
             }
         }
     
+        public void Update(GameTime gameTime)
+        {
+            if (_weapon != null)
+                _weapon.Update(gameTime);
+        }
+
         public void Draw(SpriteRender spriteRender)
         {
             if (_weapon != null)
-            _weapon.Draw(spriteRender);
+                _weapon.Draw(spriteRender);
         }
 
     }

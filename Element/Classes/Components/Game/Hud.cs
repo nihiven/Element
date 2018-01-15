@@ -30,7 +30,6 @@ namespace Element.Classes
 
         private IGraphics _graphics;
         private IPlayer _player;
-        private IContentManager _contentManager;
         private IActiveGear _activeGear;
         private SpriteFont _font;
         private SpriteFont _fontBig;
@@ -41,15 +40,14 @@ namespace Element.Classes
         private int _viewportHeight => (int)_graphics.GetViewPortSize.Y;
         private int _viewportCenterWidth => (int)_graphics.GetViewPortCenter.X;
 
-        public Hud(IGraphics graphics, IPlayer player, IContentManager contentManager, IActiveGear activeGear)
+        public Hud(IGraphics graphics, IPlayer player, IActiveGear activeGear, SpriteFont fontBig, SpriteFont fontSmall)
         {
             _graphics = graphics ?? throw new ArgumentNullException(ComponentStrings.Graphics);
             _player = player ?? throw new ArgumentNullException(ComponentStrings.Player);
-            _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
             _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
 
-            _font = this._contentManager.GetFont("Arial");
-            _fontBig = this._contentManager.GetFont("ArialBig");
+            _font = fontSmall;
+            _fontBig = fontBig;
         }
 
         public void Draw(SpriteRender spriteRender)

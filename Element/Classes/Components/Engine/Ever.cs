@@ -8,8 +8,9 @@ namespace Element
 {  
     /// <summary>
     /// This is the main type for your game.
+    /// This is the composition root??
     /// </summary>
-    public class ElementGame : Game
+    public class Ever : Game
     {
         IContentManager _contentManager;
         GraphicsDeviceManager _graphics;
@@ -20,14 +21,14 @@ namespace Element
         IInput _input;
         IControllerDebug _controllerDebug;
         IDebug _debug;
-        IUpdate _itemDebug;
+        IItemDebug _itemDebug;
         IGameManager _gameManager;
 
-        public ElementGame()
+        public Ever()
         {
-            // we use the object manager with our 'GraphicsManager', which is a GraphicsDeviceManager that implements IComponent, IGraphics
+            // we use the object manager with our 'Grafix', which is a GraphicsDeviceManager that implements IComponent, IGraphics
             // IGraphics is the interface that allows classes to get screen properties and is used for Dependency Injection
-            ObjectManager.Add(ComponentStrings.Graphics, new GraphicsManager(this));
+            ObjectManager.Add(ComponentStrings.Graphics, new Grafix(this));
             _graphics = ObjectManager.Get<GraphicsDeviceManager>(ComponentStrings.Graphics);
 
             // TODO: move this
@@ -41,9 +42,9 @@ namespace Element
 
         /// <summary>
         /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
+        /// i want my classes to be initialized in their constructors
+        /// Maybe they need a Reset()? true, i'll wait and see...
+        /// Calling base.Initialize will enumerate through any components and initialize them as well.
         /// </summary>
         protected override void Initialize()
         {
@@ -71,17 +72,18 @@ namespace Element
             LoadAssets(); // requires content manager
 
             // create the game components
-            ObjectManager.Add(ComponentStrings.Input, ObjectFactory.NewInput());
-            ObjectManager.Add(ComponentStrings.Debug, ObjectFactory.NewDebug());
-            ObjectManager.Add(ComponentStrings.ControllerDebug, ObjectFactory.NewControllerDebug());
-            ObjectManager.Add(ComponentStrings.ItemManager, ObjectFactory.NewItemManager()); // game
-            ObjectManager.Add(ComponentStrings.GameOptions, ObjectFactory.NewGameOptions()); // game
-            ObjectManager.Add(ComponentStrings.ActiveGear, ObjectFactory.NewActiveGear()); // game
-            ObjectManager.Add(ComponentStrings.Inventory, ObjectFactory.NewInventory()); // game
-            ObjectManager.Add(ComponentStrings.Player, ObjectFactory.NewPlayer()); // game
-            ObjectManager.Add(ComponentStrings.HUD, ObjectFactory.NewHud()); // game
-            ObjectManager.Add(ComponentStrings.ItemDebug, ObjectFactory.NewItemDebug());
-            ObjectManager.Add(ComponentStrings.GameManager, ObjectFactory.NewGameManager());
+            AddComponent(ComponentStrings.EntityManager);
+            AddComponent(ComponentStrings.Input);
+            AddComponent(ComponentStrings.Debug);
+            AddComponent(ComponentStrings.ControllerDebug);
+            AddComponent(ComponentStrings.ItemManager);
+            AddComponent(ComponentStrings.GameOptions);
+            AddComponent(ComponentStrings.ActiveGear);
+            AddComponent(ComponentStrings.Inventory);
+            AddComponent(ComponentStrings.Player);
+            AddComponent(ComponentStrings.HUD);
+            AddComponent(ComponentStrings.ItemDebug);
+            AddComponent(ComponentStrings.GameManager);
 
             _input = ObjectManager.Get<IInput>(ComponentStrings.Input);
             _debug = ObjectManager.Get<IDebug>(ComponentStrings.Debug);
@@ -90,6 +92,15 @@ namespace Element
             _gameManager = ObjectManager.Get<IGameManager>(ComponentStrings.GameManager);
         }
 
+
+        /// <summary>
+        /// alias for adding components to the ObjectManager
+        /// </summary>
+        /// <param name="name"></param>
+        private void AddComponent(string name)
+        {
+            ObjectManager.Add(name, ObjectFactory.New(name));
+        }
 
         /// <summary>
         /// UnloadContent will be called once per game and is the place to unload

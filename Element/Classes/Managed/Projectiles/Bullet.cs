@@ -15,66 +15,50 @@ namespace Element.Interfaces
 namespace Element.Classes
 {
 
-    public class Bullet : IProjectile
+    public class Bullet : IEntity, IProjectile
     {
-        public double Angle { get; set; }
-        public double Velocity { get; set; } // pixels per second
-        public double Range { get; set; } // pixels per second
-        public double Traveled { get; }
-        public Vector2 Position { get; set; }
-        public AnimatedSprite AnimatedSprite { get; set; }
+        public bool Expired => (_traveled > _range) ? true : false; // expire bullet when it goes beyond it's max range
 
-        private IWeapon _gun;
+        public double Angle => _angle;
+        public double Velocity => _velocity; // pixels per second
+        public double Range => _range; // pixels per second
+        public double Traveled => _traveled;
+        public Vector2 Position => _position;
+        public AnimatedSprite AnimatedSprite => _animatedSprite;
+
+        private double _angle;
+        private double _velocity;
+        private double _range;
         private double _traveled;
+        private Vector2 _position;
+        private AnimatedSprite _animatedSprite;
 
-        private IContentManager _contentManager;
-
-        public Bullet(IContentManager contentManager, IWeapon gun, Vector2 position, double angle)
+        public Bullet(AnimatedSprite animatedSprite, Vector2 position, double angle, double velocity, double range)
         {
-            this._gun = gun ?? throw new ArgumentNullException("gun");
-            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
-
-            this.Position = this._gun.FirePosition;
-            this.Angle = angle;
-            this.Velocity = gun.BaseVelocity;
-            this.Range = gun.BaseRange;
-            this.Traveled = 0;
-
-            this.AnimatedSprite = _contentManager.GetAnimatedSprite("bullet");
-        }
-
-        public bool Expired
-        {
-            get
-            {
-                if (this._traveled > this._gun.BaseRange)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        public void Initialize()
-        {
-
+            _position = position;
+            _angle = angle;
+            _velocity = velocity;
+            _range = range;
+            _traveled = 0;
+            _animatedSprite = animatedSprite;
         }
 
         public void Update(GameTime gameTime)
         {
-            Vector2 angleVector = Utilities.GetVectorFromAngle(this.Angle);
-            double movementFactor = this.Velocity * gameTime.ElapsedGameTime.TotalSeconds;
-            this._traveled += movementFactor;
-            this.Position += new Vector2((int)movementFactor, (int)movementFactor) * angleVector;
+            Vector2 angleVector = Utilities.GetVectorFromAngle(_angle);
+            double movementFactor = _velocity * gameTime.ElapsedGameTime.TotalSeconds;
+            _traveled += movementFactor;
+            _position += new Vector2((int)movementFactor, (int)movementFactor) * angleVector;
         }
 
         public void Draw(SpriteRender spriteRender)
         {
-            this.AnimatedSprite.Draw(spriteRender.spriteBatch, this.Position);
+            _animatedSprite.Draw(spriteRender.spriteBatch, _position);
         }
 
-        public void LoadContent(ContentManager content)
+        public void Dispose()
         {
-            
+            // TODO: What do we do here?
         }
     }
 }

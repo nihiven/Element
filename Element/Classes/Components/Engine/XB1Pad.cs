@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Element.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Element.Interfaces;
+using System;
+using System.Collections.Generic;
 
 namespace Element
 {
@@ -135,25 +136,12 @@ namespace Element
             }
         }
 
-        public Vector2 GetLeftThumbstickVector()
-        {
-            return currentState.ThumbSticks.Left;
-        }
-
-        public Vector2 GetRightThumbstickVector()
-        {
-            return currentState.ThumbSticks.Right;
-        }
-
-        public int GetLeftThumbstickCardinal()
-        {
-            return Utilities.GetCardinalDirection(currentState.ThumbSticks.Left);
-        }
-
-        public int GetRightThumbstickCardinal()
-        {
-            return Utilities.GetCardinalDirection(currentState.ThumbSticks.Right);
-        }
+        public Vector2 LeftThumbstickVector => currentState.ThumbSticks.Left;
+        public Vector2 RightThumbstickVector => currentState.ThumbSticks.Right;
+        public int LeftThumbstickCardinal => Utilities.GetCardinalDirection(currentState.ThumbSticks.Left);
+        public int RightThumbstickCardinal => Utilities.GetCardinalDirection(currentState.ThumbSticks.Right);
+        public float LeftThumbstickAngle => (float)Math.Atan2(currentState.ThumbSticks.Left.Y, currentState.ThumbSticks.Left.X);
+        public float RightThumbstickAngle => (float)Math.Atan2(currentState.ThumbSticks.Right.Y, currentState.ThumbSticks.Right.X);
 
         public void SetVibration(float leftMotor, float rightMotor, float duration)
         {

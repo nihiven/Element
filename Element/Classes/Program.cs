@@ -14,7 +14,7 @@ namespace Element
         [STAThread]
         static void Main()
         {
-            using (var game = new ElementGame())
+            using (var game = new Ever())
                 game.Run();
         }
     }

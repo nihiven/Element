@@ -79,15 +79,14 @@ namespace Element
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
         /// </summary>
-        public Player(IInput input, IContentManager contentManager, IActiveGear activeGear, IItemManager itemManager, IInventory inventory)
+        public Player(IInput input, AnimatedSprite animatedSprite, IActiveGear activeGear, IItemManager itemManager, IInventory inventory)
         {
             _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
-            _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
             _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
             _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
             _inventory = inventory ?? throw new ArgumentNullException(ComponentStrings.Inventory);
 
-            AnimatedSprite = _contentManager.GetAnimatedSprite("female");
+            AnimatedSprite = animatedSprite;
 
             MinPosition = new Vector2(0, 0);
             MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
@@ -133,13 +132,13 @@ namespace Element
             Vector2 oldPosition = this.Position;
             // update to a new position
             // movement is constrained to MinPosition and MaxPosition in the setter
-            this.Position += new Vector2(this._input.GetLeftThumbstickVector().X, -this._input.GetLeftThumbstickVector().Y) * new Vector2(this.BaseVelocity);
+            this.Position += new Vector2(this._input.LeftThumbstickVector.X, -this._input.LeftThumbstickVector.Y) * new Vector2(this.BaseVelocity);
 
             // cardinal direction will determine which animation is used
             // animations should be the same number of frames
             // the animation will change on .SetAnimation(), but the current frame will remain the same
             // so the animations should be synced on the spritesheet in order to move smoothly from one to another
-            int cardinal = _input.GetRightThumbstickCardinal();
+            int cardinal = _input.RightThumbstickCardinal;
 
             switch (cardinal)
             {
@@ -174,7 +173,7 @@ namespace Element
             if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || _input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held)
             {
                 if (_activeGear.Weapon != null)
-                    _activeGear.Weapon.Fire(90);
+                    _activeGear.Weapon.Fire(_input.RightThumbstickAngle);
             }
         }
 

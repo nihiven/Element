@@ -90,6 +90,8 @@ namespace Element.Classes
         public SpriteFrame PopupFrame => this.SpriteSheet.Sprite(this.PopupIcon);
         public SpriteFrame ItemFrame => this.SpriteSheet.Sprite(this.ItemIcon);
 
+        public bool Expired => throw new NotImplementedException();
+
         // Weapon
         private Vector2 _position;
         private double _timeSinceLastBullet; // 
@@ -98,19 +100,20 @@ namespace Element.Classes
         private bool _reloading;
         private readonly IInput _input;
         private readonly IContentManager _contentManager;
+        private IEntityManager _entityManager;
         private IPlayer _owner;
         public bool PlayerClose;
-        public List<Bullet> _bullets; // TODO: replace with world projectiles
-        
-        public Weapon(IInput input, IContentManager contentManager, Guid guid, Vector2 spawnLocation)
+                
+        public Weapon(IInput input, IContentManager contentManager, IEntityManager entityManager, Guid guid, Vector2 spawnLocation)
         {
-            this._input = input ?? throw new ArgumentNullException("input");
-            this._contentManager = contentManager ?? throw new ArgumentNullException("contentManager");
+            this._input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
+            this._contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
+            this._entityManager = entityManager ?? throw new ArgumentNullException(ComponentStrings.EntityManager);
+
             this.Guid = guid;
             this._position = spawnLocation;
             this.MagCount = this.BaseMagSize;
             this.ReserveCount = this.BaseReserveSize;
-            this._bullets = new List<Bullet>();
             this._timeSinceLastBullet = 0;
             this._timeReloading = 0;
             this._reloading = false;
@@ -118,37 +121,17 @@ namespace Element.Classes
             this.PlayerClose = false;
         }
 
-        public void Initialize()
-        {
-        }
-
         public void Update(GameTime gameTime)
         {
-            this._timeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
+            _timeSinceLastBullet += gameTime.ElapsedGameTime.TotalSeconds;
             //AnimatedSprite.Update(gameTime);
-
-            foreach (Bullet bullet in this._bullets)
-                bullet.Update(gameTime);
-
-            // TODO: remember the tooth
-            // put this in the particle manager?
-            // something like that, bullet manager mabye??
-            for (int i = 0; i < this._bullets.Count; i++)
-            {
-                if (this._bullets[i].Expired)
-                {
-                    this._bullets[i] = null;
-                    this._bullets.RemoveAt(i);
-                    i--;
-                }
-            }
 
             if (!this._reloading)
             {
                 if (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Pressed || (_input.GetButtonState(Buttons.RightTrigger) == ButtonState.Held && this.Modifiers.HasFlag(WeaponModifiers.Auto)))
                 {
                     // get the angle to fire at from the right thumbstick
-                    this.Fire(Math.Atan2(_input.GetRightThumbstickVector().Y, _input.GetRightThumbstickVector().X));
+                    this.Fire(Math.Atan2(_input.RightThumbstickVector.Y, _input.RightThumbstickVector.X));
                 }
 
                 if (_input.GetButtonState(Buttons.RightStick) == ButtonState.Pressed)
@@ -177,25 +160,21 @@ namespace Element.Classes
                 spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position);
             else
                 spriteRender.Draw(this.SpriteSheet.Sprite(this.ItemIcon), this.Position, null, 0.25f);
-
-            foreach (Bullet bullet in this._bullets)
-                bullet.Draw(spriteRender);
         }
 
         public void Fire(double angle)
         {
             if (this.MagCount > 0)
             {
-                if (this._timeSinceLastBullet > this.BaseFiringDelay)
+                if (_timeSinceLastBullet > this.BaseFiringDelay)
                 {
                     string sound = Utilities.GetRandomListMember<string>(new List<string> { "smg/shot1", "smg/shot2", "smg/shot3", "smg/shot4", "smg/shot5", "smg/shot6" });
-                    ObjectManager.Get<Debug>("debug").Add(sound, 3);
 
                     _input.SetVibration(leftMotor: 0.1f, rightMotor: 0.25f, duration: 0.25f);
                     _contentManager.GetSoundEffect(sound).Play(0.6f, 0, 0);
-                    this._bullets.Add(new Bullet(contentManager: this._contentManager, gun: this, position: this.FirePosition, angle: angle));
+                    _entityManager.Add(EntityFactory.New(Entities.PlayerBullet));
                     this.MagCount -= 1;
-                    this._timeSinceLastBullet = 0;
+                    _timeSinceLastBullet = 0;
                 }
             }
             else
@@ -236,6 +215,11 @@ namespace Element.Classes
         {
             this._owner = null;
             this._position = position;
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
     }
 }

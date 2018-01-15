@@ -28,38 +28,32 @@ namespace Element.Classes
     {
         // IInventory
         public IItem SelectedItem { get => (this._inventory.Count > 0) ? this._inventory[this._selectedIndex] : null; }
-        public int MaxItems { get; private set; }
-        public bool IsOpen { get; private set; }
+        public int MaxItems => _maxItems;
+        public bool IsOpen => _isOpen;
         public int Count => _inventory.Count;
 
-        // options
-        public bool AutoEquip { get; private set; }
+        private int _selectedIndex;
+        private int _maxItems;
+        private bool _isOpen;
+        private double _timeOut;
+        private List<IItem> _inventory { get; }
 
         // components
-        private IGameOptions _gameOptions;
         private readonly IContentManager _contentManager;
-        private IItemManager _itemManager;
         private readonly IInput _input;
         private IActiveGear _activeGear;
 
-        private List<IItem> _inventory { get; }
-        private int _selectedIndex;
-        private double _timeOut;
-
-        public Inventory(IGameOptions gameOptions, IInput input, IContentManager contentManager, IItemManager itemManager, IActiveGear activeGear)
+        public Inventory(IInput input, IContentManager contentManager, IActiveGear activeGear)
         {
-            _gameOptions = gameOptions ?? throw new ArgumentNullException(ComponentStrings.GameOptions);
             _input = input ?? throw new ArgumentNullException(ComponentStrings.Input);
             _contentManager = contentManager ?? throw new ArgumentNullException(ComponentStrings.ContentManager);
-            _itemManager = itemManager ?? throw new ArgumentNullException(ComponentStrings.ItemManager);
             _activeGear = activeGear ?? throw new ArgumentNullException(ComponentStrings.ActiveGear);
 
-            IsOpen = false;
+            _isOpen = false;
             _inventory = new List<IItem>(32);
             _timeOut = 5;
             _selectedIndex = 0;
-            MaxItems = 5;
-            AutoEquip = _gameOptions.GetBoolOption(option: "Inv_AutoEquip", defaultValue: false);
+            _maxItems = 5;
         }
 
         public bool Toggle()
@@ -76,7 +70,7 @@ namespace Element.Classes
         {
             if (!this.IsOpen)
             {
-                this.IsOpen = true;
+                _isOpen = true;
                 _contentManager.GetSoundEffect("Inv_Open").Play(1, 0, -0.6f);
             }
             this._timeOut = 5;
@@ -86,7 +80,7 @@ namespace Element.Classes
         {
             if (this.IsOpen)
             {
-                this.IsOpen = false;
+                _isOpen = false;
                 _contentManager.GetSoundEffect("Inv_Open").Play(1, -0.2f, -0.6f); ;
             }
             this._timeOut = 0;
@@ -94,6 +88,8 @@ namespace Element.Classes
 
         public void Update(GameTime gameTime)
         {
+            _activeGear.Update(gameTime);
+
             CheckTimeout(gameTime);
 
             if (_input.GetButtonState(Buttons.LeftShoulder) == ButtonState.Pressed)
