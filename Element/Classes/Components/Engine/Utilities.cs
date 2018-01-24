@@ -57,6 +57,22 @@ namespace Element
         {
             return list[SeededRand.Next(0, list.Count - 1)];
         }
+
+        public static Rectangle ClampRect(Rectangle rect, Rectangle constraint)
+        {
+            if (!constraint.Contains(rect))
+            {
+                float x = (rect.X < constraint.X) ? constraint.X : rect.X;
+                float y = (rect.Y < constraint.Y) ? constraint.Y : rect.Y;
+
+                x = rect.Right > constraint.Right ? constraint.Right - rect.Width : rect.X;
+                y = rect.Bottom > constraint.Bottom ? constraint.Right - rect.Height : rect.Y;
+
+                return new Rectangle((int)x, (int)y, rect.Width, rect.Height);
+            }
+            else
+                return rect;
+        }
     }
 }
 

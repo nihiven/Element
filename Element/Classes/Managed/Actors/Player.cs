@@ -36,10 +36,8 @@ namespace Element
         // IMoveable
         public int Width => (this.AnimatedSprite != null) ? this.AnimatedSprite.Width : 0;
         public int Height => (this.AnimatedSprite != null) ? this.AnimatedSprite.Height : 0;
-
-
-        // ICollideable
         public Rectangle BoundingBox => new Rectangle((int)Position.X, (int)Position.Y, AnimatedSprite.Width, AnimatedSprite.Height);
+        public Rectangle MoveConstraint => _moveConstraint; // player's valid movement box
 
         // IOwner
         public Vector2 WeaponAttachPosition { get => this.Position + new Vector2(15, 30); }
@@ -48,9 +46,6 @@ namespace Element
         public Vector2 PickupPosition { get => new Vector2(this.Position.X + (this.AnimatedSprite.Width / 2), this.Position.Y + this.AnimatedSprite.Height); }
 
         // IPlayer
-        public Vector2 MinPosition { get; set; } // top left corner of the player's movement box
-        public Vector2 MaxPosition { get; set; } // bottom right corner of the player's movement box
-
         public AnimatedSprite AnimatedSprite { get; set; }
         public IInventory Inventory { get; }
 
@@ -69,12 +64,14 @@ namespace Element
         public float Acceleration { get => this.BaseAcceleration; }
         public float Velocity { get => this.BaseVelocity; }
 
+        private Rectangle _moveConstraint;
         private Vector2 _position;
         private readonly IInput _input;
-        private readonly IContentManager _contentManager;
         private IActiveGear _activeGear;
         private IItemManager _itemManager;
         private IInventory _inventory;
+
+        private Rectangle _rect;
 
         /// <summary>
         /// Player constructor, accepts an object that implements IInput interface
@@ -88,9 +85,8 @@ namespace Element
 
             AnimatedSprite = animatedSprite;
 
-            MinPosition = new Vector2(0, 0);
-            MaxPosition = new Vector2(1280, 720); // TODO: tie to something!
-            Position = MinPosition;
+            _moveConstraint = new Rectangle(0, 0, 1280, 720);
+            Position = new Vector2(_moveConstraint.X, _moveConstraint.Y);
             BaseHealth = 100.0f;
             BaseShield = 100.0f;
             BasePickupRadius = 50;
@@ -112,14 +108,10 @@ namespace Element
             get => _position;
             set
             {
-                // clamp min an max values
-                float x = (value.X < MinPosition.X) ? MinPosition.X : value.X;
-                float y = (value.Y < MinPosition.Y) ? MinPosition.Y : value.Y;
+                _rect = Utilities.ClampRect(BoundingBox, MoveConstraint);
+                _position.X = _rect.X;
+                _position.Y = _rect.Y;
 
-                x = (x > MaxPosition.X - Height) ? MaxPosition.X - Width : x;
-                y = (y > MaxPosition.Y - Width) ? MaxPosition.Y - Height : y;
-
-                _position = new Vector2(x, y);
                 _activeGear.WeaponPosition = WeaponAttachPosition;
             }
         }

@@ -10,7 +10,7 @@ namespace Element.Classes
 
     class LiveSystemTest
     {
-        private class TestItem : ICollideable, IMoveable
+        private class TestItem : ICollideable
         {
             // IDrawable
             public bool Enabled => true;

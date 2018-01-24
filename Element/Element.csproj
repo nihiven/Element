@@ -59,6 +59,7 @@
     <Compile Include="Classes\Components\Debug\ControllerDebug.cs" />
     <Compile Include="Classes\Components\Debug\EverDebug.cs" />
     <Compile Include="Classes\Components\Game\GameOptions.cs" />
+    <Compile Include="Entities\DamageBlock.cs" />
     <Compile Include="Entities\Entities.cs" />
     <Compile Include="Interfaces\ICollideable.cs" />
     <Compile Include="Interfaces\IComponent.cs" />

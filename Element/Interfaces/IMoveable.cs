@@ -9,7 +9,7 @@ namespace Element.Interfaces
         float Acceleration { get; }
         float Velocity { get; }
         Vector2 Position { get; } // bottom right corner of the player's movement box
-        Vector2 MinPosition { get; } // top left corner of the player's movement box
-        Vector2 MaxPosition { get; } // bottom right corner of the player's movement box
+        Rectangle MoveConstraint { get; }
+        Rectangle BoundingBox { get; }
     }
 }

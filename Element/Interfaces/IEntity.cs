@@ -23,6 +23,11 @@ namespace Element.Interfaces
 
 namespace Element.Classes
 {
+    public class Entity : IEntity
+    {
+
+    }
+
     public class EntityManager : IEntityManager
     {
         public List<IEntity> Entities => _entities;

@@ -219,7 +219,8 @@ namespace Element.Classes
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }
